@@ -554,6 +554,184 @@ body {
     box-shadow: 0 0 20px rgba(201, 169, 97, 0.5);
 }
 
+/* ===============================================
+   LEAD MAGNET SECTION
+   =============================================== */
+
+.lead-magnet {
+    background: linear-gradient(135deg, var(--dark-purple) 0%, var(--maroon) 100%);
+    padding: 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.lead-magnet::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -50%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(201, 169, 97, 0.1) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.lead-magnet::after {
+    content: '';
+    position: absolute;
+    bottom: -50%;
+    left: -50%;
+    width: 800px;
+    height: 800px;
+    background: radial-gradient(circle, rgba(201, 169, 97, 0.08) 0%, transparent 70%);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.lead-magnet-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: center;
+    position: relative;
+    z-index: 2;
+}
+
+.lead-magnet-text {
+    color: white;
+}
+
+.lead-magnet-text .section-label {
+    background: rgba(201, 169, 97, 0.25);
+    color: var(--golden);
+    border-color: var(--golden);
+}
+
+.lead-magnet-text h2 {
+    font-family: var(--font-display);
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 0.75rem;
+    line-height: 1.2;
+    color: white;
+}
+
+.lead-magnet-subtitle {
+    font-size: 1.35rem;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    line-height: 1.4;
+}
+
+.lead-magnet-description {
+    font-size: 1.05rem;
+    color: rgba(255, 255, 255, 0.9);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.lead-magnet-benefits {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2.5rem 0;
+}
+
+.lead-magnet-benefits li {
+    font-size: 1rem;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-weight: 500;
+    line-height: 1.6;
+}
+
+.lead-magnet-btn {
+    background: linear-gradient(135deg, var(--golden) 0%, #E6D5B8 100%) !important;
+    color: var(--maroon) !important;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3) !important;
+}
+
+.lead-magnet-btn:hover {
+    transform: translateY(-3px) !important;
+    box-shadow: 0 12px 35px rgba(0, 0, 0, 0.4) !important;
+}
+
+.lead-magnet-trust {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 1rem;
+    font-style: italic;
+}
+
+.lead-magnet-visual {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.pdf-preview {
+    background: white;
+    border-radius: 16px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    transform: perspective(1000px) rotateY(-5deg) rotateX(5deg);
+    transition: all var(--transition-normal);
+}
+
+.pdf-preview:hover {
+    transform: perspective(1000px) rotateY(-2deg) rotateX(2deg);
+    box-shadow: 0 25px 70px rgba(0, 0, 0, 0.35);
+}
+
+.pdf-icon {
+    font-size: 4rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.pdf-title {
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--maroon);
+    margin-bottom: 0.5rem;
+}
+
+.pdf-subtitle {
+    font-size: 0.95rem;
+    color: var(--gray);
+    font-weight: 500;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .lead-magnet-content {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .lead-magnet-text h2 {
+        font-size: 2.25rem;
+    }
+
+    .lead-magnet-subtitle {
+        font-size: 1.15rem;
+    }
+
+    .pdf-preview {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg);
+    }
+
+    .pdf-preview:hover {
+        transform: perspective(1000px) rotateY(0deg) rotateX(0deg) translateY(-5px);
+    }
+}
+
 .section-header {
     text-align: center;
     margin-bottom: 5rem;
