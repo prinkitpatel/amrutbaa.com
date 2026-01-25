@@ -56,7 +56,7 @@ const currentSlots = 50; // CHANGE THIS NUMBER
 **File**: `index.html` (line ~300)
 ```html
 <p>Email: info@amrutbaa.com</p>      <!-- CHANGE EMAIL -->
-<p>Phone: +91 XXXXX XXXXX</p>         <!-- CHANGE PHONE -->
+<p>Phone: +91 6354 306783</p>         <!-- Customer Helpline -->
 ```
 
 ### Modify Pricing (when ready)

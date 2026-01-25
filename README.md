@@ -248,7 +248,7 @@ Or use Cloudflare Web Analytics (privacy-focused, no cookies):
 
 For support or inquiries:
 - Email: info@amrutbaa.com
-- Phone: +91 XXXXX XXXXX
+- Phone: +91 6354 306783
 
 ---
 

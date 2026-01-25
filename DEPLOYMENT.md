@@ -222,7 +222,7 @@ Add structured data in `<head>`:
   "name": "Amrut Baa",
   "description": "90+ year old traditional Chilly Garlic Chutney from Kathiyawad",
   "url": "https://amrutbaa.com",
-  "telephone": "+91-XXXXX-XXXXX",
+  "telephone": "+91-6354-306783",
   "address": {
     "@type": "PostalAddress",
     "addressRegion": "Gujarat",
