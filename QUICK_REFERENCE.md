@@ -17,7 +17,7 @@ Amrutbaa.com/
 └── assets/
     └── images/
         ├── product-jar.png      # Main product image
-        └── product-pouch.png    # Secondary product image
+        └── product-pouch.png    # (Removed from UI; bottles only)
 ```
 
 ## 🎨 Color Variables
@@ -216,7 +216,7 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 
 ### A/B Test Ideas
 1. CTA button text: "Register Now" vs "Reserve Your Spot"
-2. Hero image: Jar vs Pouch vs Both
+2. Hero image: Jar only (no pouch)
 3. Testimonials: With photos vs Without
 4. Form length: Short (3 fields) vs Current (7 fields)
 
@@ -234,7 +234,7 @@ Permissions-Policy: camera=(), microphone=(), geolocation=()
 | Email | Email | No | Valid email format |
 | Address | Textarea | Yes | Min 10 characters |
 | Quantity | Select | Yes | 1-5 jars |
-| Packaging | Select | No | Jar/Pouch/Mixed |
+| Packaging | Select | No | Jar only |
 | Terms | Checkbox | Yes | Must accept |
 
 ## 🎨 Typography Scale

@@ -22,7 +22,7 @@
 - [ ] CTA: "Join 1,200+ Families..."
 
 ### ✅ Pricing Section
-- [ ] 3 pricing cards visible
+- [ ] 4 pricing cards visible
 - [ ] Middle card (Family Pack) is featured:
   - Scaled up (larger)
   - Dark maroon background
@@ -136,10 +136,11 @@ Look for:
 - [ ] No typos in hero headline
 - [ ] All testimonial names correct
 - [ ] Pricing math is correct:
-  - Starter: ₹150 × 1 = ₹150
-  - Family: ₹420 for 3 (₹140 each, save ₹30)
-  - Bulk: ₹650 for 5 (₹130 each, save ₹100)
-- [ ] Free delivery threshold: ₹300+ (2+ jars)
+   - Trial Jar: ₹199 (200g)
+   - Family Pack: ₹449 (500g)
+   - Duo: ₹398 (2 × 200g)
+   - Quarterly: ₹849 (2 × 500g)
+- [ ] Free shipping threshold: ₹399+
 
 ### Check Links:
 - [ ] All navbar links work
@@ -166,7 +167,7 @@ Look for:
 
 ### Images:
 - [ ] Product image loads (product-jar.png)
-- [ ] Product pouch loads (product-pouch.png)
+- [ ] Product pouch removed from UI (bottles only)
 - [ ] Logo loads (if added)
 - [ ] No broken image icons
 
@@ -190,7 +191,7 @@ Look for:
    
 4. **Check pricing**
    - [ ] Family Pack clearly best value
-   - [ ] Free delivery above ₹300 clear
+   - [ ] Free shipping above ₹399 clear
    - [ ] Savings highlighted
    
 5. **Review FAQ**

@@ -77,7 +77,7 @@ Amrutbaa.com/
 ├── 📁 assets/
 │   └── images/
 │       ├── product-jar.png   # Main product image
-│       └── product-pouch.png # Secondary product
+│       └── product-pouch.png # (Not used; bottles only)
 │
 └── 📁 Documentation/
     ├── README.md             # Full project docs

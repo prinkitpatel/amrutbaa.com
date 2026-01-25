@@ -3,7 +3,7 @@
 ## 🔄 The Weekly Cycle
 
 ### For Customers:
-- **Order Deadline**: Sunday 11:59 PM
+- **Order Deadline**: Sunday 9:00 PM
 - **Preparation**: Monday (fresh ingredients sourced morning of)
 - **Dispatch**: Tuesday
 - **Delivery**: Wednesday-Friday (depending on location)
@@ -19,7 +19,7 @@ This isn't about limiting orders—it's about **honoring tradition**:
 
 ### Time-Based Urgency (Not Quantity)
 Instead of "50 slots left", we use:
-- **Live countdown timer** to Sunday 11:59 PM
+- **Live countdown timer** to Sunday 9:00 PM
 - **Dynamic messaging** that changes based on time remaining
 - **Visual urgency** (colors/animations) in final hours
 
@@ -27,14 +27,14 @@ Instead of "50 slots left", we use:
 
 **Normal (2-7 days left):**
 ```
-"Orders close Sunday at 11:59 PM"
+"Orders close Sunday at 9:00 PM"
 - Calm, informative tone
 - Golden accent colors
 ```
 
 **Urgent (Last 24 hours):**
 ```
-"Last day! Order by Sunday 11:59 PM"
+"Last day! Order by Sunday 9:00 PM"
 - Yellow/gold pulsing effects
 - Gentle animation
 ```
@@ -57,7 +57,7 @@ Instead of "50 slots left", we use:
 ## 💎 Premium Elements
 
 ### 1. **Countdown Timer**
-- Real-time countdown to Sunday 11:59 PM
+- Real-time countdown to Sunday 9:00 PM
 - Automatically calculates next deadline
 - Shows: Days, Hours, Minutes, Seconds
 - Responsive (2x2 grid on mobile)
@@ -113,7 +113,7 @@ Order Limit: None—Fresh for All
 
 ### Countdown Timer
 ```javascript
-// Automatically calculates next Sunday 11:59 PM
+// Automatically calculates next Sunday 9:00 PM
 // Updates every second
 // Shows different messages based on time left
 // Adds urgency classes for styling
@@ -186,7 +186,7 @@ Thank you for honoring tradition with us!
 
 ## 📅 Weekly Operations
 
-### Sunday Night (After 11:59 PM):
+### Sunday Night (After 9:00 PM):
 - Close orders for current week
 - Tally total orders
 - Prepare shopping list

@@ -42,10 +42,10 @@ function getNextSundayDeadline(fromDate) {
     const date = new Date(fromDate);
     const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
     
-    // If it's Sunday and before 11:59 PM, deadline is today
+    // If it's Sunday and before 9:00 PM, deadline is today
     if (dayOfWeek === 0) {
         const deadline = new Date(date);
-        deadline.setHours(23, 59, 59, 999);
+        deadline.setHours(21, 0, 0, 0);
         
         if (date < deadline) {
             return deadline;
@@ -56,7 +56,7 @@ function getNextSundayDeadline(fromDate) {
     const daysUntilSunday = dayOfWeek === 0 ? 7 : 7 - dayOfWeek;
     const nextSunday = new Date(date);
     nextSunday.setDate(date.getDate() + daysUntilSunday);
-    nextSunday.setHours(23, 59, 59, 999);
+    nextSunday.setHours(21, 0, 0, 0);
     
     return nextSunday;
 }
@@ -101,13 +101,13 @@ function displayCountdown(milliseconds, isNextWeek) {
             deadlineMessage.innerHTML = '<strong>This week\'s orders are closed.</strong> Next batch opens Monday.';
             deadlineMessage.classList.add('closed');
         } else if (days === 0 && hours < 3) {
-            deadlineMessage.innerHTML = '<strong>⚠️ Final hours!</strong> Order now for this week\'s fresh batch.';
+            deadlineMessage.innerHTML = '<strong>⚠️ Final hours!</strong> Order now before Sunday 9:00 PM.';
             deadlineMessage.classList.add('urgent');
         } else if (days === 0) {
-            deadlineMessage.innerHTML = '<strong>Last day!</strong> Order by Sunday 11:59 PM.';
+            deadlineMessage.innerHTML = '<strong>Last day!</strong> Order by Sunday 9:00 PM.';
             deadlineMessage.classList.add('urgent');
         } else {
-            deadlineMessage.innerHTML = 'Orders close <strong>Sunday at 11:59 PM</strong>';
+            deadlineMessage.innerHTML = 'Orders close <strong>Sunday at 9:00 PM</strong>';
             deadlineMessage.classList.remove('urgent', 'closed');
         }
     }
@@ -162,6 +162,38 @@ function initFormHandling() {
         const nameInput = document.getElementById('name');
         const emailInput = document.getElementById('email');
         const submitButton = fullForm.querySelector('.btn-submit');
+        const packageSelect = document.getElementById('package');
+        const summaryBox = document.getElementById('order-summary');
+        const summarySubtotal = document.querySelector('.summary-subtotal');
+        const summaryShipping = document.querySelector('.summary-shipping');
+        const summaryTotal = document.querySelector('.summary-total');
+
+        const catalog = {
+            trial: { name: 'The Trial Jar', price: 199, weight: '200g' },
+            family: { name: 'The Family Pack', price: 449, weight: '500g' },
+            duo: { name: "The 'Share the Love' Duo", price: 398, weight: '2 x 200g' },
+            quarterly: { name: 'The Quarterly Stock', price: 849, weight: '2 x 500g' }
+        };
+
+        function updateSummary() {
+            if (!packageSelect || !summaryBox) return;
+            const pkg = catalog[packageSelect.value];
+            if (!pkg) {
+                summaryBox.style.display = 'none';
+                return;
+            }
+            const shipping = pkg.price >= 399 ? 0 : 59;
+            const total = pkg.price + shipping;
+            summarySubtotal.textContent = `₹${pkg.price}`;
+            summaryShipping.textContent = shipping === 0 ? 'FREE' : `₹${shipping}`;
+            summaryTotal.textContent = `₹${total}`;
+            summaryBox.style.display = 'block';
+        }
+
+        if (packageSelect) {
+            packageSelect.addEventListener('change', updateSummary);
+            updateSummary();
+        }
         
         // Phone number validation (10 digits)
         if (phoneInput) {
@@ -202,7 +234,7 @@ function initFormHandling() {
             phone: document.getElementById('phone').value.trim(),
             email: document.getElementById('email').value.trim(),
             address: document.getElementById('address').value.trim(),
-            quantity: document.getElementById('quantity').value,
+            package: document.getElementById('package').value,
             packaging: document.getElementById('packaging').value,
             termsAccepted: document.getElementById('terms').checked
         };
@@ -290,8 +322,8 @@ function validateForm(data) {
         return false;
     }
     
-    if (!data.quantity) {
-        showToast('Please select a quantity', 'error');
+    if (!data.package) {
+        showToast('Please select a package', 'error');
         return false;
     }
     
@@ -314,6 +346,16 @@ function showSuccessMessage(data) {
     nextMonday.setDate(nextMonday.getDate() + 1);
     const nextTuesday = new Date(deadline);
     nextTuesday.setDate(nextTuesday.getDate() + 2);
+
+    const catalog = {
+        trial: { name: 'The Trial Jar', price: 199, weight: '200g' },
+        family: { name: 'The Family Pack', price: 449, weight: '500g' },
+        duo: { name: "The 'Share the Love' Duo", price: 398, weight: '2 x 200g' },
+        quarterly: { name: 'The Quarterly Stock', price: 849, weight: '2 x 500g' }
+    };
+    const pkg = catalog[data.package];
+    const shipping = pkg && pkg.price >= 399 ? 0 : 59;
+    const total = pkg ? pkg.price + shipping : 0;
     
     const message = `
         <div class="success-popup">
@@ -323,8 +365,11 @@ function showSuccessMessage(data) {
             <div class="success-details">
                 <p class="success-highlight">🌶️ Your order is in this week's fresh batch!</p>
                 <ul>
-                    <li><strong>Quantity:</strong> ${data.quantity} jar(s)</li>
+                    <li><strong>Package:</strong> ${pkg ? pkg.name : ''} (${pkg ? pkg.weight : ''})</li>
                     <li><strong>Packaging:</strong> ${data.packaging}</li>
+                    <li><strong>Subtotal:</strong> ₹${pkg ? pkg.price : 0}</li>
+                    <li><strong>Shipping:</strong> ${shipping === 0 ? 'FREE' : `₹${shipping}`}</li>
+                    <li><strong>Total:</strong> ₹${total}</li>
                     <li><strong>Delivery:</strong> ${data.address.substring(0, 50)}${data.address.length > 50 ? '...' : ''}</li>
                 </ul>
                 <div class="batch-timeline">
@@ -333,7 +378,7 @@ function showSuccessMessage(data) {
                         <span class="timeline-desc">Fresh ingredients sourced & prepared</span>
                     </div>
                     <div class="timeline-item">
-                        <span class="timeline-day">Tuesday</span>
+                        <span class="timeline-day">Tuesday morning</span>
                         <span class="timeline-desc">Dispatched to your doorstep</span>
                     </div>
                     <div class="timeline-item">

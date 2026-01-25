@@ -20,7 +20,7 @@ Transformed Amrutbaa.com from a basic landing page into a high-converting funnel
 - Social proof: "Rated 4.9/5 by 1,200+ Families" badge at top
 - Clear proof points: No preservatives, no artificial colors, made fresh since 1935
 - Dual CTAs: Primary "Reserve This Week's Batch" + Secondary "Why Only Mondays?"
-- Trust line: 🔒 100% Freshness Guarantee • Free Delivery Above ₹300
+- Trust line: 🔒 100% Freshness Guarantee • Free Shipping Above ₹399
 
 **Psychology:** Creates curiosity ("Why Monday-only?") + social proof + scarcity
 
@@ -83,7 +83,7 @@ Transformed Amrutbaa.com from a basic landing page into a high-converting funnel
 1. **Starter Pack**
    - Price: ₹150/jar
    - Quantity: 1 x 100g jar
-   - Delivery: ₹50 extra (needs ₹150 more for free delivery)
+   - Shipping: ₹59 extra (orders under ₹399)
    - CTA: "Order Starter Pack"
    - Target: Trial customers
 
@@ -105,7 +105,7 @@ Transformed Amrutbaa.com from a basic landing page into a high-converting funnel
 - Featured card: Dark maroon gradient background, golden border, scaled 1.05x
 - "Most Popular" ribbon on top-right
 - Savings clearly highlighted in green
-- Free delivery emphasized in bold
+- Free shipping emphasized in bold
 
 **Guarantee Badge Below:**
 🛡️ 100% Freshness Guarantee - "If you're not satisfied with the freshness, we'll refund 100% of your order—no questions asked"
@@ -122,7 +122,7 @@ Transformed Amrutbaa.com from a basic landing page into a high-converting funnel
 1. **"Why can't I order anytime?"** → Explains authenticity over convenience
 2. **"How long does it stay fresh?"** → 2-3 weeks refrigerated, zero preservatives
 3. **"What if I miss the Sunday deadline?"** → Next week's batch (removes urgency fear)
-4. **"Is delivery really free?"** → Yes above ₹300, recommends Family Pack
+4. **"Is shipping really free?"** → Yes above ₹399; recommends Family Pack and bundles
 5. **"What makes this different from store-bought?"** → Reinforces comparison
 6. **"What's your guarantee?"** → 100% money-back, no questions
 
@@ -152,7 +152,7 @@ Trust Indicators Below:
 
 **Guarantee Mini-Badges:**
 - ✓ 100% Freshness Guarantee
-- ✓ Free Delivery Above ₹300
+- ✓ Free Shipping Above ₹399
 - ✓ No Hidden Charges
 
 **STEP 2 - Full Form (Hidden, Shows After Phone Submit):**
@@ -160,8 +160,9 @@ Trust Indicators Below:
 - Delivery Address
 - Package selection (dropdown with prices shown):
   - Starter: 1 jar - ₹150
-  - Family Pack: 3 jars - ₹420 (Save ₹30) ⭐ FREE DELIVERY ← Default
-  - Bulk: 5 jars - ₹650 (Save ₹100) 🎁 FREE DELIVERY
+   - The Family Pack (500g) — ₹449 ⭐ FREE SHIPPING ← Default
+   - The 'Share the Love' Duo (2 x 200g) — ₹398 ⭐ FREE SHIPPING
+   - The Quarterly Stock (2 x 500g) — ₹849 ⭐ FREE SHIPPING
 - Packaging preference
 - Terms checkbox
 - CTA: "Confirm My Order →"

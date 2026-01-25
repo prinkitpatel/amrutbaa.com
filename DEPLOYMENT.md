@@ -185,7 +185,8 @@ brew install webp
 # Convert images
 cd assets/images
 cwebp -q 85 product-jar.png -o product-jar.webp
-cwebp -q 85 product-pouch.png -o product-pouch.webp
+# Pouch image no longer used (bottles only)
+# cwebp -q 85 product-pouch.png -o product-pouch.webp
 ```
 
 Update HTML:
