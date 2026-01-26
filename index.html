@@ -691,24 +691,61 @@
 
         /* Footer */
         .site-footer {
-            background: #fff;
-            border-top: 2px solid var(--golden);
-            padding: 2rem 0;
-            margin-top: 2rem;
+            background: rgba(250, 247, 242, 0.6);
+            border-top: 1px solid rgba(201, 169, 97, 0.15);
+            padding: 1.5rem 0;
+            margin-top: 4rem;
         }
-        .site-footer .footer-links {
+        
+        .site-footer .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+        
+        .site-footer .footer-content {
             display: flex;
-            flex-wrap: wrap;
-            gap: 1rem 2rem;
+            justify-content: center;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+        
+        .site-footer .policy-links {
+            display: flex;
+            gap: 0.75rem;
             align-items: center;
         }
-        .site-footer a {
-            color: var(--maroon);
-            font-weight: 600;
-            text-decoration: none;
+        
+        .site-footer .policy-separator {
+            color: rgba(102, 102, 102, 0.3);
         }
+        
+        .site-footer a {
+            color: var(--gray);
+            font-weight: 500;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            opacity: 0.85;
+        }
+        
         .site-footer a:hover {
-            text-decoration: underline;
+            color: var(--maroon);
+            opacity: 1;
+        }
+        
+        @media (max-width: 768px) {
+            .site-footer .footer-content {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+            
+            .site-footer .policy-links {
+                flex-wrap: wrap;
+                justify-content: center;
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
@@ -842,7 +879,14 @@
                     </div>
                 </div>
 
-                <div class="success-message" id="successMessage">✓ Registration submitted! Check your email for confirmation.</div>
+                <div class="success-message" id="successMessage">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
+                    <div style="font-size: 1.1rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.5rem;">Your Jar is Reserved!</div>
+                    <div style="font-size: 0.9rem; line-height: 1.6;">
+                        We'll call you within 24 hours to confirm.<br>
+                        Your fresh chutney will be prepared Monday and delivered by week's end.
+                    </div>
+                </div>
             </form>
         </div>
     </div>
@@ -1042,38 +1086,80 @@
                 return;
             }
 
-            try {
-                const response = await fetch('https://n8n.prinkit.cloud/webhook-test/form_fill', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify(formData)
-                });
+            const submitBtn = registrationForm.querySelector('.btn-primary-solid[type="submit"]');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing...';
+            submitBtn.disabled = true;
 
-                if (response.ok) {
+            // Create a hidden iframe for submission
+            let iframe = document.getElementById('hidden-form-iframe');
+            if (!iframe) {
+                iframe = document.createElement('iframe');
+                iframe.id = 'hidden-form-iframe';
+                iframe.name = 'hidden-form-iframe';
+                iframe.style.display = 'none';
+                document.body.appendChild(iframe);
+            }
+
+            // Create a hidden form
+            const hiddenForm = document.createElement('form');
+            hiddenForm.method = 'POST';
+            hiddenForm.action = 'https://n8n.prinkit.cloud/webhook/order_form';
+            hiddenForm.target = 'hidden-form-iframe';
+            hiddenForm.style.display = 'none';
+
+            // Add all form fields
+            for (const [key, value] of Object.entries(formData)) {
+                const input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = key;
+                input.value = value;
+                hiddenForm.appendChild(input);
+            }
+
+            document.body.appendChild(hiddenForm);
+            
+            try {
+                console.log('Submitting form data:', formData);
+                hiddenForm.submit();
+                
+                // Wait a moment then show success
+                setTimeout(() => {
+                    document.body.removeChild(hiddenForm);
                     successMessage.style.display = 'block';
                     registrationForm.style.display = 'none';
+                    
                     setTimeout(() => {
                         closeModal();
                         registrationForm.style.display = 'block';
                         registrationForm.reset();
                         successMessage.style.display = 'none';
                         setStep(1);
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
                     }, 3000);
-                }
+                }, 500);
             } catch (error) {
+                console.error('Submission error:', error);
+                document.body.removeChild(hiddenForm);
                 alert('Submission error. Please try again.');
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
             }
         });
     </script>
     <footer class="site-footer">
         <div class="container">
-            <div class="footer-links">
-                <span style="font-family: var(--font-display); color: var(--dark-purple); font-weight: 700;">Policies:</span>
-                <a href="/terms/">Terms & Conditions</a>
-                <a href="/privacy-policy/">Privacy Policy</a>
-                <a href="/refund-policy/">Refund Policy</a>
-                <a href="/return-policy/">Return Policy</a>
-                <a href="/shipping-policy/">Shipping Policy</a>
+            <div class="footer-content">
+                <div class="policy-links">
+                    <a href="/terms/">Terms</a>
+                    <span class="policy-separator">·</span>
+                    <a href="/privacy-policy/">Privacy</a>
+                    <span class="policy-separator">·</span>
+                    <a href="/refund-policy/">Refunds</a>
+                    <span class="policy-separator">·</span>
+                    <a href="/shipping-policy/">Shipping</a>
+                </div>
             </div>
         </div>
     </footer>
