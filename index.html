@@ -370,6 +370,201 @@
 
         /* Modal CSS injected by modal-component.js */
 
+        /* VISUAL STORY SECTION */
+        .visual-story {
+            position: relative;
+            background: linear-gradient(180deg, var(--cream) 0%, #FFFBF5 50%, var(--cream) 100%);
+            padding: 0;
+            overflow: hidden;
+        }
+
+        .story-item {
+            position: relative;
+            min-height: 85vh;
+            display: flex;
+            align-items: center;
+            padding: 4rem 2rem;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
+                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .story-item.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .story-item:nth-child(even) {
+            background: rgba(212, 175, 55, 0.03);
+        }
+
+        .story-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .story-item:nth-child(even) .story-container {
+            direction: rtl;
+        }
+
+        .story-item:nth-child(even) .story-content {
+            direction: ltr;
+        }
+
+        .story-image {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
+            transition: transform 0.6s ease, box-shadow 0.6s ease;
+        }
+
+        .story-image:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.2);
+        }
+
+        .story-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            aspect-ratio: 4/5;
+        }
+
+        .story-image::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.1) 100%);
+            pointer-events: none;
+        }
+
+        .story-content {
+            padding: 2rem;
+        }
+
+        .story-label {
+            font-family: var(--font-body);
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: var(--golden);
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: inline-block;
+            padding: 0.5rem 1.2rem;
+            background: rgba(212, 175, 55, 0.1);
+            border-radius: 50px;
+        }
+
+        .story-heading {
+            font-family: var(--font-display);
+            font-size: 2.8rem;
+            line-height: 1.2;
+            color: var(--maroon);
+            margin-bottom: 1.5rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .story-description {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: var(--charcoal);
+            margin-bottom: 2rem;
+            opacity: 0.9;
+        }
+
+        .story-features {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .story-feature {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            font-size: 1rem;
+            color: var(--charcoal);
+            font-weight: 500;
+        }
+
+        .story-feature-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 1024px) {
+            .story-container {
+                grid-template-columns: 1fr;
+                gap: 2.5rem;
+            }
+
+            .story-item {
+                min-height: auto;
+                padding: 3rem 1.5rem;
+            }
+
+            .story-item:nth-child(even) .story-container {
+                direction: ltr;
+            }
+
+            .story-heading {
+                font-size: 2.2rem;
+            }
+
+            .story-description {
+                font-size: 1.05rem;
+            }
+
+            .story-image img {
+                aspect-ratio: 16/11;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .story-item {
+                padding: 2.5rem 1.2rem;
+            }
+
+            .story-content {
+                padding: 1rem;
+            }
+
+            .story-heading {
+                font-size: 1.9rem;
+            }
+
+            .story-description {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .story-image {
+                border-radius: 16px;
+            }
+
+            .story-image img {
+                aspect-ratio: 4/5;
+            }
+        }
+
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .hero-content-center h1 {
@@ -523,6 +718,104 @@
         </div>
     </section>
 
+    <!-- Visual Story Section -->
+    <section class="visual-story">
+        <!-- Story 1: The Experience -->
+        <div class="story-item" data-story="1">
+            <div class="story-container">
+                <div class="story-image">
+                    <img src="assets/images/chutney on table with food.png" alt="Amrutbaa Ni Chutney served with traditional Indian food" loading="lazy">
+                </div>
+                <div class="story-content">
+                    <span class="story-label">The Experience</span>
+                    <h2 class="story-heading">Not Just a Condiment.<br>A Family Tradition.</h2>
+                    <p class="story-description">
+                        One spoonful transforms your entire meal. The heat from red chillies, the punch of garlic, 
+                        and the complexity of traditional spices—all ground by hand to preserve their soul.
+                    </p>
+                    <div class="story-features">
+                        <div class="story-feature">
+                            <span class="story-feature-icon">🌶️</span>
+                            <span>Perfect heat balance—bold but never overpowering</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">🧄</span>
+                            <span>Fresh garlic punch that cuts through any dish</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">✨</span>
+                            <span>Pairs with rotis, rice, dosas, sandwiches, anything</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story 2: The Craft -->
+        <div class="story-item" data-story="2">
+            <div class="story-container">
+                <div class="story-image">
+                    <img src="assets/images/product-jar.png" alt="Authentic ingredients for Amrutbaa's Chutney" loading="lazy">
+                </div>
+                <div class="story-content">
+                    <span class="story-label">The Craft</span>
+                    <h2 class="story-heading">Hand-Ground.<br>Never Processed.</h2>
+                    <p class="story-description">
+                        Every batch starts with sun-dried Kashmiri chillies, hand-peeled garlic, and spices 
+                        measured by instinct—not machines. The stone grinder releases oils slowly, 
+                        building layers of flavor impossible to replicate in factories.
+                    </p>
+                    <div class="story-features">
+                        <div class="story-feature">
+                            <span class="story-feature-icon">🪨</span>
+                            <span>Stone-ground to preserve essential oils</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">🚫</span>
+                            <span>Zero preservatives, colors, or artificial flavors</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">⏱️</span>
+                            <span>Made fresh every Sunday in small batches</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Story 3: The Heritage -->
+        <div class="story-item" data-story="3">
+            <div class="story-container">
+                <div class="story-image">
+                    <img src="assets/images/chutney jar open spoon Background Removed.png" alt="Traditional preparation of Amrutbaa's Chutney" loading="lazy">
+                </div>
+                <div class="story-content">
+                    <span class="story-label">The Heritage</span>
+                    <h2 class="story-heading">90+ Years.<br>One Recipe.</h2>
+                    <p class="story-description">
+                        Amrutbaa didn't write down her recipe—she passed it through her hands. 
+                        The exact ratios, the timing, the rhythm of the grinding—all learned through decades of 
+                        making this chutney for her family in Kathiyawad. Now, we're bringing it to yours.
+                    </p>
+                    <div class="story-features">
+                        <div class="story-feature">
+                            <span class="story-feature-icon">👵</span>
+                            <span>Grandmother's 90-year-old family recipe</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">🏛️</span>
+                            <span>Pride of Kathiyawad culinary tradition</span>
+                        </div>
+                        <div class="story-feature">
+                            <span class="story-feature-icon">💚</span>
+                            <span>Made with the same love we serve our family</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Sticky CTA Footer Bar - high converting pattern -->
     <div class="sticky-cta-bar">
         <div class="timer-info">
@@ -580,6 +873,24 @@
 
         updateTimer();
         setInterval(updateTimer, 1000);
+
+        // Scroll-triggered animations for story section
+        const observerOptions = {
+            threshold: 0.2,
+            rootMargin: '0px 0px -100px 0px'
+        };
+
+        const storyObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.story-item').forEach(item => {
+            storyObserver.observe(item);
+        });
     </script>
     <footer class="site-footer">
         <div class="container">
