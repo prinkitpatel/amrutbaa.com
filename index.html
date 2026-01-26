@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Amrut Baa - 90+ year old authentic Chilly Garlic Chutney from Kathiyawad. Fresh batch-made traditional recipe, delivered to your doorstep.">
+    <meta name="description" content="Amrut Baa - 90+ year old authentic Chilly Garlic Chutney from Kathiyawad. Register for our first official batch.">
     <meta name="keywords" content="garlic chutney, kathiyawad chutney, traditional chutney, indian chutney, authentic recipe">
     
     <!-- Open Graph Meta Tags -->
     <meta property="og:title" content="Amrut Baa - Traditional Chilly Garlic Chutney">
-    <meta property="og:description" content="90+ year old authentic recipe from Kathiyawad. Fresh, handcrafted in small batches.">
+    <meta property="og:description" content="90+ year old authentic recipe from Kathiyawad. Register for the first official batch.">
     <meta property="og:type" content="website">
-    <meta property="og:image" content="/assets/images/product-jar.png">
     
     <!-- Theme Color -->
     <meta name="theme-color" content="#6B1C23">
@@ -18,787 +17,398 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
     
-    <title>Amrut Baa - Traditional Chilly Garlic Chutney from Kathiyawad</title>
-    
-    <!-- Preconnect to external resources -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    
-    <!-- Preload critical resources -->
-    <link rel="preload" href="styles/main.css" as="style">
-    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@600;700&display=swap" as="style">
+    <title>Amrut Baa - First Official Batch Registration</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@600;700&display=swap" rel="stylesheet">
     
-    <!-- Stylesheet -->
-    <link rel="stylesheet" href="styles/main.css">
-    
-    <!-- Loading screen styles -->
     <style>
-        /* Critical CSS - Loading Screen */
-        #loading-screen {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --maroon: #6B1C23;
+            --deep-maroon: #4D0E13;
+            --dark-purple: #3D1F47;
+            --golden: #C9A961;
+            --golden-light: #E6D5B8;
+            --cream: #FAF7F2;
+            --warm-white: #FFFCF7;
+            --charcoal: #1A1A1A;
+            --gray: #666666;
+            --light-gray: #E5E5E5;
+            
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+            
+            --transition-normal: 0.3s ease;
+            --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-body);
+            color: var(--charcoal);
+            line-height: 1.7;
+            background: var(--warm-white);
+            font-size: 16px;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        /* Hero Section */
+        .hero {
+            min-height: 100vh;
             background: linear-gradient(135deg, #6B1C23 0%, #3D1F47 100%);
             display: flex;
-            flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 99999;
-            transition: opacity 0.5s ease-out;
+            position: relative;
+            overflow: hidden;
+            padding: 4rem 0;
         }
-        
-        #loading-screen.hidden {
-            opacity: 0;
-            pointer-events: none;
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(201,169,97,0.1)"/><circle cx="80" cy="80" r="3" fill="rgba(201,169,97,0.1)"/><circle cx="90" cy="10" r="1.5" fill="rgba(201,169,97,0.1)"/></svg>');
+            opacity: 0.5;
         }
-        
-        .loading-logo {
-            font-family: 'Playfair Display', serif;
-            font-size: 3rem;
-            color: #C9A961;
+
+        .hero .container {
+            position: relative;
+            z-index: 2;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 4rem;
+            align-items: center;
+        }
+
+        .hero-content {
+            color: var(--cream);
+        }
+
+        .hero-content h1 {
+            font-family: var(--font-display);
+            font-size: 4rem;
             font-weight: 800;
-            margin-bottom: 1rem;
-            animation: pulse 2s ease-in-out infinite;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            color: var(--golden-light);
+            letter-spacing: -2px;
         }
-        
-        .loading-text {
-            color: white;
-            font-size: 1rem;
+
+        .hero-content .subtitle {
+            font-size: 1.5rem;
+            color: var(--golden);
             margin-bottom: 2rem;
-            opacity: 0.8;
+            font-weight: 600;
         }
-        
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid rgba(255,255,255,0.3);
-            border-top-color: #C9A961;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
+
+        .hero-content p {
+            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            color: var(--cream);
+            line-height: 1.8;
         }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        .highlight {
+            color: var(--golden-light);
+            font-weight: 600;
         }
-        
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
+
+        /* Registration Form */
+        .registration-section {
+            background: var(--cream);
+            border-radius: 12px;
+            padding: 2.5rem;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .registration-section h2 {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            color: var(--maroon);
+            margin-bottom: 1rem;
+            font-weight: 700;
+        }
+
+        .registration-section .tagline {
+            color: var(--gray);
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            color: var(--charcoal);
+            margin-bottom: 0.5rem;
+            font-size: 0.95rem;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--light-gray);
+            border-radius: 6px;
+            font-family: var(--font-body);
+            font-size: 1rem;
+            transition: border-color var(--transition-normal);
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--maroon);
+            box-shadow: 0 0 0 3px rgba(107, 28, 35, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .submit-btn {
+            background: linear-gradient(135deg, var(--maroon) 0%, var(--deep-maroon) 100%);
+            color: var(--warm-white);
+            border: none;
+            padding: 1rem 2.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            width: 100%;
+            margin-top: 1rem;
+            box-shadow: 0 4px 15px rgba(107, 28, 35, 0.3);
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(107, 28, 35, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .success-message {
+            display: none;
+            background: #d4edda;
+            color: #155724;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            text-align: center;
+            border: 1px solid #c3e6cb;
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero .container {
+                grid-template-columns: 1fr;
+                gap: 2rem;
+                padding: 2rem;
+            }
+
+            .hero-content h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content .subtitle {
+                font-size: 1.2rem;
+            }
+
+            .hero-content p {
+                font-size: 1rem;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .registration-section {
+                padding: 1.5rem;
+            }
+
+            .registration-section h2 {
+                font-size: 1.4rem;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- Loading Screen -->
-    <div id="loading-screen">
-        <div class="loading-logo">અમૃત બા</div>
-        <div class="loading-text">Loading tradition...</div>
-        <div class="loading-spinner"></div>
-    </div>
-    <!-- Navigation -->
-    <nav class="navbar">
-        <div class="container">
-            <div class="nav-brand">
-                <span class="brand-name">Amrut Baa</span>
-            </div>
-            <ul class="nav-menu">
-                <li><a href="#story">Our Story</a></li>
-                <li><a href="#product">The Chutney</a></li>
-                <li><a href="#order" class="nav-cta">Reserve Your Batch</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <section id="hero" class="hero">
+    <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <div class="hero-left">
-                    <div class="hero-badge">⭐⭐⭐⭐⭐ Rated 4.9/5 by 1,200+ Families</div>
-                    <h1 class="hero-title">
-                        <span class="title-english">The Monday-Only Chutney That</span>
-                        <span class="title-highlight">Food Lovers Plan Their Week Around</span>
-                    </h1>
-                    <p class="hero-subtitle">Why This 90-Year-Old Recipe Can ONLY Be Made in Small Weekly Batches</p>
-                    <p class="hero-description">
-                        While factories rush production with preservatives, we honor grandmother's sacred method: Fresh ingredients sourced Monday morning. Traditional preparation that takes hours, not minutes. Dispatched Tuesday while still fresh. This is why mass production would destroy everything that makes it authentic.
-                    </p>
-                    <div class="social-proof-mini">
-                        <span class="proof-item">✓ No Preservatives</span>
-                        <span class="proof-item">✓ No Artificial Colors</span>
-                        <span class="proof-item">✓ Made Fresh Weekly Since 1935</span>
-                    </div>
-                    <div class="hero-cta">
-                        <a href="#order" class="btn-primary">Reserve This Week's Batch →</a>
-                        <a href="#story" class="btn-secondary">Why Only Mondays?</a>
-                    </div>
-                    <p class="hero-trust">🔒 100% Freshness Guarantee • Free Shipping Above ₹399</p>
-                </div>
-                <div class="hero-right">
-                    <div class="product-showcase">
-                        <img src="assets/images/product-jar.png" 
-                             alt="Amrut Baa Chutney Jar" 
-                             class="product-main"
-                             loading="eager">
-                        <div class="product-badge">Handcrafted</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Story Section -->
-    <section id="story" class="story">
-        <div class="container">
-            <!-- Comparison Grid - Value Proposition -->
-            <div class="comparison-section">
-                <span class="section-label">Why Customers Switch to Amrut Baa</span>
-                <h2>Store-Bought vs. The Real Thing</h2>
-                
-                <div class="comparison-grid">
-                    <div class="comparison-column bad">
-                        <div class="column-header">
-                            <h3>❌ Factory Chutney</h3>
-                            <p>What You're Used To</p>
-                        </div>
-                        <ul class="comparison-list">
-                            <li>Made months ago, sits in warehouse</li>
-                            <li>Packed with preservatives & chemicals</li>
-                            <li>Artificial colors for fake "fresh" look</li>
-                            <li>Mass-produced by machines</li>
-                            <li>Generic ingredients, lowest cost</li>
-                            <li>Bland taste, heavy on vinegar</li>
-                        </ul>
-                    </div>
-                    
-                    <div class="comparison-column good">
-                        <div class="column-header">
-                            <div class="popular-badge">Most Popular Choice</div>
-                            <h3>✓ Amrut Baa</h3>
-                            <p>Fresh Every Monday</p>
-                        </div>
-                        <ul class="comparison-list">
-                            <li>Made THIS Monday, at YOUR doorstep Tuesday</li>
-                            <li>Zero preservatives - doesn't need them!</li>
-                            <li>Natural color from real ingredients</li>
-                            <li>Hand-prepared using 90-year method</li>
-                            <li>Premium garlic & sun-dried chilies</li>
-                            <li>Bold authentic flavor that lasts</li>
-                        </ul>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="story-header">
-                <span class="section-label">Our Heritage</span>
-                <h2>Why This Recipe Can ONLY Be Made Weekly</h2>
-                <p class="story-lead">It's not about creating artificial scarcity. It's about honoring a preparation method that simply can't be rushed—and wouldn't taste the same if we tried.</p>
-            </div>
-            
-            <div class="heritage-portrait">
-                <img src="assets/images/amrutbaa portrait.png" 
-                     alt="Amrut Baa - The Legacy Keeper" 
-                     class="amrutbaa-photo"
-                     loading="lazy">
-                <div class="portrait-caption">
-                    <h4>Meet Amrut Baa</h4>
-                    <p>The grandmother whose 90-year-old recipe refuses to be mass-produced. Her method: fresh ingredients every Monday, traditional hand preparation, and absolutely no shortcuts.</p>
-                </div>
-            </div>
-            
-            <div class="story-grid">
-                <div class="story-card">
-                    <div class="story-icon">🏛️</div>
-                    <h3>Pride of Kathiyawad</h3>
-                    <p>Born in the culinary traditions of Gujarat, this chutney embodies the bold, authentic flavors that have made Kathiyawad cuisine legendary.</p>
-                </div>
-                
-                <div class="story-card featured">
-                    <div class="story-icon">👵</div>
-                    <h3>Grandmother's Recipe</h3>
-                    <p>Every batch follows Amrut Baa's exact method. No shortcuts, no compromises. Just the same care and attention she put into every jar for her family.</p>
-                </div>
-                
-                <div class="story-card">
-                    <div class="story-icon">❤️</div>
-                    <h3>Made with Love</h3>
-                    <p>This isn't just business—it's family heritage shared with yours. Each jar carries the warmth of home cooking and generations of tradition.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Product Section -->
-    <section id="product" class="product">
-        <div class="container">
-            <div class="product-content">
-                <div class="product-left">
-                    <span class="section-label">The Recipe</span>
-                    <h2>Three Simple Ingredients.<br>Endless Flavor.</h2>
-                    
-                    <div class="ingredients">
-                        <div class="ingredient-item">
-                            <span class="ingredient-icon">🧄</span>
-                            <div class="ingredient-text">
-                                <h4>Fresh Garlic</h4>
-                                <p>Hand-selected, locally sourced garlic for maximum flavor and aroma</p>
-                            </div>
-                        </div>
-                        
-                        <div class="ingredient-item">
-                            <span class="ingredient-icon">🌶️</span>
-                            <div class="ingredient-text">
-                                <h4>Sun-Dried Chillies</h4>
-                                <p>Naturally dried red chillies that bring the perfect heat and color</p>
-                            </div>
-                        </div>
-                        
-                        <div class="ingredient-item">
-                            <span class="ingredient-icon">🫗</span>
-                            <div class="ingredient-text">
-                                <h4>Fresh Oil</h4>
-                                <p>Pure, high-quality oil to bind the flavors and preserve freshness</p>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="product-highlights">
-                        <div class="highlight">✓ No Preservatives</div>
-                        <div class="highlight">✓ No Artificial Colors</div>
-                        <div class="highlight">✓ Traditional Method</div>
-                        <div class="highlight">✓ Small Batches</div>
-                    </div>
-                </div>
-                
-                <div class="product-right">
-                    <div class="product-images">
-                        <img src="assets/images/garlic-chilli.png" 
-                             alt="Fresh Garlic and Red Chillies - Our Only Ingredients" 
-                             class="ingredient-hero"
-                             loading="lazy">
-                        <div class="ingredient-badge">Just 3 Ingredients. That's It.</div>
-                        <div class="product-info-box">
-                            <h4>Packaging</h4>
-                            <p>Glass Jars only</p>
-                            <p class="weight">200g and 500g packs</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Testimonials Section -->
-    <section id="testimonials" class="testimonials">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Social Proof</span>
-                <h2>What Families Are Saying</h2>
-                <p class="section-intro">Over 1,200+ families have made our chutney a weekly tradition</p>
-            </div>
-            
-            <div class="testimonials-grid">
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"We tried every chutney brand in the market, but nothing comes close to Amrut Baa. The fresh taste is incomparable. Now we plan our weekly meals around Monday deliveries!"</p>
-                    <div class="testimonial-author">
-                        <div class="author-info">
-                            <h4>Priya Patel</h4>
-                            <p>Mumbai • 6 months regular customer</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"My kids who hate vegetables now finish their meals without fuss—all thanks to this magic chutney. Worth every rupee. The weekly batch system ensures it's always fresh."</p>
-                    <div class="testimonial-author">
-                        <div class="author-info">
-                            <h4>Rajesh Shah</h4>
-                            <p>Ahmedabad • 1 year+ regular customer</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="testimonial-card">
-                    <div class="testimonial-stars">⭐⭐⭐⭐⭐</div>
-                    <p class="testimonial-text">"As a Kathiywadi living in Pune, this chutney brings back childhood memories of my grandmother's kitchen. The authentic taste proves they haven't compromised the recipe."</p>
-                    <div class="testimonial-author">
-                        <div class="author-info">
-                            <h4>Meera Desai</h4>
-                            <p>Pune • 8 months regular customer</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            
-            <div class="testimonial-cta">
-                <p class="cta-text">Join 1,200+ Families Who Never Miss a Batch</p>
-                <a href="#order" class="btn-primary">Reserve Your Spot This Week →</a>
-            </div>
-            
-            <!-- Visual Proof Section -->
-            <div class="visual-proof">
-                <div class="proof-grid">
-                    <div class="proof-item">
-                        <img src="assets/images/chutney on table with food.png" 
-                             alt="Fresh Chutney with Family Meal" 
-                             class="proof-image"
-                             loading="lazy">
-                        <div class="proof-caption">
-                            <span class="proof-label">Perfect with every meal</span>
-                            <p>Pairs beautifully with roti, paratha, and rice</p>
-                        </div>
-                    </div>
-                    <div class="proof-item">
-                        <img src="assets/images/chutney jar open spoon Background Removed.png" 
-                             alt="Fresh Chutney Ready to Serve" 
-                             class="proof-image"
-                             loading="lazy">
-                        <div class="proof-caption">
-                            <span class="proof-label">Made fresh every Monday</span>
-                            <p>Look at that natural color and texture</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Lead Magnet Section -->
-    <section id="lead-magnet" class="lead-magnet">
-        <div class="container">
-            <div class="lead-magnet-content">
-                <div class="lead-magnet-text">
-                    <span class="section-label">Free Guide</span>
-                    <h2>The Flavor Catalyst</h2>
-                    <p class="lead-magnet-subtitle">How Amrutbaa Chutney Is Reinventing Meals Across India & Beyond</p>
-                    <p class="lead-magnet-description">
-                        Discover the real stories behind how our chutney transforms everyday meals into culinary moments. From street food vendors in Mumbai to family dinners in London, see the 50+ unique ways Amrutbaa is being used across states and continents.
-                    </p>
-                    <ul class="lead-magnet-benefits">
-                        <li>✓ 50+ Real Usage Stories from Across India & Globally</li>
-                        <li>✓ Regional Flavor Pairings & Creative Recipes</li>
-                        <li>✓ Customer Transformation Testimonials</li>
-                        <li>✓ Exclusive Behind-the-Scenes Prep Insights</li>
-                    </ul>
-                    <a href="assets/images/Amrutbaa_The_Flavor_Catalyst.pdf" download class="btn-primary lead-magnet-btn">
-                        Download Free Guide →
-                    </a>
-                    <p class="lead-magnet-trust">No email required. Direct download.</p>
-                </div>
-                <div class="lead-magnet-visual">
-                    <div class="pdf-preview">
-                        <div class="pdf-icon">📄</div>
-                        <div class="pdf-details">
-                            <div class="pdf-title">The Flavor Catalyst</div>
-                            <div class="pdf-subtitle">50+ Usage Stories</div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Pricing Section -->
-    <section id="pricing" class="pricing">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Choose Your Batch Size</span>
-                <h2>Pricing & Packages</h2>
-                <p class="section-intro">Standard Shipping ₹59 under ₹399 • Free above ₹399</p>
-            </div>
-            
-            <div class="pricing-grid">
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>The Trial Jar</h3>
-                        <p class="pricing-subtitle">200g • Best for first-time tasters</p>
-                        <p class="best-for">Best For: First-time tasters & small households</p>
-                    </div>
-                    <div class="pricing-price">
-                        <span class="currency">₹</span>
-                        <span class="amount">199</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✓ Hand-pounded fresh every Monday</li>
-                        <li>✓ Dispatch Tuesday morning</li>
-                        <li>✓ Shelf Life: up to 2 months (refrigerated)</li>
-                        <li>🚚 Standard Shipping ₹59 (orders under ₹399)</li>
-                    </ul>
-                    <a href="#order" class="btn-pricing">Choose Trial Jar</a>
-                </div>
-
-                <div class="pricing-card featured">
-                    <div class="popular-ribbon">Most Popular</div>
-                    <div class="pricing-header">
-                        <h3>The Family Pack</h3>
-                        <p class="pricing-subtitle">500g • Best value per gram</p>
-                        <p class="best-for">Best For: Daily users (best value per gram)</p>
-                    </div>
-                    <div class="pricing-price">
-                        <span class="currency">₹</span>
-                        <span class="amount">449</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✓ Made fresh to order</li>
-                        <li>✓ Sustainable glass packaging</li>
-                        <li>✓ Dispatch Tuesday morning</li>
-                        <li>✓ <strong>FREE Shipping</strong></li>
-                    </ul>
-                    <a href="#order" class="btn-pricing primary">Choose Family Pack</a>
-                </div>
-
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>The 'Share the Love' Duo</h3>
-                        <p class="pricing-subtitle">2 x 200g • Gifting or sharing</p>
-                        <p class="best-for">Best For: Gifting or keeping one, sharing one</p>
-                    </div>
-                    <div class="pricing-price">
-                        <span class="currency">₹</span>
-                        <span class="amount">398</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✓ Two artisan jars from the Monday batch</li>
-                        <li>✓ Keep one, gift one</li>
-                        <li>✓ Dispatch Tuesday morning</li>
-                        <li>✓ <strong>FREE Shipping</strong></li>
-                    </ul>
-                    <a href="#order" class="btn-pricing">Choose Duo</a>
-                </div>
-
-                <div class="pricing-card">
-                    <div class="pricing-header">
-                        <h3>The Quarterly Stock</h3>
-                        <p class="pricing-subtitle">2 x 500g • Max savings</p>
-                        <p class="best-for">Best For: Serious garlic lovers (max savings)</p>
-                    </div>
-                    <div class="pricing-price">
-                        <span class="currency">₹</span>
-                        <span class="amount">849</span>
-                    </div>
-                    <ul class="pricing-features">
-                        <li>✓ For serious garlic lovers</li>
-                        <li>✓ Fresh, preservative-free</li>
-                        <li>✓ Dispatch Tuesday morning</li>
-                        <li>✓ <strong>FREE Shipping</strong></li>
-                    </ul>
-                    <a href="#order" class="btn-pricing">Choose Quarterly Stock</a>
-                </div>
+                <h1>Amrut Baa</h1>
+                <div class="subtitle">90+ Years of Tradition</div>
+                <p>From the heart of <span class="highlight">Kathiyawad</span>, a recipe passed down through generations. Our grandmother's authentic Chilly Garlic Chutney, now ready to grace your table.</p>
+                <p style="font-size: 1rem; color: var(--golden-light);">✦ Fresh preparation • ✦ Traditional recipe • ✦ Limited batches</p>
             </div>
 
-            <div class="pricing-guarantee">
-                <div class="guarantee-badge">
-                    <span class="guarantee-icon">🛡️</span>
-                    <div class="guarantee-text">
-                        <h4>100% Freshness Guarantee</h4>
-                        <p>If you're not satisfied with the freshness, we'll refund 100% of your order—no questions asked</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Batch System Section -->
-    <section id="batch-system" class="batch-system">
-        <div class="container">
-            <div class="batch-header">
-                <span class="section-label">How It Works</span>
-                <h2>Weekly Fresh Batches</h2>
-                <p class="batch-intro">Every week, we source the freshest ingredients and prepare chutney on Monday using grandmother's traditional method. Your order is dispatched fresh on Tuesday—just like it was made in her kitchen.</p>
-            </div>
-            
-            <div class="batch-steps">
-                <div class="step">
-                    <div class="step-number">01</div>
-                    <h3>Order by Sunday</h3>
-                    <p>Place your order <strong>before Sunday 9:00 PM</strong> to be included in the next week's batch.</p>
-                </div>
+            <div class="registration-section">
+                <h2>Join Our First Official Batch</h2>
+                <p class="tagline">Register now to secure your spot. We prepare in small, fresh batches only.</p>
                 
-                <div class="step-arrow">→</div>
-                
-                <div class="step">
-                    <div class="step-number">02</div>
-                    <h3>Fresh Preparation Monday</h3>
-                    <p>We source ingredients Monday morning and prepare your chutney using the traditional method.</p>
-                </div>
-                
-                <div class="step-arrow">→</div>
-                
-                <div class="step">
-                    <div class="step-number">03</div>
-                    <h3>Dispatch Tuesday</h3>
-                    <p>Your freshly made chutney is dispatched Tuesday morning and delivered to your doorstep.</p>
-                </div>
-            </div>
-            
-            <div class="batch-notice">
-                <strong>Why Weekly Batches?</strong> This isn't about limiting orders—it's about preserving tradition. Fresh ingredients, traditional preparation, and authentic flavor can't be rushed. Each Monday, we honor grandmother's 90-year method by preparing only what's ordered.
-            </div>
-        </div>
-    </section>
-
-    <!-- FAQ Section -->
-    <section id="faq" class="faq">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-label">Common Questions</span>
-                <h2>Everything You Need to Know</h2>
-            </div>
-            
-            <div class="faq-grid">
-                <div class="faq-item">
-                    <h3 class="faq-question">Why can't I order anytime?</h3>
-                    <p class="faq-answer">This isn't about creating artificial scarcity—it's about authenticity. Grandmother's recipe requires fresh ingredients sourced Monday morning and traditional preparation methods that take hours. We refuse to compromise with preservatives or shortcuts. Weekly batches ensure you get the real thing, not a mass-produced imitation.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3 class="faq-question">How long does the chutney stay fresh?</h3>
-                    <p class="faq-answer">Made without preservatives, our chutney stays fresh for up to 2 months when refrigerated and handled hygienically. The authentic taste comes from freshness—factory chutneys last longer due to chemicals we refuse to use.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3 class="faq-question">What if I miss the Sunday deadline?</h3>
-                    <p class="faq-answer">Your order will automatically be included in the following week's batch. We prepare on Monday and dispatch on Tuesday—missing the deadline simply means waiting one additional week for your fresh batch.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3 class="faq-question">Is shipping really free?</h3>
-                    <p class="faq-answer">Yes! Orders above ₹399 get free shipping anywhere in India. Orders under ₹399 have a flat ₹59 shipping charge. This makes the Family Pack and all multi-pack bundles eligible for free shipping.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3 class="faq-question">What makes this different from store-bought?</h3>
-                    <p class="faq-answer">Everything. Factory chutneys use preservatives, artificial colors, old ingredients, and industrial methods. We source fresh ingredients Monday morning, prepare in small batches using a 90-year-old traditional method, and dispatch while fresh. The taste difference is night and day.</p>
-                </div>
-                
-                <div class="faq-item">
-                    <h3 class="faq-question">What's your guarantee?</h3>
-                    <p class="faq-answer">100% Freshness Guarantee. If you're not completely satisfied with the freshness or taste, we'll refund your entire order—no questions asked. We're that confident in our quality.</p>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Order/Registration Section -->
-    <section id="order" class="order">
-        <div class="container">
-            <div class="order-layout">
-                <div class="order-left">
-                    <span class="section-label">This Week's Batch</span>
-                    <h2>Order Before the Weekly Deadline</h2>
-                    
-                    <div class="countdown-box">
-                        <div class="countdown-label">Time Until Deadline</div>
-                        <div id="countdown-timer" class="countdown-timer">
-                            <div class="countdown-segment">
-                                <span class="countdown-number" id="days">0</span>
-                                <span class="countdown-text">Days</span>
-                            </div>
-                            <div class="countdown-segment">
-                                <span class="countdown-number" id="hours">00</span>
-                                <span class="countdown-text">Hours</span>
-                            </div>
-                            <div class="countdown-segment">
-                                <span class="countdown-number" id="minutes">00</span>
-                                <span class="countdown-text">Minutes</span>
-                            </div>
-                            <div class="countdown-segment">
-                                <span class="countdown-number" id="seconds">00</span>
-                                <span class="countdown-text">Seconds</span>
-                            </div>
-                        </div>
-                        <div class="deadline-message">Orders close <strong>Sunday at 9:00 PM</strong></div>
-                    </div>
-                    
-                    <div class="next-batch-info">
-                        <div class="batch-detail">
-                            <span class="detail-label">Preparation Day</span>
-                            <span class="detail-value">Every Monday</span>
-                        </div>
-                        <div class="batch-detail">
-                            <span class="detail-label">Dispatch Day</span>
-                            <span class="detail-value">Every Tuesday morning</span>
-                        </div>
-                        <div class="batch-detail">
-                            <span class="detail-label">Order Limit</span>
-                            <span class="detail-value freshness-badge">None—Fresh for All</span>
-                        </div>
-                    </div>
-                    
-                    <div class="why-order">
-                        <h4>The Weekly Batch Guarantee:</h4>
-                        <ul>
-                            <li>✓ Ingredients sourced Monday morning</li>
-                            <li>✓ Prepared fresh using 90-year method</li>
-                            <li>✓ Dispatched Tuesday, delivered within days</li>
-                            <li>✓ No rushed orders, no compromise on tradition</li>
-                        </ul>
-                    </div>
-                </div>
-                
-                <div class="order-right">
-                    <!-- Step 1: Phone Only -->
-                    <div id="form-step-1" class="order-form">
-                        <div class="form-header">
-                            <span class="form-badge">🔒 Secure Registration</span>
-                            <h3>Reserve Your Spot in 10 Seconds</h3>
-                            <p class="form-subtitle">Just enter your phone number to get started</p>
-                        </div>
-                        
-                        <div class="guarantee-mini">
-                            <span>✓ 100% Freshness Guarantee</span>
-                            <span>✓ Free Shipping Above ₹399</span>
-                            <span>✓ No Hidden Charges</span>
-                        </div>
-                        
-                        <form id="quick-form" class="quick-form">
-                            <div class="form-group">
-                                <label for="quick-phone">Phone Number *</label>
-                                <input type="tel" 
-                                       id="quick-phone" 
-                                       name="phone" 
-                                       required 
-                                       placeholder="+91 98765 43210"
-                                       pattern="[0-9+\s\-]+"
-                                       class="phone-input-large">
-                            </div>
-                            
-                            <button type="submit" class="btn-submit-large">
-                                Reserve My Batch Now →
-                            </button>
-                        </form>
-                        
-                        <div class="trust-indicators">
-                            <div class="trust-item">
-                                <span class="trust-icon">⭐</span>
-                                <span class="trust-text">4.9/5 Rating</span>
-                            </div>
-                            <div class="trust-item">
-                                <span class="trust-icon">👥</span>
-                                <span class="trust-text">1,200+ Families</span>
-                            </div>
-                            <div class="trust-item">
-                                <span class="trust-icon">🛡️</span>
-                                <span class="trust-text">Money-Back Guarantee</span>
-                            </div>
-                        </div>
-                        
-                        <p class="form-note">We'll call you within 2 hours to confirm your order details</p>
-                    </div>
-                    
-                    <!-- Step 2: Full Details (Hidden Initially) -->
-                    <form id="registration-form" class="order-form" style="display: none;">
-                        <h3>Complete Your Order</h3>
-                        <p class="form-subtitle">Just a few more details to confirm your delivery</p>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="name">Full Name *</label>
-                                <input type="text" id="name" name="name" required placeholder="Enter your name">
-                            </div>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" required placeholder="+91 6354 306783" readonly>
-                            </div>
-                            
-                            <div class="form-group">
-                                <label for="email">Email (Optional)</label>
-                                <input type="email" id="email" name="email" placeholder="your@email.com">
-                            </div>
-                        </div>
-                        
+                <form id="registrationForm">
+                    <div class="form-row">
                         <div class="form-group">
-                            <label for="address">Delivery Address *</label>
-                            <textarea id="address" name="address" required rows="3" placeholder="Enter complete address with pincode"></textarea>
+                            <label for="name">Your Name *</label>
+                            <input 
+                                type="text" 
+                                id="name" 
+                                name="name" 
+                                placeholder="Enter your name"
+                                required
+                            >
                         </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="package">Choose Package *</label>
-                                <select id="package" name="package" required>
-                                    <option value="">Select Package</option>
-                                    <option value="trial">The Trial Jar (200g) — ₹199</option>
-                                    <option value="family" selected>The Family Pack (500g) — ₹449 ⭐ FREE SHIPPING</option>
-                                    <option value="duo">The 'Share the Love' Duo (2 x 200g) — ₹398 ⭐ FREE SHIPPING</option>
-                                    <option value="quarterly">The Quarterly Stock (2 x 500g) — ₹849 ⭐ FREE SHIPPING</option>
-                                </select>
-                            </div>
+                        <div class="form-group">
+                            <label for="email">Email Address *</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email" 
+                                placeholder="Enter your email"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                            <div class="form-group">
-                                <label for="packaging">Packaging</label>
-                                <select id="packaging" name="packaging" disabled>
-                                    <option value="jar" selected>Glass Jar (only)</option>
-                                </select>
-                            </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone" 
+                                placeholder="Enter your phone number"
+                                required
+                            >
                         </div>
+                        <div class="form-group">
+                            <label for="quantity">Quantity (Units) *</label>
+                            <input 
+                                type="number" 
+                                id="quantity" 
+                                name="quantity" 
+                                placeholder="How many units?"
+                                min="1"
+                                required
+                            >
+                        </div>
+                    </div>
 
-                        <div id="order-summary" class="order-summary" aria-live="polite" style="display:none">
-                            <div class="summary-row"><span>Subtotal</span><span class="summary-subtotal">₹0</span></div>
-                            <div class="summary-row"><span>Shipping</span><span class="summary-shipping">₹0</span></div>
-                            <div class="summary-row total"><span>Total</span><span class="summary-total">₹0</span></div>
-                            <p class="summary-note">Standard Shipping ₹59 under ₹399 • Free above ₹399</p>
-                        </div>
-                        
-                        <div class="form-checkbox">
-                            <input type="checkbox" id="terms" name="terms" required>
-                            <label for="terms">I understand orders must be placed by Sunday 9:00 PM for Monday preparation and Tuesday morning dispatch *</label>
-                        </div>
-                        
-                        <button type="submit" class="btn-submit">Confirm My Order →</button>
-                        
-                        <p class="form-note">🔒 Secure payment link will be sent via SMS after confirmation</p>
-                    </form>
-                </div>
+                    <div class="form-group">
+                        <label for="address">Delivery Address *</label>
+                        <textarea 
+                            id="address" 
+                            name="address" 
+                            placeholder="Enter your complete delivery address"
+                            rows="3"
+                            required
+                        ></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Register for First Batch</button>
+                    <div class="success-message" id="successMessage">
+                        ✓ Thank you! We've received your registration. You'll hear from us soon!
+                    </div>
+                </form>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
-    <footer class="footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-brand">
-                    <h3>
-                        <span class="gujarati-text">અમૃત બા</span>
-                        <span>Amrut Baa</span>
-                    </h3>
-                    <p>Preserving 90+ years of Kathiyawad tradition, one batch at a time.</p>
-                </div>
-                
-                <div class="footer-contact">
-                    <h4>Get in Touch</h4>
-                    <p>Email: info@amrutbaa.com</p>
-                    <p>Phone: +91 6354 306783</p>
-                </div>
-            </div>
-            
-            <div class="footer-bottom">
-                <p>&copy; 2025 Amrut Baa. All rights reserved.</p>
-                <p>Made with ❤️ in Kathiyawad</p>
-            </div>
-        </div>
-    </footer>
-
-    <!-- Scripts -->
     <script>
-        // Hide loading screen when page is fully loaded
-        window.addEventListener('load', function() {
-            const loadingScreen = document.getElementById('loading-screen');
-            setTimeout(() => {
-                loadingScreen.classList.add('hidden');
-                setTimeout(() => loadingScreen.remove(), 500);
-            }, 500);
+        const form = document.getElementById('registrationForm');
+        const successMessage = document.getElementById('successMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            // Collect form data
+            const formData = new FormData(form);
+            const data = {
+                name: formData.get('name'),
+                email: formData.get('email'),
+                phone: formData.get('phone'),
+                quantity: formData.get('quantity'),
+                address: formData.get('address'),
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                // Send to n8n webhook
+                const response = await fetch('https://n8n.prinkit.cloud/webhook-test/form_fill', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                if (response.ok) {
+                    // Show success message
+                    successMessage.classList.add('show');
+                    form.reset();
+                    
+                    // Hide success message after 5 seconds
+                    setTimeout(() => {
+                        successMessage.classList.remove('show');
+                    }, 5000);
+                } else {
+                    alert('There was an issue with your registration. Please try again.');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Unable to submit registration. Please try again.');
+            }
         });
     </script>
-    <script src="scripts/main.js" defer></script>
 </body>
 </html>
