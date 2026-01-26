@@ -370,199 +370,440 @@
 
         /* Modal CSS injected by modal-component.js */
 
-        /* VISUAL STORY SECTION */
-        .visual-story {
+        /* BATCH JOURNEY - Scrollytelling band */
+        .batch-journey {
             position: relative;
-            background: linear-gradient(180deg, var(--cream) 0%, #FFFBF5 50%, var(--cream) 100%);
-            padding: 0;
+            background: radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
+                        radial-gradient(circle at 85% 10%, rgba(74, 0, 0, 0.08) 0%, transparent 40%),
+                        linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FFF9F0 100%);
+            padding: 4.5rem 0 6rem;
             overflow: hidden;
         }
 
-        .story-item {
-            position: relative;
-            min-height: 85vh;
-            display: flex;
-            align-items: center;
-            padding: 4rem 2rem;
-            opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), 
-                        transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        .story-item.visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .story-item:nth-child(even) {
-            background: rgba(212, 175, 55, 0.03);
-        }
-
-        .story-container {
-            max-width: 1400px;
+        .journey-shell {
+            max-width: 1200px;
             margin: 0 auto;
             display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: 240px 1fr;
+            gap: 2.5rem;
+            padding: 0 2rem;
+        }
+
+        .journey-rail {
+            position: sticky;
+            top: 80px;
+            align-self: start;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            padding: 1rem;
+            background: rgba(255, 255, 255, 0.75);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 18px;
+            backdrop-filter: blur(12px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            transition: box-shadow 0.25s ease, transform 0.25s ease;
+        }
+
+        .rail-heading {
+            font-family: var(--font-display);
+            font-size: 1.1rem;
+            color: var(--maroon);
+            margin-bottom: 0.25rem;
+            letter-spacing: -0.2px;
+        }
+
+        .rail-sub {
+            font-size: 0.95rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .rail-list {
+            margin-top: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .rail-item {
+            text-align: left;
+            padding: 0.9rem 1rem;
+            border-radius: 12px;
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            background: rgba(255, 255, 255, 0.9);
+            color: var(--charcoal);
+            font-weight: 600;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .rail-item small {
+            font-weight: 500;
+            color: var(--gray);
+        }
+
+        .rail-item.is-active {
+            border-color: var(--golden);
+            box-shadow: 0 10px 24px rgba(201, 169, 97, 0.2);
+            transform: translateX(4px);
+            background: linear-gradient(135deg, rgba(201, 169, 97, 0.18) 0%, rgba(255, 255, 255, 0.95) 100%);
+        }
+
+        /* Subtle lift when journey is active */
+        .journey-rail.is-floating {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+        }
+
+        .journey-viewport {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .journey-chip-row {
+            display: flex;
+            gap: 0.8rem;
+            flex-wrap: wrap;
             align-items: center;
         }
 
-        .story-item:nth-child(even) .story-container {
-            direction: rtl;
+        .journey-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 0.9rem;
+            border-radius: 999px;
+            background: rgba(74, 0, 0, 0.08);
+            color: var(--maroon);
+            font-weight: 700;
+            font-size: 0.9rem;
+            letter-spacing: 0.3px;
         }
 
-        .story-item:nth-child(even) .story-content {
-            direction: ltr;
+        .journey-chip .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--golden);
+            box-shadow: 0 0 0 4px rgba(201, 169, 97, 0.2);
         }
 
-        .story-image {
+        .journey-beat {
             position: relative;
-            border-radius: 20px;
+            min-height: 80vh;
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 2rem;
+            padding: 2.5rem;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.8);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
             overflow: hidden;
-            box-shadow: 0 30px 70px rgba(0, 0, 0, 0.15);
-            transition: transform 0.6s ease, box-shadow 0.6s ease;
+            transform: translateY(30px);
+            opacity: 0.4;
+            transition: transform 0.7s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.7s ease;
         }
 
-        .story-image:hover {
-            transform: translateY(-10px) scale(1.02);
-            box-shadow: 0 40px 90px rgba(0, 0, 0, 0.2);
+        .journey-beat.is-active {
+            transform: translateY(0);
+            opacity: 1;
+            border-color: var(--golden);
+            box-shadow: 0 30px 80px rgba(201, 169, 97, 0.25);
         }
 
-        .story-image img {
+        .beat-media {
+            position: relative;
+            border-radius: 18px;
+            overflow: hidden;
+            background: linear-gradient(135deg, rgba(74, 0, 0, 0.15), rgba(201, 169, 97, 0.1));
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3), 0 20px 60px rgba(0,0,0,0.12);
+        }
+
+        .beat-media img {
             width: 100%;
             height: 100%;
             object-fit: cover;
             display: block;
-            aspect-ratio: 4/5;
+            transform: scale(1.02);
+            transition: transform 0.8s ease;
         }
 
-        .story-image::after {
-            content: '';
+        .journey-beat.is-active .beat-media img {
+            transform: scale(1.06);
+        }
+
+        .media-overlay {
             position: absolute;
             inset: 0;
-            background: linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.1) 100%);
+            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12) 0%, transparent 35%),
+                        linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.2) 100%);
             pointer-events: none;
         }
 
-        .story-content {
-            padding: 2rem;
+        .grain {
+            position: absolute;
+            inset: -40%;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.08"/></svg>');
+            opacity: 0.7;
+            mix-blend-mode: multiply;
+            pointer-events: none;
         }
 
-        .story-label {
-            font-family: var(--font-body);
-            font-size: 0.75rem;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            color: var(--golden);
-            font-weight: 700;
-            margin-bottom: 1rem;
-            display: inline-block;
-            padding: 0.5rem 1.2rem;
-            background: rgba(212, 175, 55, 0.1);
-            border-radius: 50px;
-        }
-
-        .story-heading {
-            font-family: var(--font-display);
-            font-size: 2.8rem;
-            line-height: 1.2;
-            color: var(--maroon);
-            margin-bottom: 1.5rem;
-            font-weight: 700;
-            letter-spacing: -1px;
-        }
-
-        .story-description {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: var(--charcoal);
-            margin-bottom: 2rem;
-            opacity: 0.9;
-        }
-
-        .story-features {
+        .beat-content {
             display: flex;
             flex-direction: column;
-            gap: 1rem;
+            gap: 1.2rem;
+            position: relative;
+            z-index: 2;
         }
 
-        .story-feature {
-            display: flex;
+        .beat-tag {
+            display: inline-flex;
             align-items: center;
-            gap: 1rem;
-            font-size: 1rem;
+            gap: 0.6rem;
+            padding: 0.55rem 1.1rem;
+            background: rgba(201, 169, 97, 0.15);
+            color: var(--maroon);
+            border-radius: 999px;
+            font-weight: 700;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            font-size: 0.8rem;
+        }
+
+        .beat-title {
+            font-family: var(--font-display);
+            font-size: 2.6rem;
+            color: var(--maroon);
+            line-height: 1.15;
+            letter-spacing: -0.8px;
+        }
+
+        .beat-copy {
+            font-size: 1.1rem;
             color: var(--charcoal);
-            font-weight: 500;
+            line-height: 1.75;
+            max-width: 560px;
         }
 
-        .story-feature-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+        .beat-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .meta-pill {
+            padding: 0.65rem 0.85rem;
+            border-radius: 12px;
+            background: rgba(74, 0, 0, 0.06);
+            color: var(--charcoal);
+            font-weight: 600;
+            font-size: 0.95rem;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+        }
+
+        .flavor-wheel {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 0.75rem;
+            margin-top: 0.5rem;
+        }
+
+        .flavor-chip {
+            padding: 0.85rem 1rem;
+            border-radius: 14px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(201, 169, 97, 0.12));
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+            font-weight: 600;
+            color: var(--charcoal);
+            position: relative;
+        }
+
+        .flavor-chip span {
+            display: block;
+            color: var(--gray);
+            font-size: 0.9rem;
+            margin-top: 0.35rem;
+        }
+
+        .batch-timeline {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 0.85rem;
+            margin-top: 0.5rem;
+        }
+
+        .timeline-card {
+            background: rgba(255,255,255,0.95);
+            border: 1px dashed rgba(212, 175, 55, 0.6);
+            border-radius: 14px;
+            padding: 0.85rem 1rem;
+            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+        }
+
+        .timeline-card h4 {
+            font-size: 0.95rem;
+            color: var(--maroon);
+            margin-bottom: 0.3rem;
+            letter-spacing: 0.2px;
+        }
+
+        .timeline-card p {
+            font-size: 0.9rem;
+            color: var(--gray);
+            line-height: 1.5;
+        }
+
+        .journey-cta-row {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            flex-shrink: 0;
-            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+            gap: 1rem;
+            flex-wrap: wrap;
+            margin-top: 0.75rem;
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 1024px) {
-            .story-container {
+        .journey-cta {
+            background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+            color: var(--charcoal);
+            border: 2px solid var(--golden);
+            padding: 0.95rem 1.8rem;
+            border-radius: 12px;
+            font-weight: 800;
+            cursor: pointer;
+            box-shadow: 0 12px 32px rgba(212, 175, 55, 0.35);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+        }
+
+        .journey-cta:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.45);
+        }
+
+        .journey-note {
+            font-size: 0.95rem;
+            color: var(--gray);
+        }
+
+        .delivery-card {
+            background: linear-gradient(135deg, rgba(107, 28, 35, 0.12), rgba(201, 169, 97, 0.12));
+            border: 1px solid rgba(212, 175, 55, 0.3);
+            border-radius: 14px;
+            padding: 1rem 1.1rem;
+            display: grid;
+            gap: 0.4rem;
+            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+        }
+
+        .delivery-card strong {
+            color: var(--maroon);
+        }
+
+        @media (max-width: 1100px) {
+            .journey-shell {
                 grid-template-columns: 1fr;
-                gap: 2.5rem;
             }
 
-            .story-item {
+            .journey-rail {
+                position: relative;
+                top: 0;
+            }
+        }
+
+        @media (max-width: 900px) {
+            .journey-beat {
+                grid-template-columns: 1fr;
+                padding: 1.75rem;
                 min-height: auto;
-                padding: 3rem 1.5rem;
             }
 
-            .story-item:nth-child(even) .story-container {
-                direction: ltr;
+            .beat-title {
+                font-size: 2.1rem;
             }
 
-            .story-heading {
-                font-size: 2.2rem;
+            .beat-copy {
+                font-size: 1rem;
             }
 
-            .story-description {
-                font-size: 1.05rem;
+            .journey-chip-row {
+                margin-top: 0.5rem;
             }
-
-            .story-image img {
-                aspect-ratio: 16/11;
-            }
+            /* Mobile progress bar visible on small screens */
+            .journey-progress { display: flex; }
         }
 
         @media (max-width: 768px) {
-            .story-item {
-                padding: 2.5rem 1.2rem;
-            }
+            .journey-shell { padding: 0 1.25rem; }
+            .journey-rail { padding: 0.75rem; }
+            .rail-item { font-size: 0.9rem; }
+            .journey-beat { padding: 1.5rem; }
+            .journey-chip { width: 100%; justify-content: center; }
+        }
 
-            .story-content {
-                padding: 1rem;
-            }
-
-            .story-heading {
-                font-size: 1.9rem;
-            }
-
-            .story-description {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .story-image {
-                border-radius: 16px;
-            }
-
-            .story-image img {
-                aspect-ratio: 4/5;
-            }
+        /* Mobile journey progress bar */
+        .journey-progress {
+            display: none;
+            position: sticky;
+            top: 0;
+            z-index: 5;
+            background: rgba(255,255,255,0.9);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            border-radius: 12px;
+            padding: 0.6rem 0.9rem;
+            backdrop-filter: blur(8px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+        .progress-bar {
+            flex: 1;
+            height: 6px;
+            border-radius: 999px;
+            background: rgba(74,0,0,0.08);
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--golden), #E0BD4D);
+            border-radius: 999px;
+            transition: width 0.35s ease;
+        }
+        .progress-dots {
+            display: flex;
+            gap: 0.4rem;
+            margin-left: 0.75rem;
+        }
+        .progress-dots .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: rgba(74,0,0,0.12);
+            transition: background 0.2s ease, transform 0.2s ease;
+        }
+        .progress-dots .dot.is-active {
+            background: var(--golden);
+            transform: scale(1.15);
+            box-shadow: 0 0 0 3px rgba(201,169,97,0.25);
+        }
+        .progress-label {
+            font-size: 0.85rem;
+            color: var(--gray);
+            font-weight: 600;
+            margin-left: 0.75rem;
+            white-space: nowrap;
         }
 
         /* RESPONSIVE */
@@ -718,100 +959,133 @@
         </div>
     </section>
 
-    <!-- Visual Story Section -->
-    <section class="visual-story">
-        <!-- Story 1: The Experience -->
-        <div class="story-item" data-story="1">
-            <div class="story-container">
-                <div class="story-image">
-                    <img src="assets/images/chutney on table with food.png" alt="Amrutbaa Ni Chutney served with traditional Indian food" loading="lazy">
+    <!-- Batch Journey Section -->
+    <section class="batch-journey" id="batch-journey">
+        <div class="journey-shell">
+            <aside class="journey-rail" aria-label="Batch journey steps">
+                <div class="rail-heading">Batch Journey</div>
+                <div class="rail-sub">Scroll or tap through the four beats that make our chutney sacred.</div>
+                <div class="rail-list">
+                    <button class="rail-item is-active" data-target="heritage">Heritage <small>90+ years</small></button>
+                    <button class="rail-item" data-target="ingredients">Ingredients <small>Hand-picked</small></button>
+                    <button class="rail-item" data-target="batch">Batch Rhythm <small>Weekly</small></button>
+                    <button class="rail-item" data-target="register">Register & Delivery <small>Doorstep</small></button>
                 </div>
-                <div class="story-content">
-                    <span class="story-label">The Experience</span>
-                    <h2 class="story-heading">Not Just a Condiment.<br>A Family Tradition.</h2>
-                    <p class="story-description">
-                        One spoonful transforms your entire meal. The heat from red chillies, the punch of garlic, 
-                        and the complexity of traditional spices—all ground by hand to preserve their soul.
-                    </p>
-                    <div class="story-features">
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🌶️</span>
-                            <span>Perfect heat balance—bold but never overpowering</span>
-                        </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🧄</span>
-                            <span>Fresh garlic punch that cuts through any dish</span>
-                        </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">✨</span>
-                            <span>Pairs with rotis, rice, dosas, sandwiches, anything</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+            </aside>
 
-        <!-- Story 2: The Craft -->
-        <div class="story-item" data-story="2">
-            <div class="story-container">
-                <div class="story-image">
-                    <img src="assets/images/chutney-ingredients.jpg" alt="Fresh ingredients for Amrutbaa's traditional chutney recipe" loading="lazy">
+            <div class="journey-viewport">
+                <div class="journey-chip-row">
+                    <span class="journey-chip"><span class="dot"></span> Prepared in scheduled batches only</span>
+                    <span class="journey-chip"><span class="dot"></span> Register 1 day before</span>
+                    <span class="journey-chip" id="journeyCountdown">Next batch closes in —</span>
                 </div>
-                <div class="story-content">
-                    <span class="story-label">The Ingredients</span>
-                    <h2 class="story-heading">Sourced Right.<br>Ground with Soul.</h2>
-                    <p class="story-description">
-                        Kathiyawad's sun-kissed garlic. Hand-picked red chillies. Rock salt from ancient mines. 
-                        Coriander and cumin seeds toasted to perfection. Every ingredient chosen like Amrutbaa 
-                        would—by touch, smell, and decades of knowing what's right.
-                    </p>
-                    <div class="story-features">
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🌾</span>
-                            <span>Sourced from trusted farmers, never middlemen</span>
-                        </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">⚖️</span>
-                            <span>Traditional mortar & pestle for complex flavors</span>
-                        </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🔥</span>
-                            <span>Spices toasted fresh for each batch</span>
-                        </div>
+                <!-- Mobile progress bar -->
+                <div class="journey-progress" aria-label="Journey progress">
+                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="progress-dots" id="progressDots" aria-hidden="true">
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
+                        <span class="dot"></span>
                     </div>
+                    <div class="progress-label" id="progressLabel">Step 1 of 4</div>
                 </div>
-            </div>
-        </div>
 
-        <!-- Story 3: The Heritage -->
-        <div class="story-item" data-story="3">
-            <div class="story-container">
-                <div class="story-image">
-                    <img src="assets/images/chutney-with-dal.jpg" alt="Amrutbaa's chutney elevating traditional dal" loading="lazy">
-                </div>
-                <div class="story-content">
-                    <span class="story-label">The Magic</span>
-                    <h2 class="story-heading">One Spoonful.<br>Everything Changes.</h2>
-                    <p class="story-description">
-                        That moment when a simple dal becomes extraordinary. When your everyday meal suddenly 
-                        tastes like home. This is what Amrutbaa made for 90 years—not just flavor, but memories. 
-                        Now it's your turn to taste what love actually feels like.
-                    </p>
-                    <div class="story-features">
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🥘</span>
-                            <span>Transforms dal, rice, rotis instantly</span>
+                <article class="journey-beat is-active" id="beat-heritage" data-beat="heritage">
+                    <div class="beat-media">
+                        <img src="assets/images/chutney on table with food.png" alt="Amrutbaa Ni Chutney served with family meal" loading="lazy">
+                        <div class="media-overlay"></div>
+                        <div class="grain"></div>
+                    </div>
+                    <div class="beat-content">
+                        <span class="beat-tag">Heritage</span>
+                        <h2 class="beat-title">A Kathiyawad legacy passed hand-to-hand.</h2>
+                        <p class="beat-copy">Four generations, one recipe. The same mortar-and-pestle rhythm Amrutbaa used is the heartbeat of every jar today. Each batch is a promise: warmth, spice, garlic bite, and that comforting hug you remember.</p>
+                        <div class="beat-meta">
+                            <span class="meta-pill">90+ years of tradition</span>
+                            <span class="meta-pill">Zero preservatives</span>
+                            <span class="meta-pill">Family-kept process</span>
                         </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">🌟</span>
-                            <span>Secret weapon in your kitchen</span>
-                        </div>
-                        <div class="story-feature">
-                            <span class="story-feature-icon">❤️</span>
-                            <span>Makes every meal feel special</span>
+                        <div class="journey-cta-row">
+                            <button class="journey-cta" id="journeyCtaHeritage">Reserve My Jar</button>
+                            <span class="journey-note">Taste the story that started in Kathiyawad.</span>
                         </div>
                     </div>
-                </div>
+                </article>
+
+                <article class="journey-beat" id="beat-ingredients" data-beat="ingredients">
+                    <div class="beat-media">
+                        <img src="assets/images/chutney-ingredients.jpg" alt="Fresh garlic, chillies, and spices for chutney" loading="lazy">
+                        <div class="media-overlay"></div>
+                        <div class="grain"></div>
+                    </div>
+                    <div class="beat-content">
+                        <span class="beat-tag">Ingredients</span>
+                        <h2 class="beat-title">Sourced by feel. Ground with soul.</h2>
+                        <p class="beat-copy">Sun-kissed garlic from Kathiyawad, hand-picked red chillies, ancient rock salt, and spices toasted just before grinding. Every ingredient is chosen the way Amrutbaa did—by touch, aroma, and decades of intuition.</p>
+                        <div class="flavor-wheel">
+                            <div class="flavor-chip">Heat balance<span>Bold but never overpowering</span></div>
+                            <div class="flavor-chip">Garlic punch<span>Cuts through any dish</span></div>
+                            <div class="flavor-chip">Toasted spices<span>Layered, smoky warmth</span></div>
+                            <div class="flavor-chip">Rock salt<span>Mineral depth, no fillers</span></div>
+                        </div>
+                        <div class="journey-cta-row">
+                            <button class="journey-cta" id="journeyCtaIngredients">I want this flavour</button>
+                            <span class="journey-note">Small batches keep the spices alive.</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="journey-beat" id="beat-batch" data-beat="batch">
+                    <div class="beat-media">
+                        <img src="assets/images/chutney-with-dal.jpg" alt="Chutney served with comforting dal" loading="lazy">
+                        <div class="media-overlay"></div>
+                        <div class="grain"></div>
+                    </div>
+                    <div class="beat-content">
+                        <span class="beat-tag">Batch Rhythm</span>
+                        <h2 class="beat-title">Prepared weekly. Never on-demand.</h2>
+                        <p class="beat-copy">We prepare in sacred weekly batches to keep flavour peak and waste zero. Register at least a day before the batch date. When the countdown hits zero, the kitchen closes until the next cycle.</p>
+                        <div class="batch-timeline">
+                            <div class="timeline-card"><h4>Sunday 9:00 PM</h4><p>Registrations close. Ingredients are locked.</p></div>
+                            <div class="timeline-card"><h4>Monday</h4><p>Garlic peeled, spices toasted, chutney ground by hand.</p></div>
+                            <div class="timeline-card"><h4>Tuesday</h4><p>Fresh jars sealed and dispatched to your city.</p></div>
+                            <div class="timeline-card"><h4>Wed–Fri</h4><p>Delivered to your doorstep, still vibrant.</p></div>
+                        </div>
+                        <div class="journey-cta-row">
+                            <button class="journey-cta" id="journeyCtaBatch">Get on this batch</button>
+                            <span class="journey-note">Missed it? You’re first in line for the next.</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="journey-beat" id="beat-register" data-beat="register">
+                    <div class="beat-media">
+                        <div class="delivery-card">
+                            <strong>Register now →</strong>
+                            <span>Share your name, contact, quantity.</span>
+                            <span>We confirm within 24 hrs.</span>
+                            <span>Fresh jars leave the kitchen in the very next batch.</span>
+                            <span>Delivered to your doorstep.</span>
+                        </div>
+                        <div class="media-overlay"></div>
+                        <div class="grain"></div>
+                    </div>
+                    <div class="beat-content">
+                        <span class="beat-tag">Register & Delivery</span>
+                        <h2 class="beat-title">Reserve a spot. We handle the rest.</h2>
+                        <p class="beat-copy">Your slot is a promise. Tell us how many jars you need; we align you to the freshest possible batch and keep you updated. No marketplaces. No on-demand shortcuts. Just a direct line to Amrutbaa’s kitchen.</p>
+                        <div class="beat-meta">
+                            <span class="meta-pill">Doorstep delivery</span>
+                            <span class="meta-pill">Batch-aligned scheduling</span>
+                            <span class="meta-pill">Human confirmation</span>
+                        </div>
+                        <div class="journey-cta-row">
+                            <button class="journey-cta" id="journeyCtaRegister">Reserve my slot</button>
+                            <span class="journey-note">Limited slots every cycle—claim yours early.</span>
+                        </div>
+                    </div>
+                </article>
             </div>
         </div>
     </section>
@@ -834,9 +1108,13 @@
         if (window.OrderModal) {
             document.getElementById('openModalBtn')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('openModalBtnSticky')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('journeyCtaHeritage')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('journeyCtaIngredients')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('journeyCtaBatch')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('journeyCtaRegister')?.addEventListener('click', window.OrderModal.open);
         }
 
-        // Timer for sticky footer countdown
+        // Timer for sticky footer countdown and journey chip
         function getNextSundayMidnight() {
             const now = new Date();
             const currentDay = now.getDay();
@@ -851,46 +1129,100 @@
 
         function updateTimer() {
             const timerDisplay = document.getElementById('timerDisplay');
-            if (!timerDisplay) return;
+            const journeyCountdown = document.getElementById('journeyCountdown');
             
             const targetTime = getNextSundayMidnight();
             const now = new Date();
             const difference = targetTime - now;
 
             if (difference > 0) {
+                const totalHours = Math.floor(difference / (1000 * 60 * 60));
                 const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
                 const minutes = Math.floor((difference / (1000 * 60)) % 60);
                 const seconds = Math.floor((difference / 1000) % 60);
                 
-                timerDisplay.textContent = 
-                    String(hours).padStart(2, '0') + ':' +
-                    String(minutes).padStart(2, '0') + ':' +
-                    String(seconds).padStart(2, '0');
+                if (timerDisplay) {
+                    timerDisplay.textContent = 
+                        String(hours).padStart(2, '0') + ':' +
+                        String(minutes).padStart(2, '0') + ':' +
+                        String(seconds).padStart(2, '0');
+                }
+
+                if (journeyCountdown) {
+                    const days = Math.floor(totalHours / 24);
+                    const hoursLeft = totalHours % 24;
+                    journeyCountdown.textContent = `Next batch closes in ${days}d ${String(hoursLeft).padStart(2, '0')}h`;
+                }
             } else {
-                timerDisplay.textContent = '00:00:00';
+                if (timerDisplay) timerDisplay.textContent = '00:00:00';
+                if (journeyCountdown) journeyCountdown.textContent = 'Current batch closing now';
             }
         }
 
         updateTimer();
         setInterval(updateTimer, 1000);
 
-        // Scroll-triggered animations for story section
-        const observerOptions = {
-            threshold: 0.2,
-            rootMargin: '0px 0px -100px 0px'
-        };
+        // Journey scrollytelling interactions
+        const railItems = Array.from(document.querySelectorAll('.rail-item'));
+        const beats = Array.from(document.querySelectorAll('.journey-beat'));
+        const rail = document.querySelector('.journey-rail');
+        const progressFill = document.getElementById('progressFill');
+        const progressDots = Array.from(document.querySelectorAll('#progressDots .dot'));
+        const progressLabel = document.getElementById('progressLabel');
 
-        const storyObserver = new IntersectionObserver((entries) => {
+        // Ensure rail has subtle lift from the start
+        if (rail) rail.classList.add('is-floating');
+
+        function setActiveBeat(beatId) {
+            beats.forEach(beat => {
+                beat.classList.toggle('is-active', beat.dataset.beat === beatId);
+            });
+            railItems.forEach(item => {
+                item.classList.toggle('is-active', item.dataset.target === beatId);
+            });
+            // Floating lift while journey active
+            if (rail) rail.classList.add('is-floating');
+            // Update mobile progress
+            updateProgress();
+        }
+
+        const beatObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
-                    entry.target.classList.add('visible');
+                    setActiveBeat(entry.target.dataset.beat);
                 }
             });
-        }, observerOptions);
-
-        document.querySelectorAll('.story-item').forEach(item => {
-            storyObserver.observe(item);
+        }, {
+            threshold: 0.55,
+            rootMargin: '0px 0px -10% 0px'
         });
+
+        beats.forEach(beat => beatObserver.observe(beat));
+
+        railItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const target = document.getElementById(`beat-${item.dataset.target}`);
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }
+            });
+        });
+
+        function updateProgress() {
+            const activeIndex = beats.findIndex(b => b.classList.contains('is-active'));
+            const total = beats.length;
+            const clamped = activeIndex >= 0 ? activeIndex : 0;
+            const pct = ((clamped + 1) / total) * 100;
+            if (progressFill) progressFill.style.width = pct + '%';
+            if (progressLabel) progressLabel.textContent = `Step ${clamped + 1} of ${total}`;
+            if (progressDots.length) {
+                progressDots.forEach((dot, i) => {
+                    dot.classList.toggle('is-active', i <= clamped);
+                });
+            }
+        }
+        // Initialize progress state
+        updateProgress();
     </script>
     <footer class="site-footer">
         <div class="container">
