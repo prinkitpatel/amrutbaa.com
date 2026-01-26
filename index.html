@@ -741,6 +741,8 @@
             }
             /* Mobile progress bar visible on small screens */
             .journey-progress { display: flex; }
+            /* Hide side rail on mobile to reduce clutter */
+            .journey-rail { display: none; }
         }
 
         @media (max-width: 768px) {
@@ -749,6 +751,13 @@
             .rail-item { font-size: 0.9rem; }
             .journey-beat { padding: 1.5rem; }
             .journey-chip { width: 100%; justify-content: center; }
+            .journey-chip-row {
+                margin-bottom: 1rem;
+                padding: 0.5rem;
+                background: rgba(255,255,255,0.7);
+                border-radius: 12px;
+                border: 1px solid rgba(212, 175, 55, 0.15);
+            }
         }
 
         /* Mobile journey progress bar */
@@ -756,7 +765,7 @@
             display: none;
             position: sticky;
             top: 0;
-            z-index: 5;
+            z-index: 100;
             background: rgba(255,255,255,0.9);
             border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 12px;
@@ -766,6 +775,10 @@
             align-items: center;
             justify-content: space-between;
             gap: 0.75rem;
+        }
+        /* Ensure visibility on mobile; placed after base rule */
+        @media (max-width: 900px) {
+            .journey-progress { display: flex; }
         }
         .progress-bar {
             flex: 1;
@@ -988,7 +1001,7 @@
                         <span class="dot"></span>
                         <span class="dot"></span>
                     </div>
-                    <div class="progress-label" id="progressLabel">Step 1 of 4</div>
+                    <div class="progress-label" id="progressLabel">1 of 4</div>
                 </div>
 
                 <article class="journey-beat is-active" id="beat-heritage" data-beat="heritage">
@@ -1186,6 +1199,7 @@
             updateProgress();
         }
 
+        let isMobile = window.matchMedia('(max-width: 900px)').matches;
         const beatObserver = new IntersectionObserver((entries) => {
             entries.forEach(entry => {
                 if (entry.isIntersecting) {
@@ -1193,8 +1207,8 @@
                 }
             });
         }, {
-            threshold: 0.55,
-            rootMargin: '0px 0px -10% 0px'
+            threshold: isMobile ? 0.35 : 0.55,
+            rootMargin: isMobile ? '0px 0px -20% 0px' : '0px 0px -10% 0px'
         });
 
         beats.forEach(beat => beatObserver.observe(beat));
@@ -1208,13 +1222,50 @@
             });
         });
 
+        // Mobile scroll-based fallback to keep progress in sync
+        let ticking = false;
+        function handleScrollFallback() {
+            if (!isMobile) return;
+            const viewportCenter = window.innerHeight / 2;
+            let closestBeat = null;
+            let closestDist = Infinity;
+            beats.forEach(beat => {
+                const rect = beat.getBoundingClientRect();
+                const beatCenter = rect.top + rect.height / 2;
+                const dist = Math.abs(beatCenter - viewportCenter);
+                if (dist < closestDist) {
+                    closestDist = dist;
+                    closestBeat = beat;
+                }
+            });
+            if (closestBeat) {
+                setActiveBeat(closestBeat.dataset.beat);
+            }
+            updateProgress();
+        }
+
+        window.addEventListener('scroll', () => {
+            if (!isMobile) return;
+            if (!ticking) {
+                window.requestAnimationFrame(() => {
+                    handleScrollFallback();
+                    ticking = false;
+                });
+                ticking = true;
+            }
+        }, { passive: true });
+
+        window.addEventListener('resize', () => {
+            isMobile = window.matchMedia('(max-width: 900px)').matches;
+        }, { passive: true });
+
         function updateProgress() {
             const activeIndex = beats.findIndex(b => b.classList.contains('is-active'));
             const total = beats.length;
             const clamped = activeIndex >= 0 ? activeIndex : 0;
             const pct = ((clamped + 1) / total) * 100;
             if (progressFill) progressFill.style.width = pct + '%';
-            if (progressLabel) progressLabel.textContent = `Step ${clamped + 1} of ${total}`;
+            if (progressLabel) progressLabel.textContent = `${clamped + 1} of ${total}`;
             if (progressDots.length) {
                 progressDots.forEach((dot, i) => {
                     dot.classList.toggle('is-active', i <= clamped);
