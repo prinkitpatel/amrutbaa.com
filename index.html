@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Amrut Baa - 90+ year old authentic Chilly Garlic Chutney from Kathiyawad. Register for our first official batch.">
+    <meta name="description" content="Amrutbaa Ni Cutney - 90+ year old family chutney from Kathiyawad. Limited batch. Register now, taste legacy.">
     <meta name="keywords" content="garlic chutney, kathiyawad chutney, traditional chutney, indian chutney, authentic recipe">
     
     <!-- Open Graph Meta Tags -->
-    <meta property="og:title" content="Amrut Baa - Traditional Chilly Garlic Chutney">
-    <meta property="og:description" content="90+ year old authentic recipe from Kathiyawad. Register for the first official batch.">
+    <meta property="og:title" content="Amrutbaa Ni Cutney - Traditional Chilly Garlic Chutney">
+    <meta property="og:description" content="Limited batch. 90+ years of family tradition, now at your table. Register before we're full.">
     <meta property="og:type" content="website">
     
     <!-- Theme Color -->
@@ -17,7 +17,7 @@
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
     
-    <title>Amrut Baa - First Official Batch Registration</title>
+    <title>Amrutbaa Ni Cutney - First Official Batch Registration</title>
     
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&family=Noto+Sans+Gujarati:wght@600;700&display=swap" rel="stylesheet">
@@ -237,6 +237,39 @@
             animation: slideIn 0.3s ease;
         }
 
+        /* Timer Styles */
+        .timer-container {
+            background: rgba(201, 169, 97, 0.15);
+            border: 2px solid var(--golden);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .timer-label {
+            font-size: 0.9rem;
+            color: var(--gray);
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--maroon);
+            letter-spacing: 2px;
+            font-variant-numeric: tabular-nums;
+        }
+
+        .timer-subtext {
+            font-size: 0.85rem;
+            color: var(--gray);
+            margin-top: 0.5rem;
+        }
+
         @keyframes slideIn {
             from {
                 opacity: 0;
@@ -286,15 +319,21 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content">
-                <h1>Amrut Baa</h1>
-                <div class="subtitle">90+ Years of Tradition</div>
-                <p>From the heart of <span class="highlight">Kathiyawad</span>, a recipe passed down through generations. Our grandmother's authentic Chilly Garlic Chutney, now ready to grace your table.</p>
-                <p style="font-size: 1rem; color: var(--golden-light);">✦ Fresh preparation • ✦ Traditional recipe • ✦ Limited batches</p>
+                <h1>Amrutbaa Ni Cutney</h1>
+                <div class="subtitle">Taste 90+ Years of Love & Tradition</div>
+                <p>Our grandmother's hands perfected this recipe over nine decades. The same Chilly Garlic Chutney that brought families together in <span class="highlight">Kathiyawad</span>—now prepared in small, sacred batches just for you.</p>
+                <p style="font-size: 1rem; color: var(--golden-light);">✦ Hand-prepared weekly • ✦ Never processed • ✦ Slots fill fast</p>
             </div>
 
             <div class="registration-section">
-                <h2>Join Our First Official Batch</h2>
-                <p class="tagline">Register now to secure your spot. We prepare in small, fresh batches only.</p>
+                <h2>Secure Your Jar Now</h2>
+                <p class="tagline">First batch slots are limited. Register today to guarantee your delivery. We prepare fresh every week.</p>
+                
+                <div class="timer-container">
+                    <div class="timer-label">Next Batch Preparation</div>
+                    <div class="timer-display" id="timerDisplay">--:--:--</div>
+                    <div class="timer-subtext">Time remaining until Sunday midnight</div>
+                </div>
                 
                 <form id="registrationForm">
                     <div class="form-row">
@@ -332,12 +371,12 @@
                             >
                         </div>
                         <div class="form-group">
-                            <label for="quantity">Quantity (Units) *</label>
+                            <label for="quantity">Quantity (Bottles of 250g) *</label>
                             <input 
                                 type="number" 
                                 id="quantity" 
                                 name="quantity" 
-                                placeholder="How many units?"
+                                placeholder="1 = 250g bottle"
                                 min="1"
                                 required
                             >
@@ -355,9 +394,9 @@
                         ></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn">Register for First Batch</button>
+                    <button type="submit" class="submit-btn">Yes, Reserve My Jars Now</button>
                     <div class="success-message" id="successMessage">
-                        ✓ Thank you! We've received your registration. You'll hear from us soon!
+                        ✓ Perfect! Your spot is reserved. Check your email for batch date & details.
                     </div>
                 </form>
             </div>
@@ -365,6 +404,53 @@
     </section>
 
     <script>
+        // Timer functionality
+        function getNextSundayMidnight() {
+            const now = new Date();
+            const currentDay = now.getDay();
+            
+            // Calculate days until next Sunday (0)
+            let daysUntilSunday = (7 - currentDay) % 7;
+            
+            // If it's Sunday and we've already passed midnight, count to next Sunday
+            if (daysUntilSunday === 0 && now.getHours() >= 0) {
+                daysUntilSunday = 7;
+            }
+            
+            const nextSunday = new Date(now);
+            nextSunday.setDate(nextSunday.getDate() + daysUntilSunday);
+            nextSunday.setHours(0, 0, 0, 0);
+            
+            return nextSunday;
+        }
+
+        function updateTimer() {
+            const now = new Date();
+            const targetTime = getNextSundayMidnight();
+            const difference = targetTime - now;
+
+            if (difference <= 0) {
+                // Time has passed, recalculate
+                updateTimer();
+                return;
+            }
+
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / (1000 * 60)) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+
+            const timerDisplay = document.getElementById('timerDisplay');
+            timerDisplay.textContent = 
+                String(hours).padStart(2, '0') + ':' +
+                String(minutes).padStart(2, '0') + ':' +
+                String(seconds).padStart(2, '0');
+        }
+
+        // Update timer immediately and then every second
+        updateTimer();
+        setInterval(updateTimer, 1000);
+
+        // Form handling
         const form = document.getElementById('registrationForm');
         const successMessage = document.getElementById('successMessage');
 
