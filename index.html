@@ -12,7 +12,7 @@
     <meta property="og:type" content="website">
     
     <!-- Theme Color -->
-    <meta name="theme-color" content="#6B1C23">
+    <meta name="theme-color" content="#5B2C6F">
     
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
@@ -30,17 +30,25 @@
         }
 
         :root {
-            --maroon: #6B1C23;
-            --deep-maroon: #4D0E13;
-            --dark-purple: #3D1F47;
-            --golden: #C9A961;
-            --golden-light: #E6D5B8;
-            --cream: #FAF7F2;
-            --warm-white: #FFFCF7;
-            --charcoal: #1A1A1A;
-            --gray: #666666;
-            --light-gray: #E5E5E5;
+            /* Product Label Colors - Vibrant & Authentic */
+            --maroon: #8B0000;
+            --deep-maroon: #6B0000;
+            --maroon-light: #A80000;
+            --dark-purple: #5B2C6F;
+            --light-purple: #7B4A9E;
+            --golden: #D4AF37;
+            --golden-light: #F4E4C1;
+            --golden-hover: #E0BD4D;
             
+            /* Neutrals - Enhanced */
+            --cream: #FFF9F0;
+            --warm-white: #FFFEF9;
+            --charcoal: #2A1810;
+            --gray: #6B5D56;
+            --light-gray: #E8DED2;
+            --border-light: rgba(212, 175, 55, 0.2);
+            
+            /* Typography */
             --font-display: 'Playfair Display', serif;
             --font-body: 'Inter', sans-serif;
             
@@ -60,6 +68,30 @@
             font-size: 16px;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
+            overflow-x: hidden;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes glow {\n            0%, 100% { box-shadow: 0 8px 25px rgba(212, 175, 55, 0.5), 0 4px 12px rgba(0, 0, 0, 0.2); }\n            50% { box-shadow: 0 8px 35px rgba(212, 175, 55, 0.8), 0 4px 12px rgba(0, 0, 0, 0.2); }\n        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.02); }
         }
 
         .container {
@@ -71,7 +103,7 @@
         /* Hero Section */
         .hero {
             min-height: 100vh;
-            background: linear-gradient(135deg, #6B1C23 0%, #3D1F47 100%);
+            background: linear-gradient(135deg, #7A0000 0%, #8B0000 50%, #6B0000 100%);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -87,45 +119,165 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="2" fill="rgba(201,169,97,0.1)"/><circle cx="80" cy="80" r="3" fill="rgba(201,169,97,0.1)"/><circle cx="90" cy="10" r="1.5" fill="rgba(201,169,97,0.1)"/></svg>');
-            opacity: 0.5;
+            background: 
+                radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(91, 44, 111, 0.1) 0%, transparent 50%),
+                url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="20" cy="20" r="1.5" fill="rgba(212,175,55,0.15)"/><circle cx="80" cy="80" r="2" fill="rgba(212,175,55,0.15)"/><circle cx="50" cy="50" r="1" fill="rgba(212,175,55,0.1)"/><circle cx="90" cy="10" r="1.5" fill="rgba(212,175,55,0.1)"/></svg>');
+            opacity: 1;
+            animation: fadeIn 1s ease;
         }
 
         .hero .container {
             position: relative;
             z-index: 2;
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 4rem;
+            display: flex;
             align-items: center;
+            justify-content: center;
+            min-height: 100vh;
         }
 
-        .hero-content {
+        .hero-content-center {
+            max-width: 700px;
+            text-align: center;
             color: var(--cream);
+            animation: fadeInUp 0.8s ease;
         }
 
-        .hero-content h1 {
+        .hero-content-center h1 {
             font-family: var(--font-display);
-            font-size: 4rem;
+            font-size: 4.5rem;
             font-weight: 800;
             line-height: 1.1;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1rem;
             color: var(--golden-light);
             letter-spacing: -2px;
+            text-shadow: 2px 4px 12px rgba(0, 0, 0, 0.3);
         }
 
-        .hero-content .subtitle {
-            font-size: 1.5rem;
+        .hero-content-center .subtitle {
+            font-size: 1.8rem;
             color: var(--golden);
             margin-bottom: 2rem;
             font-weight: 600;
+            text-shadow: 1px 2px 8px rgba(0, 0, 0, 0.2);
         }
 
-        .hero-content p {
-            font-size: 1.1rem;
-            margin-bottom: 2rem;
+        .hero-description {
+            font-size: 1.15rem;
+            margin-bottom: 2.5rem;
             color: var(--cream);
             line-height: 1.8;
+            text-shadow: 1px 1px 4px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            font-size: 1rem;
+            color: var(--golden-light);
+            font-weight: 500;
+        }
+
+        .cta-button {
+            background: linear-gradient(135deg, var(--golden) 0%, var(--golden-hover) 100%);
+            color: var(--charcoal);
+            border: none;
+            padding: 1.25rem 3rem;
+            font-size: 1.2rem;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            box-shadow: 
+                0 8px 25px rgba(212, 175, 55, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.2);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            margin: 2rem auto;
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+            align-items: center;
+            max-width: 400px;
+            width: 100%;
+            animation: glow 2.5s ease-in-out infinite;
+        }
+
+        .cta-button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .cta-button:hover::before {
+            left: 100%;
+        }
+
+        .cta-button:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 12px 35px rgba(212, 175, 55, 0.6),
+                0 6px 16px rgba(0, 0, 0, 0.25);
+        }
+
+        .cta-button:active {
+            transform: translateY(-2px);
+        }
+
+        .cta-text {
+            font-size: 1.2rem;
+        }
+
+        .cta-subtext {
+            font-size: 0.75rem;
+            font-weight: 600;
+            opacity: 0.85;
+            text-transform: none;
+        }
+
+        .social-proof {
+            font-size: 0.95rem;
+            color: var(--golden-light);
+            margin-top: 1.5rem;
+            font-weight: 500;
+            opacity: 0.9;
+        }
+
+        .spots-counter {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+            font-size: 1rem;
+            font-weight: 600;
+            color: var(--golden-light);
+            animation: fadeInUp 0.8s ease 0.4s both;
+        }
+
+        .spots-icon {
+            font-size: 1.2rem;
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .spots-text {
+            letter-spacing: 0.3px;
         }
 
         .highlight {
@@ -133,56 +285,217 @@
             font-weight: 600;
         }
 
-        /* Registration Form */
-        .registration-section {
-            background: var(--cream);
-            border-radius: 12px;
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
+        }
+
+        .modal-content {
+            position: relative;
+            background: linear-gradient(135deg, #FAF7F2 0%, #F5F0E8 100%);
+            border-radius: 20px;
             padding: 2.5rem;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 
+                0 25px 80px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(212, 175, 55, 0.3) inset;
+            border: 3px solid var(--golden);
+            animation: slideUp 0.4s ease;
+            z-index: 10001;
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: var(--maroon);
+            color: white;
+            border: none;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            font-size: 1.5rem;
+            line-height: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-close:hover {
+            background: var(--deep-maroon);
+            transform: rotate(90deg);
+        }
+
+        .modal-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .modal-header h2 {
+            font-family: var(--font-display);
+            font-size: 2rem;
+            color: var(--deep-maroon);
+            margin-bottom: 0.75rem;
+            font-weight: 700;
+        }
+
+        .modal-tagline {
+            color: var(--charcoal);
+            font-size: 0.95rem;
+            opacity: 0.8;
+        }
+
+        /* Registration Form - Updated for Modal */
+        .registration-section {
+            background: linear-gradient(135deg, #FAF7F2 0%, #F5F0E8 100%);
+            border-radius: 16px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.4),
+                0 0 0 1px rgba(212, 175, 55, 0.2) inset;
+            border: 3px solid var(--golden);
+            position: relative;
+            animation: fadeInUp 0.8s ease 0.2s both;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .registration-section::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            border-radius: 16px;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="10" cy="10" r="1" fill="rgba(139,0,0,0.03)"/><circle cx="90" cy="90" r="1.5" fill="rgba(139,0,0,0.03)"/><circle cx="50" cy="50" r="0.8" fill="rgba(139,0,0,0.02)"/></svg>');
+            opacity: 0.6;
+            pointer-events: none;
+        }
+
+        .registration-section:hover {
+            transform: translateY(-4px);
+            box-shadow: 
+                0 25px 70px rgba(0, 0, 0, 0.5),
+                0 0 0 1px rgba(212, 175, 55, 0.3) inset;
+        }
+
+        .registration-section::before {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 12px;
+            padding: 4px;
+            background: linear-gradient(135deg, var(--golden) 0%, var(--golden-hover) 50%, var(--golden) 100%);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            pointer-events: none;
+            box-shadow: 0 0 20px rgba(212, 175, 55, 0.4);
         }
 
         .registration-section h2 {
             font-family: var(--font-display);
             font-size: 1.8rem;
-            color: var(--maroon);
+            color: var(--deep-maroon);
             margin-bottom: 1rem;
             font-weight: 700;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 2;
         }
 
         .registration-section .tagline {
-            color: var(--gray);
+            color: var(--charcoal);
             margin-bottom: 2rem;
             font-size: 0.95rem;
+            opacity: 0.8;
+            position: relative;
+            z-index: 2;
         }
 
         .form-group {
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.75rem;
         }
 
         .form-group label {
             display: block;
             font-weight: 600;
             color: var(--charcoal);
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.65rem;
             font-size: 0.95rem;
+            letter-spacing: 0.3px;
+            position: relative;
+            z-index: 2;
         }
 
         .form-group input,
         .form-group textarea {
             width: 100%;
-            padding: 0.75rem 1rem;
-            border: 2px solid var(--light-gray);
-            border-radius: 6px;
+            padding: 0.875rem 1.25rem;
+            border: 2px solid rgba(139, 0, 0, 0.2);
+            border-radius: 8px;
             font-family: var(--font-body);
             font-size: 1rem;
-            transition: border-color var(--transition-normal);
+            transition: all var(--transition-normal);
+            background: #fff;
+            color: var(--charcoal);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+            z-index: 2;
         }
 
         .form-group input:focus,
         .form-group textarea:focus {
             outline: none;
             border-color: var(--maroon);
-            box-shadow: 0 0 0 3px rgba(107, 28, 35, 0.1);
+            box-shadow: 
+                0 0 0 4px rgba(139, 0, 0, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.12);
+            background: #fff;
+            transform: translateY(-1px);
+        }
+
+        .form-group input::placeholder,
+        .form-group textarea::placeholder {
+            color: #999;
+            opacity: 0.7;
         }
 
         .form-row {
@@ -195,20 +508,51 @@
             background: linear-gradient(135deg, var(--maroon) 0%, var(--deep-maroon) 100%);
             color: var(--warm-white);
             border: none;
-            padding: 1rem 2.5rem;
-            font-size: 1rem;
-            font-weight: 600;
-            border-radius: 6px;
+            padding: 1.1rem 2.5rem;
+            font-size: 1.05rem;
+            font-weight: 700;
+            border-radius: 8px;
             cursor: pointer;
             transition: all var(--transition-normal);
             width: 100%;
             margin-top: 1rem;
-            box-shadow: 0 4px 15px rgba(107, 28, 35, 0.3);
+            box-shadow: 
+                0 6px 20px rgba(139, 0, 0, 0.4),
+                0 2px 8px rgba(0, 0, 0, 0.15);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            position: relative;
+            overflow: hidden;
+            z-index: 2;
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
         }
 
         .submit-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(107, 28, 35, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 
+                0 10px 30px rgba(139, 0, 0, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 
+                0 4px 15px rgba(139, 0, 0, 0.4),
+                0 2px 6px rgba(0, 0, 0, 0.15);
         }
 
         .submit-btn:active {
@@ -223,13 +567,15 @@
 
         .success-message {
             display: none;
-            background: #d4edda;
+            background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
             color: #155724;
-            padding: 1rem;
-            border-radius: 6px;
-            margin-top: 1rem;
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
             text-align: center;
-            border: 1px solid #c3e6cb;
+            border: 2px solid #b1dfbb;
+            font-weight: 600;
+            box-shadow: 0 4px 12px rgba(21, 87, 36, 0.15);
         }
 
         .success-message.show {
@@ -239,35 +585,68 @@
 
         /* Timer Styles */
         .timer-container {
-            background: rgba(201, 169, 97, 0.15);
-            border: 2px solid var(--golden);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, rgba(139, 0, 0, 0.95) 0%, rgba(107, 0, 0, 0.95) 100%);
+            border-bottom: 3px solid var(--golden);
+            border-radius: 0;
+            padding: 1rem 1.5rem;
             text-align: center;
+            position: sticky;
+            top: 0;
+            overflow: hidden;
+            backdrop-filter: blur(15px);
+            box-shadow: 
+                0 6px 25px rgba(139, 0, 0, 0.4),
+                0 0 0 1px rgba(212, 175, 55, 0.3) inset;
+            z-index: 100;
+        }
+
+        .timer-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(139, 0, 0, 0.1), transparent 60%);
+            pointer-events: none;
         }
 
         .timer-label {
-            font-size: 0.9rem;
-            color: var(--gray);
-            margin-bottom: 0.5rem;
+            font-size: 0.7rem;
+            color: var(--golden);
+            margin-bottom: 0.3rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 1.5px;
+            font-weight: 700;
+            position: relative;
         }
 
         .timer-display {
             font-family: 'Courier New', monospace;
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: var(--maroon);
-            letter-spacing: 2px;
+            color: var(--golden-light);
+            letter-spacing: 3px;
             font-variant-numeric: tabular-nums;
+            margin: 0.2rem 0;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+            animation: pulse 2s ease-in-out infinite;
         }
 
         .timer-subtext {
-            font-size: 0.85rem;
-            color: var(--gray);
-            margin-top: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--golden-light);
+            margin-top: 0.3rem;
+            line-height: 1.3;
+            font-weight: 500;
+            position: relative;
+            opacity: 0.9;
+        }
+
+        .timer-highlight {
+            color: var(--golden);
+            font-weight: 700;
         }
 
         @keyframes slideIn {
@@ -283,7 +662,41 @@
 
         /* Responsive */
         @media (max-width: 768px) {
-            .hero .container {
+            .hero-content-center h1 {
+                font-size: 2.5rem;
+            }
+
+            .hero-content-center .subtitle {
+                font-size: 1.3rem;
+            }
+
+            .hero-description {
+                font-size: 1rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .cta-button {
+                padding: 1rem 2rem;
+            }
+
+            .cta-text {
+                font-size: 1rem;
+            }
+
+            .modal-content {
+                padding: 1.5rem;
+                width: 95%;
+            }
+
+            .modal-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .form-row {
                 grid-template-columns: 1fr;
                 gap: 2rem;
                 padding: 2rem;
@@ -312,98 +725,203 @@
             .registration-section h2 {
                 font-size: 1.4rem;
             }
+
+            .timer-container {
+                margin: 1.5rem 0;
+                padding: 1rem 1.25rem;
+            }
+
+            .timer-display {
+                font-size: 1.8rem;
+                letter-spacing: 2px;
+            }
+
+            .timer-label {
+                font-size: 0.7rem;
+            }
+
+            .timer-subtext {
+                font-size: 0.7rem;
+            }
+
+            .timer-subtext {
+                font-size: 0.75rem;
+            }
         }
     </style>
 </head>
 <body>
     <section class="hero">
         <div class="container">
-            <div class="hero-content">
+            <div class="hero-content-center">
                 <h1>Amrutbaa Ni Cutney</h1>
                 <div class="subtitle">Taste 90+ Years of Love & Tradition</div>
-                <p>Our grandmother's hands perfected this recipe over nine decades. The same Chilly Garlic Chutney that brought families together in <span class="highlight">Kathiyawad</span>—now prepared in small, sacred batches just for you.</p>
-                <p style="font-size: 1rem; color: var(--golden-light);">✦ Hand-prepared weekly • ✦ Never processed • ✦ Slots fill fast</p>
-            </div>
-
-            <div class="registration-section">
-                <h2>Secure Your Jar Now</h2>
-                <p class="tagline">First batch slots are limited. Register today to guarantee your delivery. We prepare fresh every week.</p>
+                <p class="hero-description">Our grandmother's hands perfected this recipe over nine decades. The same Chilly Garlic Chutney that brought families together in <span class="highlight">Kathiyawad</span>—now prepared in small, sacred batches just for you.</p>
                 
-                <div class="timer-container">
-                    <div class="timer-label">Next Batch Preparation</div>
-                    <div class="timer-display" id="timerDisplay">--:--:--</div>
-                    <div class="timer-subtext">Time remaining until Sunday midnight</div>
+                <div class="hero-features">
+                    <div class="feature-item">✦ Hand-prepared weekly</div>
+                    <div class="feature-item">✦ Never processed</div>
+                    <div class="feature-item">✦ Slots fill fast</div>
                 </div>
-                
-                <form id="registrationForm">
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Your Name *</label>
-                            <input 
-                                type="text" 
-                                id="name" 
-                                name="name" 
-                                placeholder="Enter your name"
-                                required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label for="email">Email Address *</label>
-                            <input 
-                                type="email" 
-                                id="email" 
-                                name="email" 
-                                placeholder="Enter your email"
-                                required
-                            >
-                        </div>
-                    </div>
 
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="phone">Phone Number *</label>
-                            <input 
-                                type="tel" 
-                                id="phone" 
-                                name="phone" 
-                                placeholder="Enter your phone number"
-                                required
-                            >
-                        </div>
-                        <div class="form-group">
-                            <label for="quantity">Quantity (Bottles of 250g) *</label>
-                            <input 
-                                type="number" 
-                                id="quantity" 
-                                name="quantity" 
-                                placeholder="1 = 250g bottle"
-                                min="1"
-                                required
-                            >
-                        </div>
-                    </div>
+                <div class="timer-container">
+                    <div class="timer-label">⏰ NEXT BATCH CLOSES IN</div>
+                    <div class="timer-display" id="timerDisplay">--:--:--</div>
+                    <div class="timer-subtext">Register now to get your jar from the <span class="timer-highlight">next batch</span></div>
+                </div>
 
-                    <div class="form-group">
-                        <label for="address">Delivery Address *</label>
-                        <textarea 
-                            id="address" 
-                            name="address" 
-                            placeholder="Enter your complete delivery address"
-                            rows="3"
-                            required
-                        ></textarea>
-                    </div>
+                <div class="spots-counter">
+                    <span class="spots-icon">🔥</span>
+                    <span class="spots-text"><strong>127 spots</strong> left this week</span>
+                </div>
 
-                    <button type="submit" class="submit-btn">Yes, Reserve My Jars Now</button>
-                    <div class="success-message" id="successMessage">
-                        ✓ Perfect! Your spot is reserved. Check your email for batch date & details.
-                    </div>
-                </form>
+                <button class="cta-button" id="openModalBtn">
+                    <span class="cta-text">Reserve Your Jar Now</span>
+                    <span class="cta-subtext">🔥 Limited to 1 bottle per person</span>
+                </button>
+
+                <p class="social-proof">⭐ Join 500+ customers who've already registered</p>
             </div>
         </div>
     </section>
 
+    <!-- Registration Modal -->
+    <div class="modal" id="registrationModal">
+        <div class="modal-overlay" id="modalOverlay"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="closeModalBtn">&times;</button>
+            
+            <div class="modal-header">
+                <h2>Secure Your Jar Now</h2>
+                <p class="modal-tagline">First batch slots are limited. Register today to guarantee your delivery.</p>
+            </div>
+            
+            <form id="registrationForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="name">Your Name *</label>
+                        <input 
+                            type="text" 
+                            id="name" 
+                            name="name" 
+                            placeholder="Enter your name"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email Address *</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            placeholder="Enter your email"
+                            required
+                        >
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="phone">Phone Number *</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone" 
+                            placeholder="Enter your phone number"
+                            required
+                        >
+                    </div>
+                    <div class="form-group">
+                        <label for="quantity">Quantity (Bottles of 250g) *</label>
+                        <div style="position: relative;">
+                            <input 
+                                type="number" 
+                                id="quantity" 
+                                name="quantity" 
+                                value="1"
+                                readonly
+                                style="background: #f9f9f9; cursor: not-allowed; color: #666; padding-right: 80px;"
+                                min="1"
+                                max="1"
+                                required
+                            >
+                            <div style="
+                                position: absolute;
+                                right: 12px;
+                                top: 50%;
+                                transform: translateY(-50%);
+                                font-size: 0.7rem;
+                                font-weight: 600;
+                                color: var(--maroon);
+                                pointer-events: none;
+                                display: flex;
+                                align-items: center;
+                                gap: 4px;
+                            ">
+                                <span style="font-size: 0.85rem;">🔥</span>
+                                <span>Max 1/person</span>
+                            </div>
+                        </div>
+                        <p style="
+                            font-size: 0.72rem;
+                            color: var(--maroon);
+                            margin-top: 0.4rem;
+                            font-weight: 500;
+                            font-style: italic;
+                            opacity: 0.9;
+                        ">
+                            Currently limited due to high demand
+                        </p>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="address">Delivery Address *</label>
+                    <textarea 
+                        id="address" 
+                        name="address" 
+                        placeholder="Enter your complete delivery address"
+                        rows="3"
+                        required
+                    ></textarea>
+                </div>
+
+                <button type="submit" class="submit-btn">Yes, Reserve My Jars Now</button>
+                <div class="success-message" id="successMessage">
+                    ✓ Perfect! Your spot is reserved. Check your email for batch date & details.
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
+        // Modal functionality
+        const modal = document.getElementById('registrationModal');
+        const openModalBtn = document.getElementById('openModalBtn');
+        const closeModalBtn = document.getElementById('closeModalBtn');
+        const modalOverlay = document.getElementById('modalOverlay');
+
+        function openModal() {
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        openModalBtn.addEventListener('click', openModal);
+        closeModalBtn.addEventListener('click', closeModal);
+        modalOverlay.addEventListener('click', closeModal);
+
+        // Close modal on escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closeModal();
+            }
+        });
+
         // Timer functionality
         function getNextSundayMidnight() {
             const now = new Date();
