@@ -408,6 +408,9 @@
             margin: auto;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             animation: slideUp 0.4s ease-out;
+            max-height: 90vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
         }
 
         @keyframes slideUp {
@@ -673,11 +676,38 @@
 
             .modal-content {
                 padding: 2rem 1.5rem;
+                max-height: 88vh;
             }
 
             .form-row {
                 grid-template-columns: 1fr;
             }
+
+            /* Sticky CTA footer: stack to avoid overlap */
+            .sticky-cta-bar {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 0.8rem;
+                padding: 0.9rem 1rem 1.1rem;
+            }
+            .timer-info {
+                flex-wrap: wrap;
+                justify-content: space-between;
+            }
+            .timer-label { font-size: 0.68rem; }
+            .timer-display { font-size: 1.6rem; min-width: auto; }
+            .timer-subtext { font-size: 0.72rem; }
+            .cta-button-sticky {
+                width: 100%;
+                padding: 0.9rem 1.2rem;
+                font-size: 0.95rem;
+            }
+
+            /* Ensure page content doesn't sit under sticky footer */
+            body { padding-bottom: 170px; }
+
+            /* Prevent step-pane from overflowing viewport */
+            .step-pane { padding-bottom: 0.5rem; }
 
             .hero-features {
                 gap: 1rem;
@@ -771,7 +801,6 @@
 
                 <button class="cta-button" id="openModalBtn">
                     <span class="cta-text">Reserve Your Jar Now</span>
-                    <span class="cta-subtext">🔥 Fresh weekly batch — reserve now</span>
                 </button>
 
                 <p class="social-proof">⭐ Join 500+ customers who've already registered</p>
