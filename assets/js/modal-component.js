@@ -614,7 +614,7 @@ function initOrderModal() {
 
         try {
             // Price per jar (in rupees) - adjust this as needed
-            const pricePerJar = 299;
+            const pricePerJar = 349;
             const totalAmount = formData.quantity * pricePerJar;
 
             // Create order via Cloudflare Worker
