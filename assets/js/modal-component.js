@@ -646,10 +646,11 @@ function initOrderModal() {
                 order_id: order.id,
                 handler: async function(response) {
                     // Payment successful
-                    console.log('Payment successful:', response);
+                    console.log('✅ Payment successful:', response);
                     
                     // Verify payment signature via backend
                     try {
+                        console.log('Verifying payment signature...');
                         const verifyResponse = await fetch('/api/verify-payment', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -661,9 +662,11 @@ function initOrderModal() {
                         });
 
                         const verifyResult = await verifyResponse.json();
+                        console.log('Verification result:', verifyResult);
 
                         if (verifyResult.success) {
-                            // Submit order details to your backend
+                            console.log('✅ Payment verified! Submitting order...');
+                            // Submit order details to n8n
                             await submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
@@ -685,12 +688,13 @@ function initOrderModal() {
                                 submitBtn.disabled = false;
                             }, 3000);
                         } else {
+                            console.error('❌ Payment verification failed:', verifyResult);
                             alert('Payment verification failed. Please contact support.');
                             submitBtn.textContent = originalText;
                             submitBtn.disabled = false;
                         }
                     } catch (error) {
-                        console.error('Verification error:', error);
+                        console.error('❌ Verification error:', error);
                         alert('Payment verification error. Please contact support with your payment ID.');
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
@@ -734,6 +738,36 @@ function initOrderModal() {
 
     // Helper function to submit order details
     async function submitOrderDetails(orderData) {
+        try {
+            console.log('Submitting order to n8n:', orderData);
+            
+            // Send as JSON POST instead of hidden form for better reliability
+            const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(orderData)
+            });
+
+            if (response.ok) {
+                console.log('Order submitted successfully to n8n');
+                return true;
+            } else {
+                console.error('n8n webhook responded with status:', response.status);
+                // Fallback: still submit via form if JSON fails
+                await submitViaForm(orderData);
+                return true;
+            }
+        } catch (error) {
+            console.error('Error submitting to n8n:', error);
+            // Fallback to form submission
+            await submitViaForm(orderData);
+            return true;
+        }
+    }
+
+    // Fallback form submission method
+    async function submitViaForm(orderData) {
+        console.log('Using form submission fallback');
         const hiddenForm = document.createElement('form');
         hiddenForm.method = 'POST';
         hiddenForm.action = 'https://n8n.prinkit.cloud/webhook/order_form';
@@ -750,17 +784,22 @@ function initOrderModal() {
         document.body.appendChild(hiddenForm);
         
         const iframe = document.createElement('iframe');
-        iframe.name = 'hidden-form-iframe';
+        iframe.name = 'hidden-form-iframe-' + Date.now();
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
         
-        hiddenForm.target = 'hidden-form-iframe';
+        hiddenForm.target = iframe.name;
         hiddenForm.submit();
         
+        // Wait longer for form processing
         setTimeout(() => {
-            document.body.removeChild(hiddenForm);
-            document.body.removeChild(iframe);
-        }, 1000);
+            try {
+                document.body.removeChild(hiddenForm);
+            } catch (e) {}
+            try {
+                document.body.removeChild(iframe);
+            } catch (e) {}
+        }, 2000);
     }
 
     // Public API: Return object with openModal function
