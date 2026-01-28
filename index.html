@@ -600,18 +600,62 @@
 
         /* Responsive for Loved By All Section */
         @media (max-width: 1024px) {
+            .loved-by-all {
+                padding: 4rem 0 4.5rem;
+            }
+
             .food-stories-grid {
-                grid-template-columns: 1fr;
-                gap: 2rem;
-                max-width: 500px;
+                display: flex;
+                overflow-x: auto;
+                overflow-y: hidden;
+                scroll-snap-type: x mandatory;
+                scroll-behavior: smooth;
+                gap: 1.5rem;
+                padding: 0 1.5rem;
+                margin: 0 -1.5rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+
+            .food-stories-grid::-webkit-scrollbar {
+                display: none;
+            }
+
+            .story-card {
+                flex: 0 0 85%;
+                max-width: 400px;
+                scroll-snap-align: center;
+                scroll-snap-stop: always;
             }
 
             .section-title {
                 font-size: 2.5rem;
             }
 
-            .story-card {
-                max-width: 100%;
+            /* Add scroll indicator dots */
+            .scroll-dots {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                gap: 0.5rem;
+                margin-top: 1.5rem;
+                padding: 0 1.5rem;
+            }
+
+            .scroll-dot {
+                width: 8px;
+                height: 8px;
+                border-radius: 50%;
+                background: rgba(212, 175, 55, 0.25);
+                transition: all 0.3s ease;
+                cursor: pointer;
+            }
+
+            .scroll-dot.active {
+                background: var(--golden);
+                width: 24px;
+                border-radius: 4px;
+                box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
             }
         }
 
@@ -622,6 +666,7 @@
 
             .section-header {
                 margin-bottom: 2.5rem;
+                padding: 0 1.5rem;
             }
 
             .section-title {
@@ -633,8 +678,13 @@
             }
 
             .food-stories-grid {
+                gap: 1.25rem;
                 padding: 0 1.25rem;
-                gap: 1.5rem;
+                margin: 0 -1.25rem;
+            }
+
+            .story-card {
+                flex: 0 0 88%;
             }
 
             .story-title {
@@ -644,6 +694,10 @@
             .story-quote {
                 font-size: 0.9rem;
                 min-height: auto;
+            }
+
+            .section-cta {
+                padding: 0 1.25rem;
             }
 
             .cta-button-secondary {
@@ -1462,6 +1516,13 @@
                 </div>
             </div>
 
+            <!-- Scroll indicator dots for mobile -->
+            <div class="scroll-dots" id="storyScrollDots">
+                <span class="scroll-dot active" data-card="0"></span>
+                <span class="scroll-dot" data-card="1"></span>
+                <span class="scroll-dot" data-card="2"></span>
+            </div>
+
             <div class="section-cta">
                 <p class="cta-intro">Find your go-to pairing. Reserve your jar today.</p>
                 <button class="cta-button-secondary" id="lovedByAllCta">I Want to Try This</button>
@@ -1492,6 +1553,43 @@
             document.getElementById('journeyCtaBatch')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('journeyCtaRegister')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('lovedByAllCta')?.addEventListener('click', window.OrderModal.open);
+        }
+
+        // Horizontal scroll snap carousel for mobile food stories
+        const storiesGrid = document.querySelector('.food-stories-grid');
+        const storyCards = document.querySelectorAll('.story-card');
+        const scrollDots = document.querySelectorAll('.scroll-dot');
+
+        if (storiesGrid && scrollDots.length > 0) {
+            // Update active dot based on scroll position
+            let scrollTimeout;
+            storiesGrid.addEventListener('scroll', () => {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    const scrollLeft = storiesGrid.scrollLeft;
+                    const cardWidth = storyCards[0]?.offsetWidth || 0;
+                    const gap = 20; // Approximate gap
+                    const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
+                    
+                    scrollDots.forEach((dot, index) => {
+                        dot.classList.toggle('active', index === activeIndex);
+                    });
+                }, 50);
+            }, { passive: true });
+
+            // Click dot to scroll to card
+            scrollDots.forEach((dot, index) => {
+                dot.addEventListener('click', () => {
+                    const card = storyCards[index];
+                    if (card) {
+                        card.scrollIntoView({ 
+                            behavior: 'smooth', 
+                            block: 'nearest', 
+                            inline: 'center' 
+                        });
+                    }
+                });
+            });
         }
 
         // Timer for sticky footer countdown and journey chip
