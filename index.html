@@ -657,6 +657,58 @@
                 border-radius: 4px;
                 box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
             }
+
+            /* Swipe hint animation */
+            .swipe-hint {
+                position: absolute;
+                top: 50%;
+                right: 1.5rem;
+                transform: translateY(-50%);
+                background: rgba(255, 255, 255, 0.95);
+                padding: 1rem 1.2rem;
+                border-radius: 50px;
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+                display: flex;
+                align-items: center;
+                gap: 0.5rem;
+                font-size: 0.85rem;
+                font-weight: 700;
+                color: var(--maroon);
+                z-index: 10;
+                pointer-events: none;
+                animation: swipeHintBounce 2s ease-in-out infinite;
+                opacity: 0;
+            }
+
+            .swipe-hint.show {
+                opacity: 1;
+            }
+
+            .swipe-hint-icon {
+                font-size: 1.2rem;
+                animation: swipeArrow 1.5s ease-in-out infinite;
+            }
+
+            @keyframes swipeHintBounce {
+                0%, 100% { transform: translateY(-50%) translateX(0); }
+                50% { transform: translateY(-50%) translateX(-8px); }
+            }
+
+            @keyframes swipeArrow {
+                0%, 100% { transform: translateX(0); opacity: 1; }
+                50% { transform: translateX(-6px); opacity: 0.6; }
+            }
+
+            /* Initial card peek animation */
+            @keyframes cardPeekHint {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-12px); }
+                50% { transform: translateX(0); }
+            }
+
+            .story-card.peek-hint {
+                animation: cardPeekHint 1.5s ease-in-out 1s 2;
+            }
         }
 
         @media (max-width: 768px) {
@@ -1523,6 +1575,12 @@
                 <span class="scroll-dot" data-card="2"></span>
             </div>
 
+            <!-- Swipe hint overlay -->
+            <div class="swipe-hint" id="swipeHint">
+                <span>Swipe</span>
+                <span class="swipe-hint-icon">👉</span>
+            </div>
+
             <div class="section-cta">
                 <p class="cta-intro">Find your go-to pairing. Reserve your jar today.</p>
                 <button class="cta-button-secondary" id="lovedByAllCta">I Want to Try This</button>
@@ -1559,11 +1617,45 @@
         const storiesGrid = document.querySelector('.food-stories-grid');
         const storyCards = document.querySelectorAll('.story-card');
         const scrollDots = document.querySelectorAll('.scroll-dot');
+        const swipeHint = document.getElementById('swipeHint');
 
         if (storiesGrid && scrollDots.length > 0) {
+            // Show swipe hint on mobile only if user hasn't swiped before
+            const hasSwipedBefore = localStorage.getItem('hasSwipedStories');
+            const isMobile = window.innerWidth < 1024;
+
+            if (!hasSwipedBefore && isMobile && swipeHint) {
+                // Show hint after 1 second
+                setTimeout(() => {
+                    swipeHint.classList.add('show');
+                    // Add peek animation to first card
+                    if (storyCards[0]) {
+                        storyCards[0].classList.add('peek-hint');
+                    }
+                }, 1000);
+
+                // Auto-hide after 4 seconds
+                setTimeout(() => {
+                    swipeHint.classList.remove('show');
+                }, 5000);
+            }
+
             // Update active dot based on scroll position
             let scrollTimeout;
+            let hasInteracted = false;
+
             storiesGrid.addEventListener('scroll', () => {
+                // Hide hint on first scroll
+                if (!hasInteracted && swipeHint) {
+                    swipeHint.classList.remove('show');
+                    localStorage.setItem('hasSwipedStories', 'true');
+                    hasInteracted = true;
+                    // Remove peek animation
+                    if (storyCards[0]) {
+                        storyCards[0].classList.remove('peek-hint');
+                    }
+                }
+
                 clearTimeout(scrollTimeout);
                 scrollTimeout = setTimeout(() => {
                     const scrollLeft = storiesGrid.scrollLeft;
@@ -1588,7 +1680,23 @@
                             inline: 'center' 
                         });
                     }
+                    // Hide hint if visible
+                    if (swipeHint) {
+                        swipeHint.classList.remove('show');
+                        localStorage.setItem('hasSwipedStories', 'true');
+                    }
                 });
+            });
+
+            // Hide hint on touch/click anywhere on cards
+            storyCards.forEach(card => {
+                card.addEventListener('touchstart', () => {
+                    if (swipeHint && !hasInteracted) {
+                        swipeHint.classList.remove('show');
+                        localStorage.setItem('hasSwipedStories', 'true');
+                        hasInteracted = true;
+                    }
+                }, { passive: true, once: true });
             });
         }
 
