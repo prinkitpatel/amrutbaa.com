@@ -319,11 +319,19 @@ function initOrderModal() {
         }
 
         .success-message {
-            display: none;
+            display: none !important;
             text-align: center;
             color: #4CAF50;
             font-weight: 600;
             margin-top: 1rem;
+        }
+
+        .success-message.show {
+            display: block !important;
+        }
+
+        .success-message.show {
+            display: block !important;
         }
 
         @media (max-width: 768px) {
@@ -675,14 +683,17 @@ function initOrderModal() {
                             });
 
                             // Show success message
-                            successMessage.style.display = 'block';
+                            console.log('Displaying success message...');
+                            successMessage.classList.add('show');
                             registrationForm.style.display = 'none';
+                            console.log('✅ Success message should be visible now');
                             
                             setTimeout(() => {
+                                console.log('Closing modal and resetting form...');
                                 closeModal();
                                 registrationForm.style.display = 'block';
                                 registrationForm.reset();
-                                successMessage.style.display = 'none';
+                                successMessage.classList.remove('show');
                                 setStep(1);
                                 submitBtn.textContent = originalText;
                                 submitBtn.disabled = false;
