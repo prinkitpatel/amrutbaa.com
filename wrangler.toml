@@ -1,5 +1,10 @@
 name = "amrutbaa-com"
+main = "worker.js"
 compatibility_date = "2026-01-17"
 
 [assets]
 directory = "."
+
+# Environment variables (set these via Cloudflare dashboard or CLI)
+# RAZORPAY_KEY_ID = "your_key_id"
+# RAZORPAY_KEY_SECRET = "your_key_secret"

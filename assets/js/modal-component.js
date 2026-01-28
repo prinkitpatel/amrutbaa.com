@@ -587,7 +587,7 @@ function initOrderModal() {
         }
     });
 
-    // Form submission
+    // Form submission with Razorpay payment
     registrationForm.addEventListener('submit', async (e) => {
         e.preventDefault();
 
@@ -595,7 +595,7 @@ function initOrderModal() {
             name: document.getElementById('name').value,
             email: document.getElementById('email').value,
             phone: document.getElementById('phone').value,
-            quantity: document.getElementById('quantity').value,
+            quantity: parseInt(document.getElementById('quantity').value),
             address1: document.getElementById('address1').value,
             address2: document.getElementById('address2').value,
             city: document.getElementById('city').value,
@@ -609,28 +609,137 @@ function initOrderModal() {
 
         const submitBtn = registrationForm.querySelector('.btn-primary-solid[type="submit"]');
         const originalText = submitBtn.textContent;
-        submitBtn.textContent = 'Processing...';
+        submitBtn.textContent = 'Initializing Payment...';
         submitBtn.disabled = true;
 
-        // Create a hidden iframe for submission
-        let iframe = document.getElementById('hidden-form-iframe');
-        if (!iframe) {
-            iframe = document.createElement('iframe');
-            iframe.id = 'hidden-form-iframe';
-            iframe.name = 'hidden-form-iframe';
-            iframe.style.display = 'none';
-            document.body.appendChild(iframe);
-        }
+        try {
+            // Price per jar (in rupees) - adjust this as needed
+            const pricePerJar = 299;
+            const totalAmount = formData.quantity * pricePerJar;
 
-        // Create a hidden form
+            // Create order via Cloudflare Worker
+            const orderResponse = await fetch('/api/create-order', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    amount: totalAmount,
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    quantity: formData.quantity
+                })
+            });
+
+            if (!orderResponse.ok) {
+                throw new Error('Failed to create order');
+            }
+
+            const order = await orderResponse.json();
+
+            // Configure Razorpay options
+            const razorpayOptions = {
+                key: 'rzp_live_S9MRd6GMVrZZqY',
+                amount: order.amount,
+                currency: 'INR',
+                name: 'Amrutbaa Ni Chutney',
+                description: `Batch Registration - ${formData.quantity} jar${formData.quantity > 1 ? 's' : ''}`,
+                order_id: order.id,
+                handler: async function(response) {
+                    // Payment successful
+                    console.log('Payment successful:', response);
+                    
+                    // Verify payment signature via backend
+                    try {
+                        const verifyResponse = await fetch('/api/verify-payment', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                razorpay_order_id: response.razorpay_order_id,
+                                razorpay_payment_id: response.razorpay_payment_id,
+                                razorpay_signature: response.razorpay_signature
+                            })
+                        });
+
+                        const verifyResult = await verifyResponse.json();
+
+                        if (verifyResult.success) {
+                            // Submit order details to your backend
+                            await submitOrderDetails({
+                                ...formData,
+                                payment_id: response.razorpay_payment_id,
+                                order_id: response.razorpay_order_id,
+                                amount: totalAmount
+                            });
+
+                            // Show success message
+                            successMessage.style.display = 'block';
+                            registrationForm.style.display = 'none';
+                            
+                            setTimeout(() => {
+                                closeModal();
+                                registrationForm.style.display = 'block';
+                                registrationForm.reset();
+                                successMessage.style.display = 'none';
+                                setStep(1);
+                                submitBtn.textContent = originalText;
+                                submitBtn.disabled = false;
+                            }, 3000);
+                        } else {
+                            alert('Payment verification failed. Please contact support.');
+                            submitBtn.textContent = originalText;
+                            submitBtn.disabled = false;
+                        }
+                    } catch (error) {
+                        console.error('Verification error:', error);
+                        alert('Payment verification error. Please contact support with your payment ID.');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                },
+                prefill: {
+                    name: formData.name,
+                    email: formData.email,
+                    contact: formData.phone
+                },
+                notes: {
+                    address: `${formData.address1}, ${formData.address2}, ${formData.city}, ${formData.state} - ${formData.pincode}`
+                },
+                theme: {
+                    color: '#6B1C23'
+                },
+                modal: {
+                    ondismiss: function() {
+                        console.log('Payment cancelled by user');
+                        submitBtn.textContent = originalText;
+                        submitBtn.disabled = false;
+                    }
+                }
+            };
+
+            // Open Razorpay checkout
+            const rzp = new Razorpay(razorpayOptions);
+            rzp.open();
+
+            // Reset button state immediately after opening
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+
+        } catch (error) {
+            console.error('Payment initialization error:', error);
+            alert('Failed to initialize payment. Please try again.');
+            submitBtn.textContent = originalText;
+            submitBtn.disabled = false;
+        }
+    });
+
+    // Helper function to submit order details
+    async function submitOrderDetails(orderData) {
         const hiddenForm = document.createElement('form');
         hiddenForm.method = 'POST';
         hiddenForm.action = 'https://n8n.prinkit.cloud/webhook/order_form';
-        hiddenForm.target = 'hidden-form-iframe';
         hiddenForm.style.display = 'none';
 
-        // Add all form fields
-        for (const [key, value] of Object.entries(formData)) {
+        for (const [key, value] of Object.entries(orderData)) {
             const input = document.createElement('input');
             input.type = 'hidden';
             input.name = key;
@@ -640,34 +749,19 @@ function initOrderModal() {
 
         document.body.appendChild(hiddenForm);
         
-        try {
-            console.log('Submitting form data:', formData);
-            hiddenForm.submit();
-            
-            // Wait a moment then show success
-            setTimeout(() => {
-                document.body.removeChild(hiddenForm);
-                successMessage.style.display = 'block';
-                registrationForm.style.display = 'none';
-                
-                setTimeout(() => {
-                    closeModal();
-                    registrationForm.style.display = 'block';
-                    registrationForm.reset();
-                    successMessage.style.display = 'none';
-                    setStep(1);
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                }, 3000);
-            }, 500);
-        } catch (error) {
-            console.error('Submission error:', error);
+        const iframe = document.createElement('iframe');
+        iframe.name = 'hidden-form-iframe';
+        iframe.style.display = 'none';
+        document.body.appendChild(iframe);
+        
+        hiddenForm.target = 'hidden-form-iframe';
+        hiddenForm.submit();
+        
+        setTimeout(() => {
             document.body.removeChild(hiddenForm);
-            alert('Submission error. Please try again.');
-            submitBtn.textContent = originalText;
-            submitBtn.disabled = false;
-        }
-    });
+            document.body.removeChild(iframe);
+        }, 1000);
+    }
 
     // Public API: Return object with openModal function
     return {
