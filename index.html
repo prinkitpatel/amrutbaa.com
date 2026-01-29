@@ -121,6 +121,30 @@
             text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 0 24px rgba(212, 175, 55, 0.35);
             animation: pulse 2s ease-in-out infinite;
             min-width: 140px;
+            transition: color 0.5s ease, text-shadow 0.5s ease;
+        }
+
+        /* Dynamic urgency color states */
+        .timer-display.urgency-calm {
+            color: #FFD700;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 0 24px rgba(212, 175, 55, 0.35);
+        }
+
+        .timer-display.urgency-medium {
+            color: #FF9F1C;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 159, 28, 0.4);
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+
+        .timer-display.urgency-high {
+            color: #FF4444;
+            text-shadow: 0 3px 10px rgba(0, 0, 0, 0.5), 0 0 24px rgba(255, 68, 68, 0.5);
+            animation: urgentPulse 1s ease-in-out infinite;
+        }
+
+        @keyframes urgentPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.03); opacity: 0.95; }
         }
 
         .timer-subtext {
@@ -178,10 +202,35 @@
             text-transform: uppercase;
             letter-spacing: 0.6px;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             white-space: nowrap;
             flex-shrink: 0;
-            animation: glow 2.5s ease-in-out infinite;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* Pulse ring effect */
+        .cta-button-sticky::after {
+            content: '';
+            position: absolute;
+            inset: -4px;
+            border-radius: 12px;
+            border: 2px solid var(--golden);
+            opacity: 0;
+            animation: pulseRing 2.5s ease-out infinite;
+        }
+
+        @keyframes pulseRing {
+            0% {
+                transform: scale(1);
+                opacity: 0.6;
+            }
+            100% {
+                transform: scale(1.15);
+                opacity: 0;
+            }
         }
 
         .cta-button-sticky::before {
@@ -193,6 +242,16 @@
             height: 100%;
             background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.22), transparent);
             animation: shimmer 2.5s infinite;
+            z-index: 1;
+        }
+
+        /* Arrow icon styling */
+        .cta-button-sticky .cta-arrow {
+            display: inline-block;
+            transition: transform 0.3s ease;
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 2;
         }
 
         .cta-button-sticky:hover {
@@ -200,8 +259,16 @@
             box-shadow: 0 14px 32px rgba(212, 175, 55, 0.48), 0 5px 14px rgba(0, 0, 0, 0.22);
         }
 
+        .cta-button-sticky:hover .cta-arrow {
+            transform: translateX(3px);
+        }
+
         .cta-button-sticky:active {
             transform: translateY(-1px);
+        }
+
+        .cta-button-sticky:active .cta-arrow {
+            transform: translateX(1px);
         }
 
         /* HERO SECTION */
@@ -1889,7 +1956,10 @@
             <div class="price-value">₹349</div>
             <div class="price-label">Per Jar</div>
         </div>
-        <button class="cta-button-sticky" id="openModalBtnSticky">Reserve Jar</button>
+        <button class="cta-button-sticky" id="openModalBtnSticky">
+            <span>Reserve Jar</span>
+            <span class="cta-arrow">→</span>
+        </button>
     </div>
 
 
@@ -2035,6 +2105,16 @@
                     String(hours).padStart(2, '0') + ':' +
                     String(minutes).padStart(2, '0') + ':' +
                     String(seconds).padStart(2, '0');
+                
+                // Dynamic urgency color system
+                timerDisplay.classList.remove('urgency-calm', 'urgency-medium', 'urgency-high');
+                if (totalHours > 48) {
+                    timerDisplay.classList.add('urgency-calm');
+                } else if (totalHours > 24) {
+                    timerDisplay.classList.add('urgency-medium');
+                } else {
+                    timerDisplay.classList.add('urgency-high');
+                }
             }
 
             if (journeyCountdown) {
