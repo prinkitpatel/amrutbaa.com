@@ -1966,27 +1966,22 @@
             const now = new Date();
             const difference = targetTime - now;
 
-            if (difference > 0) {
-                const totalHours = Math.floor(difference / (1000 * 60 * 60));
-                const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
-                const minutes = Math.floor((difference / (1000 * 60)) % 60);
-                const seconds = Math.floor((difference / 1000) % 60);
-                
-                if (timerDisplay) {
-                    timerDisplay.textContent = 
-                        String(hours).padStart(2, '0') + ':' +
-                        String(minutes).padStart(2, '0') + ':' +
-                        String(seconds).padStart(2, '0');
-                }
+            const totalHours = Math.floor(difference / (1000 * 60 * 60));
+            const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
+            const minutes = Math.floor((difference / (1000 * 60)) % 60);
+            const seconds = Math.floor((difference / 1000) % 60);
+            
+            if (timerDisplay) {
+                timerDisplay.textContent = 
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
+            }
 
-                if (journeyCountdown) {
-                    const days = Math.floor(totalHours / 24);
-                    const hoursLeft = totalHours % 24;
-                    journeyCountdown.textContent = `Next batch closes in ${days}d ${String(hoursLeft).padStart(2, '0')}h`;
-                }
-            } else {
-                if (timerDisplay) timerDisplay.textContent = '00:00:00';
-                if (journeyCountdown) journeyCountdown.textContent = 'Current batch closing now';
+            if (journeyCountdown) {
+                const days = Math.floor(totalHours / 24);
+                const hoursLeft = totalHours % 24;
+                journeyCountdown.textContent = `Next batch closes in ${days}d ${String(hoursLeft).padStart(2, '0')}h`;
             }
         }
 
