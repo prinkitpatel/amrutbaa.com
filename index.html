@@ -271,6 +271,7 @@
             transform: translateX(1px);
         }
 
+        /* HERO SECTION */
         .hero {
             min-height: 100vh;
             background: linear-gradient(135deg, #7A0000 0%, #8B0000 50%, #6B0000 100%);
@@ -295,14 +296,6 @@
             animation: fadeInUp 1s ease;
         }
 
-        .hero::after {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="160" height="160" viewBox="0 0 160 160"><filter id="n" x="0" y="0"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="4" stitchTiles="stitch"/></filter><rect width="100%" height="100%" filter="url(%23n)" opacity="0.04"/></svg>');
-            pointer-events: none;
-        }
-
         .hero .container {
             position: relative;
             z-index: 2;
@@ -322,55 +315,24 @@
             animation: fadeInUp 0.8s ease;
         }
 
-        .hero-overline {
-            display: inline-block;
-            font-size: 0.85rem;
-            font-weight: 900;
-            letter-spacing: 2px;
-            text-transform: uppercase;
-            color: var(--golden);
-            margin-bottom: 1.2rem;
-            padding: 0.6rem 1.2rem;
-            border: 1px solid rgba(212, 175, 55, 0.4);
-            border-radius: 50px;
-            background: rgba(212, 175, 55, 0.08);
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-        }
-
         .hero-content-center h1 {
             font-family: var(--font-display);
-            font-size: 4.5rem;
+            font-size: 5rem;
             font-weight: 800;
-            line-height: 1.15;
-            margin-bottom: 0.6rem;
-            color: var(--cream);
-            letter-spacing: -2px;
-            text-shadow: 4px 8px 20px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-highlight {
+            line-height: 1;
+            margin-bottom: 0.8rem;
             color: var(--golden-light);
-            font-style: italic;
-            display: inline;
+            letter-spacing: -3px;
+            text-shadow: 3px 6px 16px rgba(0, 0, 0, 0.4);
         }
 
-        .hero-benefit {
-            display: block;
-            color: #FFD700;
-            font-size: 0.95em;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            margin-top: 0.4rem;
-        }
-
-        .hero-subheading {
-            font-size: 1.4rem;
+        .hero-content-center .subtitle {
+            font-size: 1.9rem;
             color: var(--golden);
-            margin-bottom: 1.8rem;
+            margin-bottom: 2.2rem;
             font-weight: 600;
-            font-style: italic;
             text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.3);
-            letter-spacing: -0.3px;
+            letter-spacing: -0.5px;
         }
 
         .hero-description {
@@ -384,126 +346,55 @@
             margin-right: auto;
         }
 
-        .hero-benefits {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
-            margin: 2.5rem 0 3rem;
-            max-width: 700px;
-            margin-left: auto;
-            margin-right: auto;
-            animation: fadeInUp 0.8s ease 0.35s both;
+        .hero-features {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+            flex-wrap: wrap;
+            animation: fadeInUp 0.8s ease 0.2s both;
         }
 
-        .benefit-card {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            border-radius: 12px;
-            padding: 1rem 1.2rem;
-            text-align: center;
-            backdrop-filter: blur(8px);
-            transition: all 0.3s ease;
-        }
-
-        .benefit-card:hover {
-            background: rgba(212, 175, 55, 0.12);
-            border-color: var(--golden);
-            transform: translateY(-2px);
-        }
-
-        .benefit-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .benefit-text {
-            font-size: 0.9rem;
+        .feature-item {
+            font-size: 1rem;
             color: var(--cream);
-            font-weight: 600;
-            line-height: 1.4;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(212, 175, 55, 0.1);
+            padding: 0.8rem 1.2rem;
+            border-radius: 25px;
+            border: 1px solid rgba(212, 175, 55, 0.2);
         }
 
         .spots-counter {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 1rem;
-            margin: 2rem auto 2.5rem;
-            animation: fadeInUp 0.8s ease 0.4s both;
-            background: linear-gradient(135deg, rgba(255, 68, 68, 0.15), rgba(212, 175, 55, 0.1));
-            padding: 1.2rem 1.8rem;
-            border-radius: 16px;
-            border: 2px solid rgba(255, 68, 68, 0.3);
+            gap: 0.8rem;
+            margin-bottom: 2.5rem;
+            animation: fadeInUp 0.8s ease 0.3s both;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.1), rgba(212, 175, 55, 0.05));
+            padding: 0.8rem 1.5rem;
+            border-radius: 30px;
+            border: 1px solid rgba(212, 175, 55, 0.3);
             backdrop-filter: blur(10px);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .spots-counter::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            animation: shimmer 3s infinite;
         }
 
         .spots-icon {
-            font-size: 1.6rem;
-            animation: urgentPulse 1.2s ease-in-out infinite;
-            position: relative;
-            z-index: 2;
-        }
-
-        .spots-text {
-            font-size: 1.15rem;
-            color: var(--cream);
-            font-weight: 700;
-            position: relative;
-            z-index: 2;
-        }
-
-        .spots-text strong {
-            color: #FF6B6B;
             font-size: 1.3rem;
-            text-shadow: 0 0 12px rgba(255, 107, 107, 0.5);
-        }
-
-        .spots-text .spots-warning {
-            display: block;
-            font-size: 0.85rem;
-            color: #FFB3B3;
-            margin-top: 0.25rem;
-            font-weight: 600;
-            letter-spacing: 0.5px;
-        }
-
-        .live-ticker {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.6rem;
-            font-size: 0.9rem;
-            color: var(--cream);
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 1px solid rgba(212, 175, 55, 0.2);
-            font-weight: 500;
-            position: relative;
-            z-index: 2;
-        }
-
-        .live-ticker-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4CAF50;
             animation: pulse 2s ease-in-out infinite;
         }
 
-        .live-ticker-text {
-            font-style: italic;
-            opacity: 0.95;
+        .spots-text {
+            font-size: 1rem;
+            color: var(--cream);
+            font-weight: 600;
+        }
+
+        .spots-text strong {
+            color: var(--golden-light);
         }
 
         /* CTA BUTTON - Premium */
@@ -511,19 +402,19 @@
             background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
             color: var(--charcoal);
             border: 3px solid var(--golden);
-            padding: 1.6rem 4rem;
-            font-size: 1.3rem;
-            font-weight: 900;
+            padding: 1.4rem 3.5rem;
+            font-size: 1.2rem;
+            font-weight: 800;
             border-radius: 8px;
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.45),
-                        0 0 30px rgba(212, 175, 55, 0.3);
+            box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4),
+                        0 4px 15px rgba(0, 0, 0, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
             overflow: hidden;
-            margin: 1rem auto 2rem;
+            margin: 2rem auto;
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
@@ -531,7 +422,7 @@
             justify-content: center;
             max-width: 400px;
             width: 100%;
-            animation: glow 2.5s ease-in-out infinite, fadeInUp 0.8s ease 0.5s both;
+            animation: glow 2.5s ease-in-out infinite;
         }
 
         .cta-button::before {
@@ -541,35 +432,14 @@
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.25), transparent);
             animation: shimmer 2.5s infinite;
-        }
-
-        .cta-button::after {
-            content: '';
-            position: absolute;
-            inset: -2px;
-            border-radius: 8px;
-            border: 2px solid var(--golden);
-            opacity: 0;
-            animation: ctaPulseRing 2s ease-out infinite;
-        }
-
-        @keyframes ctaPulseRing {
-            0% {
-                transform: scale(1);
-                opacity: 0.8;
-            }
-            100% {
-                transform: scale(1.08);
-                opacity: 0;
-            }
         }
 
         .cta-button:hover {
             transform: translateY(-6px);
-            box-shadow: 0 24px 50px rgba(212, 175, 55, 0.55),
-                        0 0 40px rgba(212, 175, 55, 0.4);
+            box-shadow: 0 16px 40px rgba(212, 175, 55, 0.5),
+                        0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .cta-button:active {
@@ -577,51 +447,22 @@
         }
 
         .cta-text {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             letter-spacing: 0.5px;
-            position: relative;
-            z-index: 2;
         }
 
         .cta-subtext {
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             font-weight: 600;
             opacity: 0.95;
-            position: relative;
-            z-index: 2;
         }
 
         .social-proof {
-            font-size: 1.05rem;
+            font-size: 1rem;
             color: var(--cream);
-            margin-top: 1rem;
-            animation: fadeInUp 0.8s ease 0.55s both;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.8rem;
-        }
-
-        .proof-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.4rem;
-            background: rgba(212, 175, 55, 0.15);
-            padding: 0.5rem 0.9rem;
-            border-radius: 8px;
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            font-size: 0.9rem;
-        }
-
-        .proof-bullet {
-            display: inline-block;
-            width: 6px;
-            height: 6px;
-            background: var(--golden);
-            border-radius: 50%;
-            margin: 0 0.5rem;
-            opacity: 0.6;
+            margin-top: 2rem;
+            animation: fadeInUp 0.8s ease 0.4s both;
+            font-weight: 500;
         }
 
         /* Modal CSS injected by modal-component.js */
@@ -1662,25 +1503,12 @@
 
         /* RESPONSIVE */
         @media (max-width: 768px) {
-            .hero-overline {
-                font-size: 0.75rem;
-                margin-bottom: 1rem;
-                padding: 0.5rem 1rem;
-            }
-
             .hero-content-center h1 {
-                font-size: 2.8rem;
-                line-height: 1.2;
-                margin-bottom: 0.5rem;
+                font-size: 3.5rem;
             }
 
-            .hero-benefit {
-                font-size: 0.9em;
-            }
-
-            .hero-subheading {
-                font-size: 1.1rem;
-                margin-bottom: 1.5rem;
+            .hero-content-center .subtitle {
+                font-size: 1.5rem;
             }
 
             .hero-description {
@@ -1822,52 +1650,26 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content-center">
-                <div class="hero-overline">450+ Years of Kitchen Legacy</div>
-                <h1>The <span class="hero-highlight">"Kitchen Jewel"</span><br>That Makes Daily Cooking<br><span class="hero-benefit">Lightning Fast, Unbelievably Satisfying</span></h1>
-                <p class="hero-subheading">...And Will Have Your Guests Begging You For The Recipe</p>
-                <p class="hero-description">Four generations of Kathiyawadi perfection in every jar. Our grandmother's hands-crafted chutney doesn't just season your food—it transforms the entire meal into something unforgettable. Fresh, never processed, always worth the wait.</p>
+                <h1>Amrutbaa Ni Chutney</h1>
+                <div class="subtitle">Taste 90+ Years of Love & Tradition</div>
+                <p class="hero-description">Our grandmother's hands perfected this recipe over nine decades. The same Chilly Garlic Chutney that brought families together in <strong>Kathiyawad</strong>—now prepared in small, sacred batches just for you.</p>
                 
-                <div class="hero-countdown">
-                    <span class="countdown-label">⏰ Next batch closes in:</span>
-                    <span class="countdown-timer" id="heroCountdown">6d 12:30:00</span>
+                <div class="hero-features">
+                    <div class="feature-item">✦ Hand-prepared weekly</div>
+                    <div class="feature-item">✦ Never processed</div>
+                    <div class="feature-item">✦ Slots fill fast</div>
                 </div>
 
                 <div class="spots-counter">
                     <span class="spots-icon">🔥</span>
-                    <span class="spots-text"><strong>127 spots</strong> left this week <span class="spots-warning">Filling Fast</span></span>
-                    <div class="live-ticker">
-                        <span class="live-ticker-dot"></span>
-                        <span class="live-ticker-text">Priya from Mumbai just reserved 3 jars</span>
-                    </div>
-                </div>
-
-                <div class="hero-benefits">
-                    <div class="benefit-card">
-                        <span class="benefit-icon">✓</span>
-                        <span class="benefit-text">100% Money Back Guarantee</span>
-                    </div>
-                    <div class="benefit-card">
-                        <span class="benefit-icon">🌿</span>
-                        <span class="benefit-text">Zero Preservatives, No Fillers</span>
-                    </div>
-                    <div class="benefit-card">
-                        <span class="benefit-icon">🥫</span>
-                        <span class="benefit-text">Fresh Batch Every Sunday</span>
-                    </div>
+                    <span class="spots-text"><strong>127 spots</strong> left this week</span>
                 </div>
 
                 <button class="cta-button" id="openModalBtn">
-                    <span class="cta-text">Secure Your Jar Now</span>
-                    <span class="cta-subtext">Limited to 200 jars per batch</span>
+                    <span class="cta-text">Reserve Your Jar Now</span>
                 </button>
 
-                <p class="social-proof">
-                    <span class="proof-badge">⭐ 500+ customers</span>
-                    <span class="proof-bullet"></span>
-                    <span class="proof-badge">4.9/5 stars</span>
-                    <span class="proof-bullet"></span>
-                    <span class="proof-badge">Kathiyawadi-made</span>
-                </p>
+                <p class="social-proof">⭐ Join 500+ customers who've already registered</p>
             </div>
         </div>
     </section>
@@ -2279,7 +2081,6 @@
         function updateTimer() {
             const timerDisplay = document.getElementById('timerDisplay');
             const journeyCountdown = document.getElementById('journeyCountdown');
-            const heroCountdown = document.getElementById('heroCountdown');
             
             let targetTime = getNextSundayMidnight();
             const now = new Date();
@@ -2321,41 +2122,7 @@
                 const hoursLeft = totalHours % 24;
                 journeyCountdown.textContent = `Next batch closes in ${days}d ${String(hoursLeft).padStart(2, '0')}h`;
             }
-            
-            // Sync hero countdown timer
-            if (heroCountdown) {
-                heroCountdown.textContent = 
-                    String(days).padStart(1, '0') + 'd ' +
-                    String(hours).padStart(2, '0') + ':' +
-                    String(minutes).padStart(2, '0') + ':' +
-                    String(seconds).padStart(2, '0');
-            }
         }
-
-        // Live ticker messages rotation
-        const tickerMessages = [
-            "Priya from Mumbai just reserved 3 jars",
-            "Rajesh from Ahmedabad grabbed 2 jars",
-            "Neha from Bangalore secured her order",
-            "Vikram from Delhi just registered",
-            "Anjali from Pune reserved 4 jars",
-            "Arjun from Surat joined the batch",
-            "Maya from Vadodara placed order",
-            "Amit from Bhavnagar reserved jars"
-        ];
-        
-        let currentMessageIndex = 0;
-        function rotateTickerMessage() {
-            const tickerText = document.querySelector('.live-ticker-text');
-            if (tickerText) {
-                tickerText.textContent = tickerMessages[currentMessageIndex];
-                currentMessageIndex = (currentMessageIndex + 1) % tickerMessages.length;
-            }
-        }
-        
-        // Rotate ticker every 4 seconds
-        rotateTickerMessage();
-        setInterval(rotateTickerMessage, 4000);
 
         updateTimer();
         setInterval(updateTimer, 1000);
