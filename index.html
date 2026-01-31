@@ -360,6 +360,79 @@
             letter-spacing: -0.5px;
         }
 
+        .hero-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: var(--golden);
+            margin-bottom: 1.2rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(212, 175, 55, 0.5);
+            border-radius: 50px;
+            background: rgba(212, 175, 55, 0.1);
+            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+            animation: fadeInUp 0.6s ease;
+        }
+
+        .hero-headline {
+            margin-bottom: 2rem;
+        }
+
+        .hero-subheadline {
+            font-size: 1.1rem;
+            color: var(--cream);
+            margin-bottom: 3rem;
+            line-height: 1.8;
+            text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.2);
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+            font-weight: 400;
+            letter-spacing: 0.3px;
+        }
+
+        .hero-image-wrapper {
+            margin: 3rem 0 3rem 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            animation: fadeInUp 0.8s ease 0.1s both;
+        }
+
+        .hero-image-wrapper img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            max-height: 450px;
+            object-fit: cover;
+        }
+
+        @media (max-width: 768px) {
+            .hero-image-wrapper {
+                margin: 2rem 0;
+            }
+
+            .hero-image-wrapper img {
+                max-height: 300px;
+                border-radius: 8px;
+            }
+
+            .hero-badge {
+                font-size: 0.7rem;
+                padding: 0.4rem 0.8rem;
+                margin-bottom: 1rem;
+            }
+
+            .hero-subheadline {
+                font-size: 1rem;
+                margin-bottom: 2rem;
+            }
+        }
+
         .hero-description {
             font-size: 1.2rem;
             margin-bottom: 3rem;
@@ -1675,9 +1748,18 @@
     <section class="hero">
         <div class="container">
             <div class="hero-content-center">
-                <h1>The 450-Year-Old "Kitchen Jewel" That Makes Daily Cooking Lightning Fast, Unbelievably Satisfying... And Will Have Your Guests Begging You For The Recipe.</h1>
-                <p class="hero-description">Four generations of Kathiyawadi perfection in every jar. Our grandmother's hands-crafted chutney doesn't just season your food—it transforms the entire meal into something unforgettable. Fresh, never processed, always worth the wait.</p>
+                <span class="hero-badge">✓ 450+ Years of Kitchen Legacy</span>
                 
+                <div class="hero-headline">
+                    <h1>The 450-Year-Old "Kitchen Jewel" That Makes Daily Cooking Lightning Fast, Unbelievably Satisfying... And Will Have Your Guests Begging You For The Recipe.</h1>
+                </div>
+
+                <p class="hero-subheadline">Four generations of Kathiyawadi perfection in every jar. Our grandmother's hands-crafted chutney doesn't just season your food—it transforms the entire meal into something unforgettable.</p>
+
+                <div class="hero-image-wrapper">
+                    <img src="assets/images/chutney on table with food.png" alt="Amrutbaa Ni Chutney served with family meal" loading="lazy">
+                </div>
+
                 <div class="hero-features">
                     <div class="feature-item">✦ Hand-prepared weekly</div>
                     <div class="feature-item">✦ Never processed</div>
