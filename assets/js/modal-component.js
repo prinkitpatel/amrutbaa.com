@@ -122,6 +122,55 @@ function initOrderModal() {
             margin-bottom: 2rem;
         }
 
+        .modal-trust {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .trust-item {
+            background: rgba(212, 175, 55, 0.12);
+            border: 1px solid rgba(212, 175, 55, 0.25);
+            color: #6B2C2C;
+            padding: 0.35rem 0.75rem;
+            border-radius: 999px;
+            font-size: 0.78rem;
+            font-weight: 600;
+            letter-spacing: 0.2px;
+        }
+
+        .modal-price {
+            display: flex;
+            align-items: baseline;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .price-amount {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: #6B2C2C;
+        }
+
+        .price-caption {
+            font-size: 0.8rem;
+            color: #4A4A4A;
+            opacity: 0.9;
+            font-weight: 600;
+        }
+
+        .modal-urgency {
+            font-size: 0.85rem;
+            color: #6B2C2C;
+            background: rgba(212, 175, 55, 0.1);
+            border: 1px solid rgba(212, 175, 55, 0.22);
+            border-radius: 8px;
+            padding: 0.6rem 0.8rem;
+            margin-bottom: 1.25rem;
+            line-height: 1.4;
+        }
+
         .form-group.error input,
         .form-group.error textarea {
             border-color: #C0392B;
@@ -318,6 +367,22 @@ function initOrderModal() {
             box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
         }
 
+        .secure-note {
+            margin-top: 0.75rem;
+            font-size: 0.8rem;
+            color: #4A4A4A;
+            text-align: center;
+            opacity: 0.85;
+        }
+
+        .refund-note {
+            margin-top: 0.35rem;
+            font-size: 0.75rem;
+            color: #4A4A4A;
+            text-align: center;
+            opacity: 0.75;
+        }
+
         .success-message {
             display: none !important;
             text-align: center;
@@ -348,6 +413,18 @@ function initOrderModal() {
                 padding-bottom: 0.5rem;
             }
 
+            .modal-trust {
+                gap: 0.5rem;
+            }
+
+            .trust-item {
+                font-size: 0.72rem;
+            }
+
+            .price-amount {
+                font-size: 1.4rem;
+            }
+
             .modal-close {
                 top: 0.8rem;
                 right: 0.8rem;
@@ -367,15 +444,28 @@ function initOrderModal() {
                 <button class="modal-close" id="closeModalBtn">&times;</button>
                 
                 <div class="modal-header">
-                    <h2>Secure Your Jar Now</h2>
-                    <p class="modal-tagline">First batch slots are limited. Register today to guarantee your delivery.</p>
+                    <h2>Reserve Your Jar in This Week’s Batch</h2>
+                    <p class="modal-tagline">Fresh prep begins Monday • Dispatch Tuesday • Delivered Wed–Fri</p>
                 </div>
+
+                <div class="modal-trust">
+                    <span class="trust-item">4.9★ from 500+ families</span>
+                    <span class="trust-item">No preservatives</span>
+                    <span class="trust-item">Weekly fresh batch</span>
+                </div>
+
+                <div class="modal-price">
+                    <span class="price-amount">₹349</span>
+                    <span class="price-caption">per jar • Free shipping on all orders</span>
+                </div>
+
+                <div class="modal-urgency">Batch closes in <span id="modalTimer">--:--:--</span></div>
                 
                 <form id="registrationForm">
                     <div class="stepper" id="formStepper">
                         <div class="step active" data-step="1">
                             <span class="step-number">1</span>
-                            <span class="step-title">Contact</span>
+                            <span class="step-title">Reserve</span>
                         </div>
                         <div class="step" data-step="2">
                             <span class="step-number">2</span>
@@ -384,7 +474,23 @@ function initOrderModal() {
                     </div>
 
                     <div class="step-pane active" data-step-pane="1">
-                        <div class="form-row">
+                        <div class="form-group">
+                            <label for="phone">Phone Number *</label>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone" required>
+                            <p class="input-error" data-error-for="phone" style="display:none;"></p>
+                            <p class="field-note">We’ll confirm your batch slot over WhatsApp/SMS.</p>
+                        </div>
+                        <input type="hidden" id="quantity" name="quantity" value="1">
+                        <div class="step-actions">
+                            <button type="button" class="btn-primary-solid" id="nextStepBtn">Continue →</button>
+                        </div>
+                    </div>
+
+                    <div class="step-pane" data-step-pane="2">
+                        <div class="order-recap">
+                            <strong>Reserved:</strong> 1 fresh jar in this week's batch • Dispatch starts Monday after prep.
+                        </div>
+                        <div class="form-row" style="margin-top: 1.25rem;">
                             <div class="form-group">
                                 <label for="name">Your Name *</label>
                                 <input type="text" id="name" name="name" placeholder="Enter your name" required>
@@ -396,28 +502,7 @@ function initOrderModal() {
                                 <p class="input-error" data-error-for="email" style="display:none;"></p>
                             </div>
                         </div>
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="phone">Phone Number *</label>
-                                <input type="tel" id="phone" name="phone" placeholder="Enter your phone" required>
-                                <p class="input-error" data-error-for="phone" style="display:none;"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="quantity">Quantity *</label>
-                                <input type="number" id="quantity" name="quantity" value="1" max="1" readonly>
-                                <p class="field-note">High early orders this week, so it's 1 jar per person for now. We'll open more slots in the next batch.</p>
-                            </div>
-                        </div>
-                        <div class="step-actions">
-                            <button type="button" class="btn-primary-solid" id="nextStepBtn">Continue to Delivery →</button>
-                        </div>
-                    </div>
-
-                    <div class="step-pane" data-step-pane="2">
-                        <div class="order-recap">
-                            <strong>Reserved:</strong> 1 fresh jar in this week's batch • Dispatch starts Monday after prep.
-                        </div>
-                        <div class="form-group" style="margin-top: 1.25rem;">
+                        <div class="form-group">
                             <label for="address1">Address Line 1 *</label>
                             <input type="text" id="address1" name="address1" placeholder="House / flat number, street" required>
                             <p class="input-error" data-error-for="address1" style="display:none;"></p>
@@ -446,8 +531,10 @@ function initOrderModal() {
                         </div>
                         <div class="step-actions">
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
-                            <button type="submit" class="btn-primary-solid">Confirm & Reserve</button>
+                            <button type="submit" class="btn-primary-solid">Reserve & Pay Securely</button>
                         </div>
+                        <div class="secure-note">Secure checkout powered by Razorpay</div>
+                        <div class="refund-note">Need to make a change? Contact us before Sunday 9 PM.</div>
                     </div>
 
                     <div class="success-message" id="successMessage">
@@ -522,22 +609,9 @@ function initOrderModal() {
     }
 
     function validateStep1() {
-        const name = document.getElementById('name').value.trim();
-        const email = document.getElementById('email').value.trim();
         const phone = document.getElementById('phone').value.trim();
 
         clearErrors();
-
-        if (name.length < 2) {
-            setError('name', 'Please enter your full name.');
-            return false;
-        }
-
-        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-        if (!emailValid) {
-            setError('email', 'Add a valid email so we can share batch updates.');
-            return false;
-        }
 
         const phoneDigits = phone.replace(/\D/g, '');
         if (phoneDigits.length < 10) {
@@ -549,6 +623,8 @@ function initOrderModal() {
     }
 
     function validateStep2() {
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
         const address1 = document.getElementById('address1').value.trim();
         const city = document.getElementById('city').value.trim();
         const state = document.getElementById('state').value.trim();
@@ -556,6 +632,17 @@ function initOrderModal() {
 
         let valid = true;
         clearErrors();
+
+        if (name.length < 2) {
+            setError('name', 'Please enter your full name.');
+            valid = false;
+        }
+
+        const emailValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+        if (!emailValid) {
+            setError('email', 'Add a valid email so we can share batch updates.');
+            valid = false;
+        }
 
         if (address1.length < 5) {
             setError('address1', 'Please add your street and house details.');

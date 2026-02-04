@@ -2564,6 +2564,7 @@
         function updateTimer() {
             const timerDisplay = document.getElementById('timerDisplay');
             const journeyCountdown = document.getElementById('journeyCountdown');
+            const modalTimer = document.getElementById('modalTimer');
 
             let targetTime = getNextSundayMidnight();
             const now = new Date();
@@ -2598,6 +2599,14 @@
                 } else {
                     timerDisplay.classList.add('urgency-high');
                 }
+            }
+
+            if (modalTimer) {
+                modalTimer.textContent =
+                    String(days) + 'd ' +
+                    String(hours).padStart(2, '0') + ':' +
+                    String(minutes).padStart(2, '0') + ':' +
+                    String(seconds).padStart(2, '0');
             }
 
             if (journeyCountdown) {
