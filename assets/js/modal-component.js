@@ -347,6 +347,14 @@ function initOrderModal() {
             .step-pane {
                 padding-bottom: 0.5rem;
             }
+
+            .modal-close {
+                top: 0.8rem;
+                right: 0.8rem;
+                font-size: 1.5rem;
+                width: 30px;
+                height: 30px;
+            }
         }
     `;
     document.head.appendChild(styleSheet);

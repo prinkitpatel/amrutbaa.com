@@ -548,6 +548,12 @@
                 font-size: 0.85rem;
                 margin-top: 0.8rem;
             }
+
+            .batch-notice {
+                font-size: 0.68rem;
+                margin-top: 0.8rem;
+                line-height: 1.4;
+            }
         }
 
         @media (max-width: 500px) {
@@ -616,6 +622,12 @@
             .social-proof {
                 font-size: 0.75rem;
                 margin-top: 0.5rem;
+            }
+
+            .batch-notice {
+                font-size: 0.65rem;
+                margin-top: 0.6rem;
+                line-height: 1.3;
             }
         }
 
@@ -747,6 +759,21 @@
             margin-top: 2rem;
             animation: fadeInUp 0.8s ease 0.4s both;
             font-weight: 500;
+        }
+
+        .batch-notice {
+            font-size: 0.75rem;
+            color: rgba(255, 252, 247, 0.5);
+            margin-top: 1rem;
+            line-height: 1.5;
+            animation: fadeInUp 0.8s ease 0.45s both;
+            text-align: center;
+            font-weight: 400;
+        }
+
+        .batch-notice strong {
+            color: rgba(255, 252, 247, 0.65);
+            font-weight: 600;
         }
 
         /* Modal CSS injected by modal-component.js */
@@ -2031,6 +2058,8 @@
                 <button class="cta-button" id="openModalBtn">
                     <span class="cta-text">Reserve Your Jar Now</span>
                 </button>
+
+                <p class="batch-notice">⚠️ <strong>Note:</strong> All orders are prepared strictly as per our weekly batch schedule. No ready stock available. Urgent delivery requests cannot be accommodated at any cost.</p>
 
                 <p class="social-proof">⭐ Join 500+ customers who've already registered</p>
             </div>
