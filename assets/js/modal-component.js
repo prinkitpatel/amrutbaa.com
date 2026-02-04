@@ -297,6 +297,74 @@ function initOrderModal() {
             color: #6B2C2C;
         }
 
+        .confidence-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 1rem;
+            margin: 1.5rem 0 2rem 0;
+        }
+
+        .confidence-item {
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.04) 100%);
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 10px;
+            padding: 1rem 0.9rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+
+        .confidence-item:hover {
+            border-color: rgba(212, 175, 55, 0.4);
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.08) 100%);
+            transform: translateY(-2px);
+        }
+
+        .confidence-icon {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            display: block;
+        }
+
+        .confidence-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #6B2C2C;
+            margin-bottom: 0.4rem;
+            line-height: 1.3;
+        }
+
+        .confidence-description {
+            font-size: 0.75rem;
+            color: #4A4A4A;
+            opacity: 0.8;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 768px) {
+            .confidence-section {
+                grid-template-columns: 1fr;
+                gap: 0.8rem;
+                margin: 1.2rem 0 1.5rem 0;
+            }
+
+            .confidence-item {
+                padding: 0.85rem 0.75rem;
+            }
+
+            .confidence-icon {
+                font-size: 1.6rem;
+                margin-bottom: 0.35rem;
+            }
+
+            .confidence-title {
+                font-size: 0.8rem;
+            }
+
+            .confidence-description {
+                font-size: 0.7rem;
+            }
+        }
+
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -490,6 +558,25 @@ function initOrderModal() {
                         <div class="order-recap">
                             <strong>Reserved:</strong> 1 fresh jar in this week's batch • Dispatch starts Monday after prep.
                         </div>
+
+                        <div class="confidence-section">
+                            <div class="confidence-item">
+                                <span class="confidence-icon">✨</span>
+                                <div class="confidence-title">7-Day Guarantee</div>
+                                <div class="confidence-description">Not happy? Full refund, no questions asked.</div>
+                            </div>
+                            <div class="confidence-item">
+                                <span class="confidence-icon">👥</span>
+                                <div class="confidence-title">42 Reserved This Batch</div>
+                                <div class="confidence-description">Join 500+ families who trust Amrutbaa.</div>
+                            </div>
+                            <div class="confidence-item">
+                                <span class="confidence-icon">🔒</span>
+                                <div class="confidence-title">100% Secure Payment</div>
+                                <div class="confidence-description">Encrypted by Razorpay, card never stored.</div>
+                            </div>
+                        </div>
+
                         <div class="form-row" style="margin-top: 1.25rem;">
                             <div class="form-group">
                                 <label for="name">Your Name *</label>
@@ -533,8 +620,7 @@ function initOrderModal() {
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
                             <button type="submit" class="btn-primary-solid">Reserve & Pay Securely</button>
                         </div>
-                        <div class="secure-note">Secure checkout powered by Razorpay</div>
-                        <div class="refund-note">Need to make a change? Contact us before Sunday 9 PM.</div>
+                        <div class="refund-note">💬 Need to make a change? Contact us before Sunday 9 PM.</div>
                     </div>
 
                     <div class="success-message" id="successMessage">
