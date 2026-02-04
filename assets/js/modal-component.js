@@ -652,10 +652,10 @@ function initOrderModal() {
                 name: 'Amrutbaa Ni Chutney',
                 description: `Batch Registration - ${formData.quantity} jar${formData.quantity > 1 ? 's' : ''}`,
                 order_id: order.id,
-                handler: async function(response) {
+                handler: async function (response) {
                     // Payment successful
                     console.log('✅ Payment successful:', response);
-                    
+
                     // Verify payment signature via backend
                     try {
                         console.log('Verifying payment signature...');
@@ -687,7 +687,7 @@ function initOrderModal() {
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none';
                             console.log('✅ Success message should be visible now');
-                            
+
                             setTimeout(() => {
                                 console.log('Closing modal and resetting form...');
                                 closeModal();
@@ -723,7 +723,7 @@ function initOrderModal() {
                     color: '#6B1C23'
                 },
                 modal: {
-                    ondismiss: function() {
+                    ondismiss: function () {
                         console.log('Payment cancelled by user');
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
@@ -751,7 +751,7 @@ function initOrderModal() {
     async function submitOrderDetails(orderData) {
         try {
             console.log('Submitting order to n8n:', orderData);
-            
+
             // Send as JSON POST instead of hidden form for better reliability
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
@@ -793,23 +793,23 @@ function initOrderModal() {
         }
 
         document.body.appendChild(hiddenForm);
-        
+
         const iframe = document.createElement('iframe');
         iframe.name = 'hidden-form-iframe-' + Date.now();
         iframe.style.display = 'none';
         document.body.appendChild(iframe);
-        
+
         hiddenForm.target = iframe.name;
         hiddenForm.submit();
-        
+
         // Wait longer for form processing
         setTimeout(() => {
             try {
                 document.body.removeChild(hiddenForm);
-            } catch (e) {}
+            } catch (e) { }
             try {
                 document.body.removeChild(iframe);
-            } catch (e) {}
+            } catch (e) { }
         }, 2000);
     }
 

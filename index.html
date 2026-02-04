@@ -1,14 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Amrutbaa Ni Cutney - 90+ year old family chutney from Kathiyawad. Limited batch. Register now, taste legacy.">
+    <meta name="description"
+        content="Amrutbaa Ni Cutney - 90+ year old family chutney from Kathiyawad. Limited batch. Register now, taste legacy.">
     <title>Amrutbaa Ni Cutney - First Official Batch Registration</title>
-    
+
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+
     <style>
         * {
             margin: 0;
@@ -41,28 +45,61 @@
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes slideInDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         @keyframes glow {
-            0%, 100% { box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0, 0, 0, 0.2); }
-            50% { box-shadow: 0 16px 40px rgba(212, 175, 55, 0.5), 0 6px 20px rgba(0, 0, 0, 0.25); }
+
+            0%,
+            100% {
+                box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4), 0 4px 15px rgba(0, 0, 0, 0.2);
+            }
+
+            50% {
+                box-shadow: 0 16px 40px rgba(212, 175, 55, 0.5), 0 6px 20px rgba(0, 0, 0, 0.25);
+            }
         }
 
         @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.02); }
+
+            0%,
+            100% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.02);
+            }
         }
 
         @keyframes shimmer {
-            0% { left: -100%; }
-            100% { left: 100%; }
+            0% {
+                left: -100%;
+            }
+
+            100% {
+                left: 100%;
+            }
         }
 
         /* Sticky footer CTA with timer */
@@ -89,7 +126,7 @@
             position: absolute;
             inset: 0;
             background: radial-gradient(circle at 15% 50%, rgba(212, 175, 55, 0.14) 0%, transparent 50%),
-                        radial-gradient(circle at 85% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 55%);
+                radial-gradient(circle at 85% 50%, rgba(212, 175, 55, 0.1) 0%, transparent 55%);
             pointer-events: none;
         }
 
@@ -143,8 +180,17 @@
         }
 
         @keyframes urgentPulse {
-            0%, 100% { transform: scale(1); opacity: 1; }
-            50% { transform: scale(1.03); opacity: 0.95; }
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.03);
+                opacity: 0.95;
+            }
         }
 
         .timer-subtext {
@@ -227,6 +273,7 @@
                 transform: scale(1);
                 opacity: 0.6;
             }
+
             100% {
                 transform: scale(1.15);
                 opacity: 0;
@@ -291,7 +338,7 @@
             right: 0;
             bottom: 0;
             background: radial-gradient(circle at 20% 30%, rgba(212, 175, 55, 0.08) 0%, transparent 50%),
-                        radial-gradient(circle at 80% 70%, rgba(91, 44, 111, 0.1) 0%, transparent 50%);
+                radial-gradient(circle at 80% 70%, rgba(91, 44, 111, 0.1) 0%, transparent 50%);
             opacity: 1;
             animation: fadeInUp 1s ease;
         }
@@ -394,77 +441,181 @@
         }
 
         .hero-image-wrapper {
-            margin: 3rem 0 3rem 0;
+            margin: 3rem 0 2.5rem 0;
             display: flex;
             justify-content: center;
             align-items: center;
             animation: fadeInUp 0.8s ease 0.1s both;
+            position: relative;
         }
 
         .hero-image-wrapper img {
             max-width: 100%;
             height: auto;
             display: block;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
-            max-height: 450px;
+            max-height: 550px;
             object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .hero-image-wrapper img:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 30px 80px rgba(107, 28, 35, 0.2);
+        }
         }
 
         @media (max-width: 768px) {
             .hero .container {
                 padding: 0 1.25rem;
+                min-height: auto;
+                padding-top: 1.5rem;
+                padding-bottom: 1.5rem;
+            }
+
+            .hero-content-center {
+                max-width: 100%;
+                overflow-x: hidden;
             }
 
             .hero-content-center h1 {
-                font-size: 2.1rem;
-                line-height: 1.25;
-                letter-spacing: -1px;
+                font-size: 1.35rem;
+                line-height: 1.2;
+                letter-spacing: 0;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                margin-bottom: 0.8rem;
             }
 
             .hero-headline {
-                margin-bottom: 1.2rem;
+                margin-bottom: 0.6rem;
             }
 
             .hero-image-wrapper {
-                margin: 2rem 0;
+                margin: 1rem 0 1.4rem;
             }
 
             .hero-image-wrapper img {
-                max-height: 260px;
-                border-radius: 8px;
+                max-height: 320px;
+                border-radius: 12px;
             }
 
             .hero-badge {
-                font-size: 0.7rem;
-                padding: 0.4rem 0.8rem;
-                margin-bottom: 1rem;
+                font-size: 0.6rem;
+                padding: 0.25rem 0.6rem;
+                margin-bottom: 0.6rem;
             }
 
             .hero-subheadline {
-                font-size: 1rem;
-                margin-bottom: 2rem;
+                font-size: 0.95rem;
+                margin-bottom: 1.2rem;
             }
 
             .hero-features {
-                gap: 0.75rem;
-                margin-bottom: 1.5rem;
+                gap: 0.4rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .feature-item {
+                font-size: 0.85rem;
+                padding: 0.5rem 0.8rem;
             }
 
             .spots-counter {
-                padding: 0.6rem 1rem;
-                margin-bottom: 1.75rem;
+                padding: 0.5rem 0.8rem;
+                margin-bottom: 1rem;
+                font-size: 0.85rem;
             }
 
             .cta-button {
-                padding: 1.1rem 2rem;
-                font-size: 1rem;
+                padding: 0.9rem 1.8rem;
+                font-size: 0.9rem;
                 width: 100%;
-                max-width: 320px;
+                max-width: 300px;
+                margin: 1rem auto 0.8rem;
             }
 
             .cta-text {
-                font-size: 1rem;
+                font-size: 0.95rem;
+            }
+
+            .cta-subtext {
+                font-size: 0.7rem;
+            }
+
+            .social-proof {
+                font-size: 0.85rem;
+                margin-top: 0.8rem;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .hero .container {
+                padding: 0 1rem;
+                min-height: auto;
+                padding-top: 1rem;
+                padding-bottom: 1rem;
+            }
+
+            .hero-content-center {
+                max-width: 100%;
+            }
+
+            .hero-content-center h1 {
+                font-size: 1.1rem;
+                line-height: 1.15;
+                letter-spacing: 0;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
+                hyphens: auto;
+                margin-bottom: 0.4rem;
+            }
+
+            .hero-badge {
+                font-size: 0.52rem;
+                padding: 0.2rem 0.5rem;
+                margin-bottom: 0.4rem;
+            }
+
+            .hero-features {
+                flex-direction: column;
+                gap: 0.25rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .feature-item {
+                font-size: 0.78rem;
+                padding: 0.4rem 0.6rem;
+            }
+
+            .hero-image-wrapper {
+                margin: 0.8rem 0 1.2rem;
+            }
+
+            .hero-image-wrapper img {
+                max-height: 300px;
+                border-radius: 10px;
+            }
+
+            .cta-button {
+                padding: 0.8rem 1.4rem;
+                font-size: 0.82rem;
+                max-width: 260px;
+                margin: 0.8rem auto 0.6rem;
+            }
+
+            .cta-text {
+                font-size: 0.9rem;
+            }
+
+            .cta-subtext {
+                font-size: 0.65rem;
+            }
+
+            .social-proof {
+                font-size: 0.75rem;
+                margin-top: 0.5rem;
             }
         }
 
@@ -502,7 +653,7 @@
         }
 
         .spots-counter {
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 0.8rem;
@@ -542,7 +693,7 @@
             cursor: pointer;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
             box-shadow: 0 10px 30px rgba(212, 175, 55, 0.4),
-                        0 4px 15px rgba(0, 0, 0, 0.2);
+                0 4px 15px rgba(0, 0, 0, 0.2);
             text-transform: uppercase;
             letter-spacing: 1px;
             position: relative;
@@ -572,7 +723,7 @@
         .cta-button:hover {
             transform: translateY(-6px);
             box-shadow: 0 16px 40px rgba(212, 175, 55, 0.5),
-                        0 6px 20px rgba(0, 0, 0, 0.25);
+                0 6px 20px rgba(0, 0, 0, 0.25);
         }
 
         .cta-button:active {
@@ -898,7 +1049,8 @@
                 padding: 1rem 1.2rem;
                 border-radius: 50px;
                 box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-                display: none; /* Hidden by default on desktop */
+                display: none;
+                /* Hidden by default on desktop */
                 align-items: center;
                 gap: 0.5rem;
                 font-size: 0.85rem;
@@ -911,7 +1063,8 @@
             }
 
             .swipe-hint.show {
-                display: flex; /* Show only when triggered on mobile */
+                display: flex;
+                /* Show only when triggered on mobile */
                 opacity: 1;
             }
 
@@ -921,20 +1074,46 @@
             }
 
             @keyframes swipeHintBounce {
-                0%, 100% { transform: translateY(-50%) translateX(0); }
-                50% { transform: translateY(-50%) translateX(-8px); }
+
+                0%,
+                100% {
+                    transform: translateY(-50%) translateX(0);
+                }
+
+                50% {
+                    transform: translateY(-50%) translateX(-8px);
+                }
             }
 
             @keyframes swipeArrow {
-                0%, 100% { transform: translateX(0); opacity: 1; }
-                50% { transform: translateX(-6px); opacity: 0.6; }
+
+                0%,
+                100% {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+
+                50% {
+                    transform: translateX(-6px);
+                    opacity: 0.6;
+                }
             }
 
             /* Initial card peek animation */
             @keyframes cardPeekHint {
-                0%, 100% { transform: translateX(0); }
-                25% { transform: translateX(-12px); }
-                50% { transform: translateX(0); }
+
+                0%,
+                100% {
+                    transform: translateX(0);
+                }
+
+                25% {
+                    transform: translateX(-12px);
+                }
+
+                50% {
+                    transform: translateX(0);
+                }
             }
 
             .story-card.peek-hint {
@@ -1189,10 +1368,11 @@
         .batch-journey {
             position: relative;
             background: radial-gradient(circle at 15% 20%, rgba(212, 175, 55, 0.12) 0%, transparent 40%),
-                        radial-gradient(circle at 85% 10%, rgba(74, 0, 0, 0.08) 0%, transparent 40%),
-                        linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FFF9F0 100%);
+                radial-gradient(circle at 85% 10%, rgba(74, 0, 0, 0.08) 0%, transparent 40%),
+                linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FFF9F0 100%);
             padding: 4.5rem 0 6rem;
-            overflow: visible; /* Allow sticky rail to behave across section */
+            overflow: visible;
+            /* Allow sticky rail to behave across section */
         }
 
         .journey-shell {
@@ -1216,7 +1396,7 @@
             border: 1px solid rgba(212, 175, 55, 0.2);
             border-radius: 18px;
             backdrop-filter: blur(12px);
-            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
             transition: box-shadow 0.25s ease, transform 0.25s ease;
         }
 
@@ -1273,7 +1453,7 @@
         /* Subtle lift when journey is active */
         .journey-rail.is-floating {
             transform: translateY(-3px);
-            box-shadow: 0 16px 40px rgba(0,0,0,0.12);
+            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.12);
         }
 
         .journey-viewport {
@@ -1340,7 +1520,7 @@
             border-radius: 18px;
             overflow: hidden;
             background: linear-gradient(135deg, rgba(74, 0, 0, 0.15), rgba(201, 169, 97, 0.1));
-            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.3), 0 20px 60px rgba(0,0,0,0.12);
+            box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.3), 0 20px 60px rgba(0, 0, 0, 0.12);
         }
 
         .beat-media img {
@@ -1359,8 +1539,8 @@
         .media-overlay {
             position: absolute;
             inset: 0;
-            background: radial-gradient(circle at 20% 20%, rgba(255,255,255,0.12) 0%, transparent 35%),
-                        linear-gradient(180deg, transparent 60%, rgba(0,0,0,0.2) 100%);
+            background: radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.12) 0%, transparent 35%),
+                linear-gradient(180deg, transparent 60%, rgba(0, 0, 0, 0.2) 100%);
             pointer-events: none;
         }
 
@@ -1436,9 +1616,9 @@
         .flavor-chip {
             padding: 0.85rem 1rem;
             border-radius: 14px;
-            background: linear-gradient(135deg, rgba(255,255,255,0.9), rgba(201, 169, 97, 0.12));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(201, 169, 97, 0.12));
             border: 1px solid rgba(212, 175, 55, 0.2);
-            box-shadow: 0 10px 28px rgba(0,0,0,0.06);
+            box-shadow: 0 10px 28px rgba(0, 0, 0, 0.06);
             font-weight: 600;
             color: var(--charcoal);
             position: relative;
@@ -1459,11 +1639,11 @@
         }
 
         .timeline-card {
-            background: rgba(255,255,255,0.95);
+            background: rgba(255, 255, 255, 0.95);
             border: 1px dashed rgba(212, 175, 55, 0.6);
             border-radius: 14px;
             padding: 0.85rem 1rem;
-            box-shadow: 0 6px 16px rgba(0,0,0,0.05);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.05);
         }
 
         .timeline-card h4 {
@@ -1518,7 +1698,7 @@
             padding: 1rem 1.1rem;
             display: grid;
             gap: 0.4rem;
-            box-shadow: 0 12px 30px rgba(0,0,0,0.06);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.06);
         }
 
         .delivery-card strong {
@@ -1554,22 +1734,44 @@
             .journey-chip-row {
                 margin-top: 0.5rem;
             }
+
             /* Mobile progress bar visible on small screens */
-            .journey-progress { display: flex; }
+            .journey-progress {
+                display: flex;
+            }
+
             /* Hide side rail on mobile to reduce clutter */
-            .journey-rail { display: none; }
+            .journey-rail {
+                display: none;
+            }
         }
 
         @media (max-width: 768px) {
-            .journey-shell { padding: 0 1.25rem; }
-            .journey-rail { padding: 0.75rem; }
-            .rail-item { font-size: 0.9rem; }
-            .journey-beat { padding: 1.5rem; }
-            .journey-chip { width: 100%; justify-content: center; }
+            .journey-shell {
+                padding: 0 1.25rem;
+            }
+
+            .journey-rail {
+                padding: 0.75rem;
+            }
+
+            .rail-item {
+                font-size: 0.9rem;
+            }
+
+            .journey-beat {
+                padding: 1.5rem;
+            }
+
+            .journey-chip {
+                width: 100%;
+                justify-content: center;
+            }
+
             .journey-chip-row {
                 margin-bottom: 1rem;
                 padding: 0.5rem;
-                background: rgba(255,255,255,0.7);
+                background: rgba(255, 255, 255, 0.7);
                 border-radius: 12px;
                 border: 1px solid rgba(212, 175, 55, 0.15);
             }
@@ -1581,27 +1783,32 @@
             position: sticky;
             top: 0;
             z-index: 100;
-            background: rgba(255,255,255,0.9);
+            background: rgba(255, 255, 255, 0.9);
             border: 1px solid rgba(212, 175, 55, 0.25);
             border-radius: 12px;
             padding: 0.6rem 0.9rem;
             backdrop-filter: blur(8px);
-            box-shadow: 0 8px 20px rgba(0,0,0,0.08);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
             align-items: center;
             justify-content: space-between;
             gap: 0.75rem;
         }
+
         /* Ensure visibility on mobile; placed after base rule */
         @media (max-width: 900px) {
-            .journey-progress { display: flex; }
+            .journey-progress {
+                display: flex;
+            }
         }
+
         .progress-bar {
             flex: 1;
             height: 6px;
             border-radius: 999px;
-            background: rgba(74,0,0,0.08);
+            background: rgba(74, 0, 0, 0.08);
             overflow: hidden;
         }
+
         .progress-fill {
             height: 100%;
             width: 0%;
@@ -1609,23 +1816,27 @@
             border-radius: 999px;
             transition: width 0.35s ease;
         }
+
         .progress-dots {
             display: flex;
             gap: 0.4rem;
             margin-left: 0.75rem;
         }
+
         .progress-dots .dot {
             width: 8px;
             height: 8px;
             border-radius: 50%;
-            background: rgba(74,0,0,0.12);
+            background: rgba(74, 0, 0, 0.12);
             transition: background 0.2s ease, transform 0.2s ease;
         }
+
         .progress-dots .dot.is-active {
             background: var(--golden);
             transform: scale(1.15);
-            box-shadow: 0 0 0 3px rgba(201,169,97,0.25);
+            box-shadow: 0 0 0 3px rgba(201, 169, 97, 0.25);
         }
+
         .progress-label {
             font-size: 0.85rem;
             color: var(--gray);
@@ -1637,11 +1848,13 @@
         /* RESPONSIVE */
         @media (max-width: 768px) {
             .hero-content-center h1 {
-                font-size: 3.5rem;
+                font-size: 1.35rem;
+                word-wrap: break-word;
+                overflow-wrap: break-word;
             }
 
             .hero-content-center .subtitle {
-                font-size: 1.5rem;
+                font-size: 1rem;
             }
 
             .hero-description {
@@ -1671,27 +1884,38 @@
                 gap: 0.8rem;
                 padding: 0.9rem 1rem 1.1rem;
             }
+
             .timer-info {
                 flex: 1 1 auto;
                 justify-content: flex-start;
                 gap: 0.6rem;
             }
-            .timer-label { font-size: 0.65rem; }
-            .timer-display { font-size: 1.4rem; min-width: auto; letter-spacing: 1px; }
-            
+
+            .timer-label {
+                font-size: 0.65rem;
+            }
+
+            .timer-display {
+                font-size: 1.4rem;
+                min-width: auto;
+                letter-spacing: 1px;
+            }
+
             .price-anchor {
                 flex: 0 0 auto;
                 padding: 0 0.8rem;
                 border-left: 1px solid rgba(212, 175, 55, 0.3);
                 border-right: 1px solid rgba(212, 175, 55, 0.3);
             }
+
             .price-value {
                 font-size: 1.4rem;
             }
+
             .price-label {
                 font-size: 0.58rem;
             }
-            
+
             .cta-button-sticky {
                 flex: 1 1 100%;
                 width: 100%;
@@ -1700,10 +1924,14 @@
             }
 
             /* Ensure page content doesn't sit under sticky footer */
-            body { padding-bottom: 170px; }
+            body {
+                padding-bottom: 170px;
+            }
 
             /* Prevent step-pane from overflowing viewport */
-            .step-pane { padding-bottom: 0.5rem; }
+            .step-pane {
+                padding-bottom: 0.5rem;
+            }
 
             .hero-features {
                 gap: 1rem;
@@ -1722,13 +1950,13 @@
             padding: 1.5rem 0;
             margin-top: 4rem;
         }
-        
+
         .site-footer .container {
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 2rem;
         }
-        
+
         .site-footer .footer-content {
             display: flex;
             justify-content: center;
@@ -1737,17 +1965,17 @@
             font-size: 0.8rem;
             color: var(--gray);
         }
-        
+
         .site-footer .policy-links {
             display: flex;
             gap: 0.75rem;
             align-items: center;
         }
-        
+
         .site-footer .policy-separator {
             color: rgba(102, 102, 102, 0.3);
         }
-        
+
         .site-footer a {
             color: var(--gray);
             font-weight: 500;
@@ -1755,18 +1983,18 @@
             transition: color 0.2s ease;
             opacity: 0.85;
         }
-        
+
         .site-footer a:hover {
             color: var(--maroon);
             opacity: 1;
         }
-        
+
         @media (max-width: 768px) {
             .site-footer .footer-content {
                 flex-direction: column;
                 gap: 0.75rem;
             }
-            
+
             .site-footer .policy-links {
                 flex-wrap: wrap;
                 justify-content: center;
@@ -1774,31 +2002,25 @@
             }
         }
     </style>
-    
+
     <!-- Razorpay Checkout Script -->
     <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
+
 <body>
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
             <div class="hero-content-center">
                 <span class="hero-badge">✓ 450+ Years of Kitchen Legacy</span>
-                
-                <div class="hero-headline">
-                    <h1>The 450-Year-Old "Kitchen Jewel" That Makes Daily Cooking Lightning Fast, Unbelievably Satisfying... And Will Have Your Guests Begging You For The Recipe.</h1>
-                </div>
 
-                <p class="hero-subheadline">Four generations of Kathiyawadi perfection in every jar. Our grandmother's hands-crafted chutney doesn't just season your food—it transforms the entire meal into something unforgettable.</p>
+                <div class="hero-headline">
+                    <h1>The 450-Year-Old "Red Gold" That Makes Daily Cooking Lightning Fast, Unbelievably
+                        Satisfying... And Will Have Your Guests Begging You For The Recipe.</h1>
+                </div>
 
                 <div class="hero-image-wrapper">
-                    <img src="assets/images/product-jar.png" alt="Amrutbaa Ni Chutney jar" loading="lazy">
-                </div>
-
-                <div class="hero-features">
-                    <div class="feature-item">✦ Hand-prepared weekly</div>
-                    <div class="feature-item">✦ Never processed</div>
-                    <div class="feature-item">✦ Slots fill fast</div>
+                    <img src="assets/images/hero image.jpeg" alt="Amrutbaa Ni Chutney in action" loading="lazy">
                 </div>
 
                 <div class="spots-counter">
@@ -1822,10 +2044,12 @@
                 <div class="rail-heading">Batch Journey</div>
                 <div class="rail-sub">Scroll or tap through the four beats that make our chutney sacred.</div>
                 <div class="rail-list">
-                    <button class="rail-item is-active" data-target="heritage">Heritage <small>90+ years</small></button>
+                    <button class="rail-item is-active" data-target="heritage">Heritage <small>90+
+                            years</small></button>
                     <button class="rail-item" data-target="ingredients">Ingredients <small>Hand-picked</small></button>
                     <button class="rail-item" data-target="batch">Batch Rhythm <small>Weekly</small></button>
-                    <button class="rail-item" data-target="register">Register & Delivery <small>Doorstep</small></button>
+                    <button class="rail-item" data-target="register">Register & Delivery
+                        <small>Doorstep</small></button>
                 </div>
             </aside>
 
@@ -1837,7 +2061,9 @@
                 </div>
                 <!-- Mobile progress bar -->
                 <div class="journey-progress" aria-label="Journey progress">
-                    <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
                     <div class="progress-dots" id="progressDots" aria-hidden="true">
                         <span class="dot"></span>
                         <span class="dot"></span>
@@ -1849,14 +2075,17 @@
 
                 <article class="journey-beat is-active" id="beat-heritage" data-beat="heritage">
                     <div class="beat-media">
-                        <img src="assets/images/chutney on table with food.png" alt="Amrutbaa Ni Chutney served with family meal" loading="lazy">
+                        <img src="assets/images/chutney on table with food.png"
+                            alt="Amrutbaa Ni Chutney served with family meal" loading="lazy">
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
                     <div class="beat-content">
                         <span class="beat-tag">Heritage</span>
                         <h2 class="beat-title">A Kathiyawad legacy passed hand-to-hand.</h2>
-                        <p class="beat-copy">Four generations, one recipe. The same mortar-and-pestle rhythm Amrutbaa used is the heartbeat of every jar today. Each batch is a promise: warmth, spice, garlic bite, and that comforting hug you remember.</p>
+                        <p class="beat-copy">Four generations, one recipe. The same mortar-and-pestle rhythm Amrutbaa
+                            used is the heartbeat of every jar today. Each batch is a promise: warmth, spice, garlic
+                            bite, and that comforting hug you remember.</p>
                         <div class="beat-meta">
                             <span class="meta-pill">90+ years of tradition</span>
                             <span class="meta-pill">Zero preservatives</span>
@@ -1871,14 +2100,17 @@
 
                 <article class="journey-beat" id="beat-ingredients" data-beat="ingredients">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-ingredients.jpg" alt="Fresh garlic, chillies, and spices for chutney" loading="lazy">
+                        <img src="assets/images/chutney-ingredients.jpg"
+                            alt="Fresh garlic, chillies, and spices for chutney" loading="lazy">
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
                     <div class="beat-content">
                         <span class="beat-tag">Ingredients</span>
                         <h2 class="beat-title">Sourced by feel. Ground with soul.</h2>
-                        <p class="beat-copy">Sun-kissed garlic from Kathiyawad, hand-picked red chillies, ancient rock salt, and spices toasted just before grinding. Every ingredient is chosen the way Amrutbaa did—by touch, aroma, and decades of intuition.</p>
+                        <p class="beat-copy">Sun-kissed garlic from Kathiyawad, hand-picked red chillies, ancient rock
+                            salt, and spices toasted just before grinding. Every ingredient is chosen the way Amrutbaa
+                            did—by touch, aroma, and decades of intuition.</p>
                         <div class="flavor-wheel">
                             <div class="flavor-chip">Heat balance<span>Bold but never overpowering</span></div>
                             <div class="flavor-chip">Garlic punch<span>Cuts through any dish</span></div>
@@ -1894,19 +2126,34 @@
 
                 <article class="journey-beat" id="beat-batch" data-beat="batch">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-with-dal.jpg" alt="Chutney served with comforting dal" loading="lazy">
+                        <img src="assets/images/chutney-with-dal.jpg" alt="Chutney served with comforting dal"
+                            loading="lazy">
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
                     <div class="beat-content">
                         <span class="beat-tag">Batch Rhythm</span>
                         <h2 class="beat-title">Prepared weekly. Never on-demand.</h2>
-                        <p class="beat-copy">We prepare in sacred weekly batches to keep flavour peak and waste zero. Register at least a day before the batch date. When the countdown hits zero, the kitchen closes until the next cycle.</p>
+                        <p class="beat-copy">We prepare in sacred weekly batches to keep flavour peak and waste zero.
+                            Register at least a day before the batch date. When the countdown hits zero, the kitchen
+                            closes until the next cycle.</p>
                         <div class="batch-timeline">
-                            <div class="timeline-card"><h4>Sunday 9:00 PM</h4><p>Registrations close. Ingredients are locked.</p></div>
-                            <div class="timeline-card"><h4>Monday</h4><p>Garlic peeled, spices toasted, chutney ground by hand.</p></div>
-                            <div class="timeline-card"><h4>Tuesday</h4><p>Fresh jars sealed and dispatched to your city.</p></div>
-                            <div class="timeline-card"><h4>Wed–Fri</h4><p>Delivered to your doorstep, still vibrant.</p></div>
+                            <div class="timeline-card">
+                                <h4>Sunday 9:00 PM</h4>
+                                <p>Registrations close. Ingredients are locked.</p>
+                            </div>
+                            <div class="timeline-card">
+                                <h4>Monday</h4>
+                                <p>Garlic peeled, spices toasted, chutney ground by hand.</p>
+                            </div>
+                            <div class="timeline-card">
+                                <h4>Tuesday</h4>
+                                <p>Fresh jars sealed and dispatched to your city.</p>
+                            </div>
+                            <div class="timeline-card">
+                                <h4>Wed–Fri</h4>
+                                <p>Delivered to your doorstep, still vibrant.</p>
+                            </div>
                         </div>
                         <div class="journey-cta-row">
                             <button class="journey-cta" id="journeyCtaBatch">Get on this batch</button>
@@ -1917,14 +2164,17 @@
 
                 <article class="journey-beat" id="beat-register" data-beat="register">
                     <div class="beat-media">
-                        <img src="assets/images/chutney batch.jpg" alt="Chutney batch preparation" class="beat-image" loading="lazy">
+                        <img src="assets/images/chutney batch.jpg" alt="Chutney batch preparation" class="beat-image"
+                            loading="lazy">
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
                     <div class="beat-content">
                         <span class="beat-tag">Register & Delivery</span>
                         <h2 class="beat-title">Reserve a spot. We handle the rest.</h2>
-                        <p class="beat-copy">Your slot is a promise. Tell us how many jars you need; we align you to the freshest possible batch and keep you updated. No marketplaces. No on-demand shortcuts. Just a direct line to Amrutbaa’s kitchen.</p>
+                        <p class="beat-copy">Your slot is a promise. Tell us how many jars you need; we align you to the
+                            freshest possible batch and keep you updated. No marketplaces. No on-demand shortcuts. Just
+                            a direct line to Amrutbaa’s kitchen.</p>
                         <div class="beat-meta">
                             <span class="meta-pill">Doorstep delivery</span>
                             <span class="meta-pill">Batch-aligned scheduling</span>
@@ -1946,20 +2196,23 @@
             <div class="section-header">
                 <span class="section-tag">Loved Across Tables</span>
                 <h2 class="section-title">One Chutney. Infinite Ways to Enjoy.</h2>
-                <p class="section-subtitle">From traditional thalis to modern brunches—Amrutbaa's chutney finds its home everywhere. Here's how our customers make it their own.</p>
+                <p class="section-subtitle">From traditional thalis to modern brunches—Amrutbaa's chutney finds its home
+                    everywhere. Here's how our customers make it their own.</p>
             </div>
 
             <div class="food-stories-grid">
                 <!-- Story Card 1: Traditional -->
                 <div class="story-card" data-story="traditional">
                     <div class="story-image-wrapper">
-                        <img src="assets/images/dal chawal.jpg" alt="Dal chawal with Amrutbaa chutney" class="story-image" loading="lazy">
+                        <img src="assets/images/dal chawal.jpg" alt="Dal chawal with Amrutbaa chutney"
+                            class="story-image" loading="lazy">
                         <div class="story-badge">Most Popular</div>
                         <div class="story-overlay"></div>
                     </div>
                     <div class="story-content">
                         <h3 class="story-title">The Comfort Classic</h3>
-                        <p class="story-quote">"My dal-chawal feels incomplete without this. It's the flavor my grandmother's cooking had—warm, bold, alive."</p>
+                        <p class="story-quote">"My dal-chawal feels incomplete without this. It's the flavor my
+                            grandmother's cooking had—warm, bold, alive."</p>
                         <div class="story-meta">
                             <span class="story-icon">🍛</span>
                             <span class="story-label">Perfect with: Dal, Rice, Khichdi, Kadhi</span>
@@ -1974,13 +2227,15 @@
                 <!-- Story Card 2: Traditional Indian -->
                 <div class="story-card" data-story="homestyle">
                     <div class="story-image-wrapper">
-                        <img src="assets/images/roti chutney.jpg" alt="Roti with Amrutbaa chutney" class="story-image" loading="lazy">
+                        <img src="assets/images/roti chutney.jpg" alt="Roti with Amrutbaa chutney" class="story-image"
+                            loading="lazy">
                         <div class="story-badge">Customer Favorite</div>
                         <div class="story-overlay"></div>
                     </div>
                     <div class="story-content">
                         <h3 class="story-title">The Quick Meal Hero</h3>
-                        <p class="story-quote">"Literally just roti and chutney for lunch—and I'm happy. The garlic punch is everything."</p>
+                        <p class="story-quote">"Literally just roti and chutney for lunch—and I'm happy. The garlic
+                            punch is everything."</p>
                         <div class="story-meta">
                             <span class="story-icon">🫓</span>
                             <span class="story-label">Perfect with: Roti, Paratha, Thepla, Dosa</span>
@@ -1995,13 +2250,15 @@
                 <!-- Story Card 3: Modern Fusion -->
                 <div class="story-card" data-story="fusion">
                     <div class="story-image-wrapper">
-                        <img src="assets/images/hummus and sourdough.jpg" alt="Hummus and sourdough with Amrutbaa chutney" class="story-image" loading="lazy">
+                        <img src="assets/images/hummus and sourdough.jpg"
+                            alt="Hummus and sourdough with Amrutbaa chutney" class="story-image" loading="lazy">
                         <div class="story-badge">Trending</div>
                         <div class="story-overlay"></div>
                     </div>
                     <div class="story-content">
                         <h3 class="story-title">The Brunch Surprise</h3>
-                        <p class="story-quote">"Started adding it to my hummus toast—total game changer. Friends keep asking what my secret is!"</p>
+                        <p class="story-quote">"Started adding it to my hummus toast—total game changer. Friends keep
+                            asking what my secret is!"</p>
                         <div class="story-meta">
                             <span class="story-icon">🥖</span>
                             <span class="story-label">Perfect with: Hummus, Bread, Cheese, Avocado</span>
@@ -2039,19 +2296,26 @@
         <div class="container">
             <div class="promise-content">
                 <div class="promise-seal">
-                    <img src="assets/images/guarantee seal.jpg" alt="Amrutbaa Guarantee Seal" class="seal-image" loading="lazy">
+                    <img src="assets/images/guarantee seal.jpg" alt="Amrutbaa Guarantee Seal" class="seal-image"
+                        loading="lazy">
                 </div>
-                
+
                 <div class="promise-text">
                     <span class="promise-tag">Our Kathiyawadi Promise</span>
                     <h2 class="promise-title">We Believe in Good People.</h2>
-                    
-                    <p class="promise-intro">In Kathiyawad, joy comes from sharing with those we care about. This chutney is our family's legacy, passed down through generations. Now it's your turn to be part of this story.</p>
-                    
+
+                    <p class="promise-intro">In Kathiyawad, joy comes from sharing with those we care about. This
+                        chutney is our family's legacy, passed down through generations. Now it's your turn to be part
+                        of this story.</p>
+
                     <div class="promise-core">
-                        <p class="promise-belief">If this chutney doesn't bring you that same joy it brings us—if it doesn't meet your expectations, we'll humbly request your feedback so we can learn and improve. And we'll refund every rupee. No questions. No conditions.</p>
-                        
-                        <p class="promise-trust">We're not afraid of this promise because we believe there are more good people in this world than bad. And we trust you'll be honest with us. Your happiness isn't just a business transaction—it's building our community together.</p>
+                        <p class="promise-belief">If this chutney doesn't bring you that same joy it brings us—if it
+                            doesn't meet your expectations, we'll humbly request your feedback so we can learn and
+                            improve. And we'll refund every rupee. No questions. No conditions.</p>
+
+                        <p class="promise-trust">We're not afraid of this promise because we believe there are more good
+                            people in this world than bad. And we trust you'll be honest with us. Your happiness isn't
+                            just a business transaction—it's building our community together.</p>
                     </div>
 
                     <div class="promise-details">
@@ -2168,7 +2432,7 @@
                     const cardWidth = storyCards[0]?.offsetWidth || 0;
                     const gap = 20; // Approximate gap
                     const activeIndex = Math.round(scrollLeft / (cardWidth + gap));
-                    
+
                     scrollDots.forEach((dot, index) => {
                         dot.classList.toggle('active', index === activeIndex);
                     });
@@ -2180,10 +2444,10 @@
                 dot.addEventListener('click', () => {
                     const card = storyCards[index];
                     if (card) {
-                        card.scrollIntoView({ 
-                            behavior: 'smooth', 
-                            block: 'nearest', 
-                            inline: 'center' 
+                        card.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'nearest',
+                            inline: 'center'
                         });
                     }
                     // Hide hint if visible
@@ -2212,7 +2476,7 @@
             const currentDay = now.getDay();
             let daysUntilSunday = (7 - currentDay) % 7;
             if (daysUntilSunday === 0) daysUntilSunday = 7;
-            
+
             const nextSunday = new Date(now);
             nextSunday.setDate(nextSunday.getDate() + daysUntilSunday);
             nextSunday.setHours(0, 0, 0, 0);
@@ -2222,7 +2486,7 @@
         function updateTimer() {
             const timerDisplay = document.getElementById('timerDisplay');
             const journeyCountdown = document.getElementById('journeyCountdown');
-            
+
             let targetTime = getNextSundayMidnight();
             const now = new Date();
             let difference = targetTime - now;
@@ -2239,14 +2503,14 @@
             const hours = Math.floor((difference / (1000 * 60 * 60)) % 24);
             const minutes = Math.floor((difference / (1000 * 60)) % 60);
             const seconds = Math.floor((difference / 1000) % 60);
-            
+
             if (timerDisplay) {
-                timerDisplay.textContent = 
+                timerDisplay.textContent =
                     String(days).padStart(2, '0') + 'd ' +
                     String(hours).padStart(2, '0') + ':' +
                     String(minutes).padStart(2, '0') + ':' +
                     String(seconds).padStart(2, '0');
-                
+
                 // Dynamic urgency color system
                 timerDisplay.classList.remove('urgency-calm', 'urgency-medium', 'urgency-high');
                 if (totalHours > 48) {
@@ -2384,4 +2648,5 @@
         </div>
     </footer>
 </body>
+
 </html>
