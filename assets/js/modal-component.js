@@ -457,30 +457,46 @@ function initOrderModal() {
             color: #2B2B2B;
             font-weight: 600;
             margin-top: 1rem;
-            padding: 2rem 1.5rem;
-            background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e9 100%);
-            border-radius: 8px;
+            padding: 2rem;
+            background: linear-gradient(135deg, #f0f7f0 0%, #ffffff 50%, #e8f5e9 100%);
+            border-radius: 12px;
             border: 2px solid #4CAF50;
-            position: relative;
-            z-index: 100;
+            box-shadow: 0 8px 16px rgba(46, 125, 50, 0.15);
         }
 
         .success-message.show {
             display: block !important;
-            animation: successPop 0.4s ease-out;
+            animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
-        .success-message.show ~ form {
-            display: none !important;
+        .success-checkmark {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1.5rem;
         }
 
-        @keyframes successPop {
+        .checkmark-circle {
+            width: 60px;
+            height: 60px;
+            background: #4CAF50;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 2.5rem;
+            font-weight: 700;
+            animation: checkmarkBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        @keyframes checkmarkBounce {
             0% {
-                opacity: 0;
-                transform: scale(0.9);
+                transform: scale(0);
+            }
+            50% {
+                transform: scale(1.1);
             }
             100% {
-                opacity: 1;
                 transform: scale(1);
             }
         }
@@ -666,13 +682,53 @@ function initOrderModal() {
                 </form>
 
                 <div class="success-message" id="successMessage">
-                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
-                    <div style="font-size: 1.1rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.5rem;">Your Jar is Reserved!</div>
-                    <div style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-                        Your fresh chutney will be prepared Monday and dispatched Tuesday.<br>
-                        Expected delivery: Wednesday-Friday
+                    <div class="success-checkmark">
+                        <div class="checkmark-circle">✓</div>
                     </div>
-                    <div id="tracking-info" style="display: none; padding: 0.75rem; background: #f0f7ff; border-left: 3px solid #2196F3; font-size: 0.85rem; line-height: 1.8; border-radius: 4px;"></div>
+                    <h2 style="font-size: 1.8rem; color: #2E7D32; margin: 1rem 0 0.5rem;">Order Confirmed! 🎉</h2>
+                    <p style="font-size: 0.95rem; color: #555; margin-bottom: 1.5rem;">Your fresh chutney is reserved for this week's batch</p>
+                    
+                    <div id="order-details-box" style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">ORDER NUMBER</div>
+                                <div id="order-number" style="font-size: 1.1rem; font-weight: 700; color: #2B2B2B;">---</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">AMOUNT PAID</div>
+                                <div id="order-amount" style="font-size: 1.1rem; font-weight: 700; color: #2E7D32;">---</div>
+                            </div>
+                        </div>
+                        <div id="tracking-section" style="display: none; border-top: 1px solid #ddd; padding-top: 1rem;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">TRACKING NUMBER</div>
+                                    <div id="tracking-display" style="font-size: 1rem; font-weight: 700; color: #1976D2; font-family: monospace;">---</div>
+                                </div>
+                                <div>
+                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">COURIER</div>
+                                    <div id="courier-display" style="font-size: 1rem; font-weight: 700; color: #2B2B2B;">---</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; text-align: left;">
+                        <div style="font-size: 0.9rem; font-weight: 600; color: #e65100; margin-bottom: 0.5rem;">📅 What Happens Next:</div>
+                        <div style="font-size: 0.85rem; color: #e65100; line-height: 1.6;">
+                            <strong>Monday:</strong> Fresh prep begins<br>
+                            <strong>Tuesday:</strong> Dispatched to you<br>
+                            <strong>Wed-Fri:</strong> Delivered fresh to your doorstep
+                        </div>
+                    </div>
+
+                    <button id="track-order-btn" style="width: 100%; padding: 0.875rem; background: #1976D2; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: none;">
+                        📦 Track Your Order
+                    </button>
+
+                    <div style="font-size: 0.8rem; color: #999; margin-top: 1rem;">
+                        You'll also receive tracking updates via WhatsApp/Email
+                    </div>
                 </div>
             </div>
         </div>
@@ -931,17 +987,24 @@ function initOrderModal() {
                                 // Don't fail the whole flow - payment succeeded
                             }
 
-                            // Update success message with tracking info FIRST
+                            // Update success message with ALL order details
                             if (trackingInfo?.awb_code) {
-                                const trackingElement = document.getElementById('tracking-info');
-                                if (trackingElement) {
-                                    trackingElement.innerHTML = `
-                                        <strong>📦 Tracking Number:</strong> ${trackingInfo.awb_code}<br>
-                                        <strong>🚚 Courier:</strong> ${trackingInfo.courier_name || 'Assigned soon'}<br>
-                                        <a href="/tracking.html?awb=${trackingInfo.awb_code}" target="_blank" class="btn-link">Track Your Order →</a>
-                                    `;
-                                    trackingElement.style.display = 'block';
+                                document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
+                                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                                document.getElementById('tracking-display').textContent = trackingInfo.awb_code;
+                                document.getElementById('courier-display').textContent = trackingInfo.courier_name || 'Assigned soon';
+                                document.getElementById('tracking-section').style.display = 'block';
+                                
+                                const trackBtn = document.getElementById('track-order-btn');
+                                if (trackBtn) {
+                                    trackBtn.style.display = 'block';
+                                    trackBtn.onclick = () => {
+                                        window.open(`/tracking.html?awb=${trackingInfo.awb_code}`, '_blank');
+                                    };
                                 }
+                            } else {
+                                document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
+                                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
                             }
 
                             // Show success message IMMEDIATELY
