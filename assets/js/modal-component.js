@@ -461,11 +461,17 @@ function initOrderModal() {
             background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e9 100%);
             border-radius: 8px;
             border: 2px solid #4CAF50;
+            position: relative;
+            z-index: 100;
         }
 
         .success-message.show {
             display: block !important;
             animation: successPop 0.4s ease-out;
+        }
+
+        .success-message.show ~ form {
+            display: none !important;
         }
 
         @keyframes successPop {
@@ -941,7 +947,8 @@ function initOrderModal() {
                             // Show success message IMMEDIATELY
                             console.log('Displaying success message...');
                             successMessage.classList.add('show');
-                            registrationForm.style.display = 'none';
+                            registrationForm.style.display = 'none !important';
+                            registrationForm.hidden = true;
                             console.log('✅ Success message is now visible');
 
                             // Submit order details to n8n in background (doesn't block success display)
