@@ -626,10 +626,11 @@ function initOrderModal() {
                     <div class="success-message" id="successMessage">
                         <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
                         <div style="font-size: 1.1rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.5rem;">Your Jar is Reserved!</div>
-                        <div style="font-size: 0.9rem; line-height: 1.6;">
-                            We'll call you within 24 hours to confirm.<br>
-                            Your fresh chutney will be prepared Monday and delivered by week's end.
+                        <div style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
+                            Your fresh chutney will be prepared Monday and dispatched Tuesday.<br>
+                            Expected delivery: Wednesday-Friday
                         </div>
+                        <div id="tracking-info" style="display: none; padding: 0.75rem; background: #f0f7ff; border-left: 3px solid #2196F3; font-size: 0.85rem; line-height: 1.8; border-radius: 4px;"></div>
                     </div>
                 </form>
             </div>
@@ -854,14 +855,64 @@ function initOrderModal() {
                         console.log('Verification result:', verifyResult);
 
                         if (verifyResult.success) {
-                            console.log('✅ Payment verified! Submitting order...');
-                            // Submit order details to n8n
+                            console.log('✅ Payment verified! Creating shipment...');
+                            
+                            // Create Shiprocket shipment
+                            let trackingInfo = null;
+                            try {
+                                const shipmentResponse = await fetch('/api/create-shipment', {
+                                    method: 'POST',
+                                    headers: { 'Content-Type': 'application/json' },
+                                    body: JSON.stringify({
+                                        order_id: response.razorpay_order_id,
+                                        payment_id: response.razorpay_payment_id,
+                                        customer_name: formData.name,
+                                        customer_email: formData.email,
+                                        customer_phone: formData.phone,
+                                        address1: formData.address1,
+                                        address2: formData.address2,
+                                        city: formData.city,
+                                        state: formData.state,
+                                        pincode: formData.pincode,
+                                        quantity: formData.quantity,
+                                        amount: totalAmount
+                                    })
+                                });
+
+                                if (shipmentResponse.ok) {
+                                    trackingInfo = await shipmentResponse.json();
+                                    console.log('✅ Shipment created:', trackingInfo);
+                                } else {
+                                    console.warn('⚠️ Shipment creation failed, but payment succeeded');
+                                }
+                            } catch (shipmentError) {
+                                console.error('Shipment error:', shipmentError);
+                                // Don't fail the whole flow - payment succeeded
+                            }
+
+                            // Submit order details to n8n (with tracking info if available)
                             await submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
                                 order_id: response.razorpay_order_id,
-                                amount: totalAmount
+                                amount: totalAmount,
+                                tracking_number: trackingInfo?.awb_code || null,
+                                shipment_id: trackingInfo?.shipment_id || null,
+                                courier_name: trackingInfo?.courier_name || null
                             });
+
+                            // Update success message with tracking info
+                            if (trackingInfo?.awb_code) {
+                                const trackingElement = document.getElementById('tracking-info');
+                                if (trackingElement) {
+                                    trackingElement.innerHTML = `
+                                        <strong>📦 Tracking Number:</strong> ${trackingInfo.awb_code}<br>
+                                        <strong>🚚 Courier:</strong> ${trackingInfo.courier_name || 'Assigned soon'}<br>
+                                        <a href="/tracking.html?awb=${trackingInfo.awb_code}" target="_blank" class="btn-link">Track Your Order →</a>
+                                    `;
+                                    trackingElement.style.display = 'block';
+                                }
+                            }
 
                             // Show success message
                             console.log('Displaying success message...');
@@ -878,7 +929,13 @@ function initOrderModal() {
                                 setStep(1);
                                 submitBtn.textContent = originalText;
                                 submitBtn.disabled = false;
-                            }, 3000);
+                                // Clear tracking info
+                                const trackingElement = document.getElementById('tracking-info');
+                                if (trackingElement) {
+                                    trackingElement.innerHTML = '';
+                                    trackingElement.style.display = 'none';
+                                }
+                            }, 5000); // Extended to 5 seconds for tracking info
                         } else {
                             console.error('❌ Payment verification failed:', verifyResult);
                             alert('Payment verification failed. Please contact support.');

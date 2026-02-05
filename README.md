@@ -8,6 +8,8 @@ This is a modern, single-page website built with pure HTML, CSS, and JavaScript.
 
 - **Premium Design**: Heritage-inspired UI with modern animations
 - **Batch-Based Ordering**: Unique registration system for fresh preparation
+- **Payment Integration**: Razorpay payment gateway (Cloudflare Workers backend)
+- **Shipping Automation**: Shiprocket integration for end-to-end delivery management 🆕
 - **High Performance**: Optimized for speed and SEO
 - **Mobile-First**: Responsive design for all devices
 - **Accessibility**: WCAG compliant with keyboard navigation and screen reader support
@@ -240,7 +242,36 @@ Or use Cloudflare Web Analytics (privacy-focused, no cookies):
 - Check if user has "reduced motion" enabled
 - Verify CSS animations are not disabled
 
-## 📝 License
+## � Documentation
+
+### Core Guides
+- [DEPLOYMENT.md](DEPLOYMENT.md) - Complete deployment guide for Cloudflare Pages
+- [QUICK_REFERENCE.md](QUICK_REFERENCE.md) - Quick reference for common tasks
+- [WEEKLY_BATCH_SYSTEM.md](WEEKLY_BATCH_SYSTEM.md) - How the batch ordering works
+
+### Payment & Shipping Integration 🆕
+- [RAZORPAY_SETUP.md](RAZORPAY_SETUP.md) - Razorpay payment gateway setup
+- [SHIPROCKET_INTEGRATION.md](SHIPROCKET_INTEGRATION.md) - Complete Shiprocket integration guide
+- [SHIPROCKET_QUICKSTART.md](SHIPROCKET_QUICKSTART.md) - 5-minute Shiprocket setup
+- [SHIPROCKET_FLOW_DIAGRAM.md](SHIPROCKET_FLOW_DIAGRAM.md) - Visual flow diagram
+- [SHIPROCKET_SUMMARY.md](SHIPROCKET_SUMMARY.md) - Integration overview
+
+### Additional Resources
+- [LAUNCH_CHECKLIST.md](LAUNCH_CHECKLIST.md) - Pre-launch checklist
+- [TESTING_CHECKLIST.md](TESTING_CHECKLIST.md) - Testing procedures
+
+## 🚚 Shipping Integration
+
+This project now includes **automatic shipping integration** with Shiprocket:
+- ✅ Auto-creates shipment after successful payment
+- ✅ Generates tracking number instantly
+- ✅ Customer tracking page ([tracking.html](tracking.html))
+- ✅ Real-time status updates via webhook
+- ✅ Zero manual work required
+
+**Quick Setup:** See [SHIPROCKET_QUICKSTART.md](SHIPROCKET_QUICKSTART.md) for 5-minute integration.
+
+## �📝 License
 
 © 2026 Amrut Baa. All rights reserved.
 
