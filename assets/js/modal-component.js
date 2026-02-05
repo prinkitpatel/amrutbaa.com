@@ -454,17 +454,52 @@ function initOrderModal() {
         .success-message {
             display: none !important;
             text-align: center;
-            color: #4CAF50;
+            color: #2B2B2B;
             font-weight: 600;
             margin-top: 1rem;
+            padding: 2rem 1.5rem;
+            background: linear-gradient(135deg, #f0f7f0 0%, #e8f5e9 100%);
+            border-radius: 8px;
+            border: 2px solid #4CAF50;
         }
 
         .success-message.show {
             display: block !important;
+            animation: successPop 0.4s ease-out;
         }
 
-        .success-message.show {
-            display: block !important;
+        @keyframes successPop {
+            0% {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        #tracking-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
+            border-left: 4px solid #1976D2;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            line-height: 1.8;
+            color: #0d47a1;
+        }
+
+        #tracking-info a {
+            color: #1976D2;
+            font-weight: 600;
+            text-decoration: none;
+            transition: opacity 0.3s;
+        }
+
+        #tracking-info a:hover {
+            opacity: 0.8;
+            text-decoration: underline;
         }
 
         @media (max-width: 768px) {
