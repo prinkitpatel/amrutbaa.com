@@ -988,11 +988,13 @@ function initOrderModal() {
                             }
 
                             // Update success message with ALL order details
-                            if (trackingInfo?.awb_code) {
-                                document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
-                                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                            document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
+                            document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                            
+                            if (trackingInfo?.awb_code && trackingInfo.awb_code.trim() !== '') {
+                                // Courier assigned - show tracking
                                 document.getElementById('tracking-display').textContent = trackingInfo.awb_code;
-                                document.getElementById('courier-display').textContent = trackingInfo.courier_name || 'Assigned soon';
+                                document.getElementById('courier-display').textContent = trackingInfo.courier_name || 'Processing';
                                 document.getElementById('tracking-section').style.display = 'block';
                                 
                                 const trackBtn = document.getElementById('track-order-btn');
@@ -1003,8 +1005,16 @@ function initOrderModal() {
                                     };
                                 }
                             } else {
-                                document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
-                                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                                // Courier not yet assigned - show message
+                                document.getElementById('tracking-section').style.display = 'none';
+                                const trackBtn = document.getElementById('track-order-btn');
+                                if (trackBtn) {
+                                    trackBtn.style.display = 'block';
+                                    trackBtn.textContent = '📧 Tracking Details Coming Soon';
+                                    trackBtn.style.background = '#FF9800';
+                                    trackBtn.disabled = true;
+                                    trackBtn.title = 'Courier will be assigned within 2-4 hours. Check email for tracking.';
+                                }
                             }
 
                             // Show success message IMMEDIATELY
