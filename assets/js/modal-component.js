@@ -925,18 +925,7 @@ function initOrderModal() {
                                 // Don't fail the whole flow - payment succeeded
                             }
 
-                            // Submit order details to n8n (with tracking info if available)
-                            await submitOrderDetails({
-                                ...formData,
-                                payment_id: response.razorpay_payment_id,
-                                order_id: response.razorpay_order_id,
-                                amount: totalAmount,
-                                tracking_number: trackingInfo?.awb_code || null,
-                                shipment_id: trackingInfo?.shipment_id || null,
-                                courier_name: trackingInfo?.courier_name || null
-                            });
-
-                            // Update success message with tracking info
+                            // Update success message with tracking info FIRST
                             if (trackingInfo?.awb_code) {
                                 const trackingElement = document.getElementById('tracking-info');
                                 if (trackingElement) {
@@ -949,12 +938,24 @@ function initOrderModal() {
                                 }
                             }
 
-                            // Show success message
+                            // Show success message IMMEDIATELY
                             console.log('Displaying success message...');
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none';
-                            console.log('✅ Success message should be visible now');
+                            console.log('✅ Success message is now visible');
 
+                            // Submit order details to n8n in background (doesn't block success display)
+                            submitOrderDetails({
+                                ...formData,
+                                payment_id: response.razorpay_payment_id,
+                                order_id: response.razorpay_order_id,
+                                amount: totalAmount,
+                                tracking_number: trackingInfo?.awb_code || null,
+                                shipment_id: trackingInfo?.shipment_id || null,
+                                courier_name: trackingInfo?.courier_name || null
+                            }).catch(err => console.error('Background n8n submission error:', err));
+
+                            // Close modal after delay
                             setTimeout(() => {
                                 console.log('Closing modal and resetting form...');
                                 closeModal();
@@ -970,7 +971,7 @@ function initOrderModal() {
                                     trackingElement.innerHTML = '';
                                     trackingElement.style.display = 'none';
                                 }
-                            }, 5000); // Extended to 5 seconds for tracking info
+                            }, 5000);
                         } else {
                             console.error('❌ Payment verification failed:', verifyResult);
                             alert('Payment verification failed. Please contact support.');
@@ -1020,12 +1021,12 @@ function initOrderModal() {
         }
     });
 
-    // Helper function to submit order details
+    // Helper function to submit order details in background
     async function submitOrderDetails(orderData) {
         try {
-            console.log('Submitting order to n8n:', orderData);
+            console.log('Submitting order to n8n in background:', orderData);
 
-            // Send as JSON POST instead of hidden form for better reliability
+            // Send as JSON POST - this runs in background, doesn't block UI
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1033,57 +1034,18 @@ function initOrderModal() {
             });
 
             if (response.ok) {
-                console.log('Order submitted successfully to n8n');
+                console.log('✅ Order submitted successfully to n8n');
                 return true;
             } else {
-                console.error('n8n webhook responded with status:', response.status);
-                // Fallback: still submit via form if JSON fails
-                await submitViaForm(orderData);
-                return true;
+                console.warn('⚠️ n8n webhook responded with status:', response.status);
+                // Don't fail - order is already confirmed to customer
+                return false;
             }
         } catch (error) {
-            console.error('Error submitting to n8n:', error);
-            // Fallback to form submission
-            await submitViaForm(orderData);
-            return true;
+            console.error('⚠️ Error submitting to n8n (non-blocking):', error);
+            // Don't fail - order is already confirmed to customer
+            return false;
         }
-    }
-
-    // Fallback form submission method
-    async function submitViaForm(orderData) {
-        console.log('Using form submission fallback');
-        const hiddenForm = document.createElement('form');
-        hiddenForm.method = 'POST';
-        hiddenForm.action = 'https://n8n.prinkit.cloud/webhook/order_form';
-        hiddenForm.style.display = 'none';
-
-        for (const [key, value] of Object.entries(orderData)) {
-            const input = document.createElement('input');
-            input.type = 'hidden';
-            input.name = key;
-            input.value = value;
-            hiddenForm.appendChild(input);
-        }
-
-        document.body.appendChild(hiddenForm);
-
-        const iframe = document.createElement('iframe');
-        iframe.name = 'hidden-form-iframe-' + Date.now();
-        iframe.style.display = 'none';
-        document.body.appendChild(iframe);
-
-        hiddenForm.target = iframe.name;
-        hiddenForm.submit();
-
-        // Wait longer for form processing
-        setTimeout(() => {
-            try {
-                document.body.removeChild(hiddenForm);
-            } catch (e) { }
-            try {
-                document.body.removeChild(iframe);
-            } catch (e) { }
-        }, 2000);
     }
 
     // Public API: Return object with openModal function
