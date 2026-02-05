@@ -466,7 +466,7 @@ function initOrderModal() {
 
         .success-message.show {
             display: block !important;
-            animation: successPop 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+            animation: fadeInUp 0.4s ease-out;
         }
 
         .success-checkmark {
@@ -933,11 +933,8 @@ function initOrderModal() {
                 order_id: order.id,
                 handler: async function (response) {
                     // Payment successful
-                    console.log('✅ Payment successful:', response);
-
                     // Verify payment signature via backend
                     try {
-                        console.log('Verifying payment signature...');
                         const verifyResponse = await fetch('/api/verify-payment', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
@@ -949,11 +946,8 @@ function initOrderModal() {
                         });
 
                         const verifyResult = await verifyResponse.json();
-                        console.log('Verification result:', verifyResult);
 
                         if (verifyResult.success) {
-                            console.log('✅ Payment verified! Creating shipment...');
-                            
                             // Create Shiprocket shipment
                             let trackingInfo = null;
                             try {
@@ -978,12 +972,8 @@ function initOrderModal() {
 
                                 if (shipmentResponse.ok) {
                                     trackingInfo = await shipmentResponse.json();
-                                    console.log('✅ Shipment created:', trackingInfo);
-                                } else {
-                                    console.warn('⚠️ Shipment creation failed, but payment succeeded');
                                 }
                             } catch (shipmentError) {
-                                console.error('Shipment error:', shipmentError);
                                 // Don't fail the whole flow - payment succeeded
                             }
 
