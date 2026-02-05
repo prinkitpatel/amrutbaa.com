@@ -657,17 +657,17 @@ function initOrderModal() {
                         </div>
                         <div class="refund-note">💬 Need to make a change? Contact us before Sunday 9 PM.</div>
                     </div>
-
-                    <div class="success-message" id="successMessage">
-                        <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
-                        <div style="font-size: 1.1rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.5rem;">Your Jar is Reserved!</div>
-                        <div style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
-                            Your fresh chutney will be prepared Monday and dispatched Tuesday.<br>
-                            Expected delivery: Wednesday-Friday
-                        </div>
-                        <div id="tracking-info" style="display: none; padding: 0.75rem; background: #f0f7ff; border-left: 3px solid #2196F3; font-size: 0.85rem; line-height: 1.8; border-radius: 4px;"></div>
-                    </div>
                 </form>
+
+                <div class="success-message" id="successMessage">
+                    <div style="font-size: 2rem; margin-bottom: 0.5rem;">🎉</div>
+                    <div style="font-size: 1.1rem; font-weight: 700; color: #2E7D32; margin-bottom: 0.5rem;">Your Jar is Reserved!</div>
+                    <div style="font-size: 0.9rem; line-height: 1.6; margin-bottom: 1rem;">
+                        Your fresh chutney will be prepared Monday and dispatched Tuesday.<br>
+                        Expected delivery: Wednesday-Friday
+                    </div>
+                    <div id="tracking-info" style="display: none; padding: 0.75rem; background: #f0f7ff; border-left: 3px solid #2196F3; font-size: 0.85rem; line-height: 1.8; border-radius: 4px;"></div>
+                </div>
             </div>
         </div>
     `;
