@@ -298,6 +298,42 @@ body {
     flex-wrap: wrap;
 }
 
+/* Money-back stamp styling (hero) */
+.hero-stamp {
+    position: absolute;
+    z-index: 3;
+    width: 220px;
+    max-width: 30%;
+    right: 8%;
+    top: 45%;
+    transform: translateY(-50%) rotate(-12deg);
+    pointer-events: none;
+    filter: drop-shadow(0 12px 24px rgba(0,0,0,0.18));
+}
+
+@media (max-width: 900px) {
+    .hero-stamp {
+        width: 160px;
+        right: 6%;
+        top: 46%;
+        transform: translateY(-50%) rotate(-10deg);
+    }
+}
+
+@media (max-width: 480px) {
+    .hero-stamp {
+        position: relative;
+        display: block;
+        margin: 1rem auto 0 auto;
+        width: 120px;
+        transform: rotate(-6deg);
+    }
+    .hero .container {
+        flex-direction: column-reverse;
+        gap: 1rem;
+    }
+}
+
 .btn-primary {
     display: inline-flex;
     align-items: center;
