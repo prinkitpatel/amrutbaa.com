@@ -2836,11 +2836,12 @@
         // Track CTA button clicks
         document.addEventListener('click', function(e) {
             // Register/Reserve buttons
-            if (e.target.matches('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button')) {
-                const buttonText = e.target.textContent.trim();
-                const buttonLocation = e.target.closest('.hero') ? 'hero' : 
-                                      e.target.closest('.sticky-cta-bar') ? 'sticky_footer' :
-                                      e.target.closest('footer') ? 'footer' : 'other';
+            const ctaEl = e.target.closest('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button');
+            if (ctaEl) {
+                const buttonText = ctaEl.textContent.trim();
+                const buttonLocation = ctaEl.closest('.hero') ? 'hero' : 
+                                      ctaEl.closest('.sticky-cta-bar') ? 'sticky_footer' :
+                                      ctaEl.closest('footer') ? 'footer' : 'other';
                 
                 // Get countdown time remaining if available
                 const timerDisplay = document.querySelector('.timer-display');
