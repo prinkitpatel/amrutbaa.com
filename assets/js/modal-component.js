@@ -753,9 +753,22 @@ function initOrderModal() {
                             <p class="pincode-status" id="pincodeStatus"></p>
                             <p class="field-note">We deliver right after the batch is prepared. Add landmarks to help the rider.</p>
                         </div>
+                        <div class="form-group">
+                            <label>Payment Method *</label>
+                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" id="paymentMethodOnline" name="payment_method" value="online" checked> 
+                                    <span>Pay Now (Razorpay)</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
+                                    <input type="radio" id="paymentMethodCod" name="payment_method" value="cod"> 
+                                    <span>Pay on Delivery (COD)</span>
+                                </label>
+                            </div>
+                        </div>
                         <div class="step-actions">
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
-                            <button type="submit" class="btn-primary-solid">Reserve & Pay Securely</button>
+                            <button type="submit" class="btn-primary-solid" id="submitBtn">Reserve & Pay Securely</button>
                         </div>
                         <div class="refund-note">💬 Need to make a change? Contact us before Sunday 9 PM.</div>
                     </div>
@@ -835,11 +848,13 @@ function initOrderModal() {
     const orderQuantityText = document.getElementById('orderQuantityText');
     const pincodeInput = document.getElementById('pincode');
     const pincodeStatus = document.getElementById('pincodeStatus');
+    const paymentMethodOnline = document.getElementById('paymentMethodOnline');
+    const paymentMethodCod = document.getElementById('paymentMethodCod');
+    const submitBtn = document.getElementById('submitBtn');
     let currentStep = 1;
     let pincodeServiceable = null;
     let pincodeCheckTimer = null;
-
-    const pricingConfig = {
+    let isCodSelected = false;
         unitPrice: 349,
         offers: [
             { minQty: 2, discountPercent: 5, label: '5% off 2+ jars' },
@@ -856,6 +871,20 @@ function initOrderModal() {
     function calculatePricing(qty) {
         const safeQty = Number.isFinite(qty) ? qty : 1;
         const baseTotal = safeQty * pricingConfig.unitPrice;
+        
+        // No discounts for COD
+        if (isCodSelected) {
+            return {
+                qty: safeQty,
+                unitPrice: pricingConfig.unitPrice,
+                baseTotal,
+                discount: 0,
+                total: baseTotal,
+                offer: null
+            };
+        }
+        
+        // Apply discounts for online payments
         const offer = getOfferForQty(safeQty);
         const discount = offer ? Math.round((baseTotal * offer.discountPercent) / 100) : 0;
         const total = baseTotal - discount;
@@ -1169,6 +1198,18 @@ function initOrderModal() {
         checkPincodeServiceability();
     });
 
+    paymentMethodOnline?.addEventListener('change', () => {
+        isCodSelected = false;
+        updatePricingUI();
+        if (submitBtn) submitBtn.textContent = 'Reserve & Pay Securely';
+    });
+
+    paymentMethodCod?.addEventListener('change', () => {
+        isCodSelected = true;
+        updatePricingUI();
+        if (submitBtn) submitBtn.textContent = 'Reserve & Pay on Delivery';
+    });
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
             closeModal();
@@ -1188,7 +1229,8 @@ function initOrderModal() {
             address2: document.getElementById('address2').value,
             city: document.getElementById('city').value,
             state: document.getElementById('state').value,
-            pincode: document.getElementById('pincode').value
+            pincode: document.getElementById('pincode').value,
+            payment_method: document.querySelector('input[name="payment_method"]:checked')?.value || 'online'
         };
 
         if (!validateStep2()) {
@@ -1205,14 +1247,107 @@ function initOrderModal() {
             const pricePerJar = pricing.unitPrice;
             const totalAmount = pricing.total;
             
+            // For COD, skip Razorpay and create order directly
+            if (formData.payment_method === 'cod') {
+                // Track COD Purchase (no payment gateway)
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'event': 'purchase',
+                    'payment_type': 'cod',
+                    'ecommerce': {
+                        'transaction_id': `COD-${Date.now()}`,
+                        'value': totalAmount,
+                        'tax': 0,
+                        'shipping': 0,
+                        'currency': 'INR',
+                        'coupon': '',
+                        'items': [{
+                            'item_id': 'amrutbaa-chutney',
+                            'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                            'item_category': 'Condiment',
+                            'item_brand': 'Amrut Baa',
+                            'price': pricePerJar,
+                            'quantity': formData.quantity
+                        }]
+                    },
+                    'order_id': `COD-${Date.now()}`,
+                    'payment_type': 'cod',
+                    'customer_email': formData.email,
+                    'customer_phone': formData.phone,
+                    'customer_city': formData.city,
+                    'customer_state': formData.state
+                });
+
+                // Create COD order via Worker
+                const codOrderResponse = await fetch('/api/create-order-cod', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        customer_name: formData.name,
+                        customer_email: formData.email,
+                        customer_phone: formData.phone,
+                        address1: formData.address1,
+                        address2: formData.address2,
+                        city: formData.city,
+                        state: formData.state,
+                        pincode: formData.pincode,
+                        quantity: formData.quantity,
+                        amount: totalAmount,
+                        unit_price: pricePerJar,
+                        base_total: pricing.baseTotal,
+                        discount: 0
+                    })
+                });
+
+                if (!codOrderResponse.ok) {
+                    throw new Error('Failed to create COD order');
+                }
+
+                const codResult = await codOrderResponse.json();
+
+                // Update success message
+                document.getElementById('order-number').textContent = `COD-${Date.now()}`.substring(0, 15) + '...';
+                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                
+                // Show success message immediately
+                successMessage.classList.add('show');
+                registrationForm.style.display = 'none !important';
+                registrationForm.hidden = true;
+
+                // Submit order to n8n in background
+                submitOrderDetails({
+                    ...formData,
+                    payment_type: 'cod',
+                    order_id: `COD-${Date.now()}`,
+                    amount: totalAmount,
+                    tracking_number: null,
+                    shipment_id: null,
+                    courier_name: null
+                }).catch(() => {});
+
+                // Close modal after delay
+                setTimeout(() => {
+                    closeModal();
+                    registrationForm.style.display = 'block';
+                    registrationForm.hidden = false;
+                    successMessage.classList.remove('show');
+                    registrationForm.reset();
+                }, 4000);
+
+                return;
+            }
+
+            // RAZORPAY FLOW (existing code)
+            
             // Track Add to Cart / Package Selection
             window.dataLayer = window.dataLayer || [];
             dataLayer.push({
                 'event': 'add_to_cart',
+                'payment_type': 'razorpay',
                 'ecommerce': {
                     'currency': 'INR',
                     'value': totalAmount,
-                        'coupon': pricing.offer ? pricing.offer.label : '',
+                    'coupon': pricing.offer ? pricing.offer.label : '',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
                         'item_name': 'Amrutbaa Chilly Garlic Chutney',
@@ -1227,10 +1362,7 @@ function initOrderModal() {
             // Track Shipping Info Added
             dataLayer.push({
                 'event': 'add_shipping_info',
-                'ecommerce': {
-                    'currency': 'INR',
-                    'value': totalAmount,
-                        'coupon': pricing.offer ? pricing.offer.label : '',
+                'payment_type': 'razorpay',
                     'shipping_tier': 'Standard',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
@@ -1272,7 +1404,7 @@ function initOrderModal() {
                 'ecommerce': {
                     'currency': 'INR',
                     'value': totalAmount,
-                        'coupon': pricing.offer ? pricing.offer.label : '',
+                    'coupon': pricing.offer ? pricing.offer.label : '',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
                         'item_name': 'Amrutbaa Chilly Garlic Chutney',
@@ -1313,6 +1445,7 @@ function initOrderModal() {
                             window.dataLayer = window.dataLayer || [];
                             dataLayer.push({
                                 'event': 'purchase',
+                                'payment_type': 'razorpay',
                                 'ecommerce': {
                                     'transaction_id': response.razorpay_order_id,
                                     'value': totalAmount,

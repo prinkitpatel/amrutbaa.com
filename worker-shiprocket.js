@@ -166,8 +166,133 @@ export default {
       }
     }
 
-    // Check Shiprocket serviceability for pincode
-    if (url.pathname === '/api/check-pincode' && request.method === 'POST') {
+    // Create COD Order (no Razorpay)
+    if (url.pathname === '/api/create-order-cod' && request.method === 'POST') {
+      try {
+        const orderData = await request.json();
+        const {
+          customer_name,
+          customer_email,
+          customer_phone,
+          address1,
+          address2,
+          city,
+          state,
+          pincode,
+          quantity,
+          amount,
+          unit_price,
+          base_total,
+          discount
+        } = orderData;
+
+        // Validate required fields
+        if (!customer_name || !customer_phone || !address1 || !city || !state || !pincode) {
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Missing required shipping details' 
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const token = await getShiprocketToken(env);
+
+        // Prepare COD shipment data
+        const safeQuantity = Number.isFinite(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
+        const safeUnitPrice = Number.isFinite(Number(unit_price)) && Number(unit_price) > 0
+          ? Number(unit_price)
+          : (Number.isFinite(Number(base_total)) && Number(base_total) > 0 ? Number(base_total) / safeQuantity : Number(amount) / safeQuantity);
+        const safeAmount = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : safeUnitPrice * safeQuantity;
+
+        const shipmentData = {
+          order_id: `COD-${Date.now()}`,
+          order_date: new Date().toISOString().split('T')[0],
+          pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
+          channel_id: "",
+          comment: "Weekly batch order - Amrutbaa COD",
+          billing_customer_name: customer_name,
+          billing_last_name: "",
+          billing_address: address1,
+          billing_address_2: address2 || "",
+          billing_city: city,
+          billing_pincode: pincode,
+          billing_state: state,
+          billing_country: "India",
+          billing_email: customer_email,
+          billing_phone: customer_phone,
+          shipping_is_billing: true,
+          order_items: [
+            {
+              name: "Amrut Baa Chilly Garlic Chutney",
+              sku: "AMB-CGC-100G",
+              units: safeQuantity,
+              selling_price: safeUnitPrice,
+              discount: 0,
+              tax: 0,
+              hsn: 210390
+            }
+          ],
+          payment_method: "COD",
+          collectable_amount: safeAmount,
+          shipping_charges: 0,
+          giftwrap_charges: 0,
+          transaction_charges: 0,
+          total_discount: 0,
+          sub_total: safeAmount,
+          length: 10,
+          breadth: 10,
+          height: 8,
+          weight: 0.15 * safeQuantity
+        };
+
+        const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(shipmentData)
+        });
+
+        if (!shiprocketResponse.ok) {
+          const errorText = await shiprocketResponse.text();
+          console.error('Shiprocket API error:', errorText);
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Failed to create COD shipment',
+            details: errorText
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const shipmentResult = await shiprocketResponse.json();
+
+        return new Response(JSON.stringify({
+          success: true,
+          shipment_id: shipmentResult.shipment_id,
+          order_id: shipmentResult.order_id,
+          awb_code: shipmentResult.awb_code,
+          courier_name: shipmentResult.courier_name,
+          message: 'COD order created successfully'
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error('Create COD order error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
       try {
         const { pincode, weight = 0.15, cod = false } = await request.json();
 
