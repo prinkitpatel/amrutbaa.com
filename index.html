@@ -2836,7 +2836,7 @@
         // Track CTA button clicks
         document.addEventListener('click', function(e) {
             // Register/Reserve buttons
-            const ctaEl = e.target.closest('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button');
+            const ctaEl = e.target.closest('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button, .cta-button, .cta-button-secondary, .cta-button-promise, .cta-button-sticky');
             if (ctaEl) {
                 const buttonText = ctaEl.textContent.trim();
                 const buttonLocation = ctaEl.closest('.hero') ? 'hero' : 
