@@ -1375,6 +1375,9 @@ function initOrderModal() {
             dataLayer.push({
                 'event': 'add_shipping_info',
                 'payment_type': 'razorpay',
+                'ecommerce': {
+                    'currency': 'INR',
+                    'value': totalAmount,
                     'shipping_tier': 'Standard',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
