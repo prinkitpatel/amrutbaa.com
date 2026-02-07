@@ -851,11 +851,38 @@ function initOrderModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         setStep(1);
+        
+        // Track modal open (Begin Checkout)
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            'event': 'begin_checkout',
+            'ecommerce': {
+                'currency': 'INR',
+                'value': 0, // Unknown at this stage
+                'items': [{
+                    'item_id': 'amrutbaa-chutney',
+                    'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                    'item_category': 'Condiment',
+                    'item_brand': 'Amrut Baa',
+                    'price': 349,
+                    'quantity': 1
+                }]
+            }
+        });
     }
 
     function closeModal() {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
+        
+        // Track modal close / abandonment
+        const currentStep = modal.querySelector('.step-pane.active')?.dataset?.step || '1';
+        window.dataLayer = window.dataLayer || [];
+        dataLayer.push({
+            'event': 'checkout_abandoned',
+            'abandonment_step': `step_${currentStep}`,
+            'form_name': 'registration_form'
+        });
     }
 
     // Event listeners
@@ -863,7 +890,26 @@ function initOrderModal() {
     modalOverlay.addEventListener('click', closeModal);
 
     nextStepBtn?.addEventListener('click', () => {
-        if (validateStep1()) setStep(2);
+        if (validateStep1()) {
+            // Track Step 1 completion (Phone submitted)
+            window.dataLayer = window.dataLayer || [];
+            const phoneValue = document.getElementById('phone').value;
+            dataLayer.push({
+                'event': 'form_step_1_complete',
+                'form_name': 'registration_form',
+                'step': 'phone_submit',
+                'phone_verified': phoneValue.length === 10
+            });
+            
+            setStep(2);
+            
+            // Track Step 2 start
+            dataLayer.push({
+                'event': 'form_step_2_start',
+                'form_name': 'registration_form',
+                'step': 'details_form'
+            });
+        }
     });
 
     prevStepBtn?.addEventListener('click', () => setStep(1));
@@ -903,6 +949,45 @@ function initOrderModal() {
             // Price per jar (in rupees) - adjust this as needed
             const pricePerJar = 349;
             const totalAmount = formData.quantity * pricePerJar;
+            
+            // Track Add to Cart / Package Selection
+            window.dataLayer = window.dataLayer || [];
+            dataLayer.push({
+                'event': 'add_to_cart',
+                'ecommerce': {
+                    'currency': 'INR',
+                    'value': totalAmount,
+                    'items': [{
+                        'item_id': 'amrutbaa-chutney',
+                        'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                        'item_category': 'Condiment',
+                        'item_brand': 'Amrut Baa',
+                        'price': pricePerJar,
+                        'quantity': formData.quantity
+                    }]
+                }
+            });
+            
+            // Track Shipping Info Added
+            dataLayer.push({
+                'event': 'add_shipping_info',
+                'ecommerce': {
+                    'currency': 'INR',
+                    'value': totalAmount,
+                    'shipping_tier': 'Standard',
+                    'items': [{
+                        'item_id': 'amrutbaa-chutney',
+                        'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                        'item_category': 'Condiment',
+                        'item_brand': 'Amrut Baa',
+                        'price': pricePerJar,
+                        'quantity': formData.quantity
+                    }]
+                },
+                'shipping_city': formData.city,
+                'shipping_state': formData.state,
+                'shipping_pincode': formData.pincode
+            });
 
             // Create order via Cloudflare Worker
             const orderResponse = await fetch('/api/create-order', {
@@ -922,6 +1007,24 @@ function initOrderModal() {
             }
 
             const order = await orderResponse.json();
+            
+            // Track Payment Info Added (Razorpay modal about to open)
+            dataLayer.push({
+                'event': 'add_payment_info',
+                'payment_type': 'razorpay',
+                'ecommerce': {
+                    'currency': 'INR',
+                    'value': totalAmount,
+                    'items': [{
+                        'item_id': 'amrutbaa-chutney',
+                        'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                        'item_category': 'Condiment',
+                        'item_brand': 'Amrut Baa',
+                        'price': pricePerJar,
+                        'quantity': formData.quantity
+                    }]
+                }
+            });
 
             // Configure Razorpay options
             const razorpayOptions = {
@@ -948,6 +1051,45 @@ function initOrderModal() {
                         const verifyResult = await verifyResponse.json();
 
                         if (verifyResult.success) {
+                            // 🎯 CRITICAL: Track Purchase (Conversion Event)
+                            window.dataLayer = window.dataLayer || [];
+                            dataLayer.push({
+                                'event': 'purchase',
+                                'ecommerce': {
+                                    'transaction_id': response.razorpay_order_id,
+                                    'value': totalAmount,
+                                    'tax': 0,
+                                    'shipping': 0,
+                                    'currency': 'INR',
+                                    'coupon': '',
+                                    'items': [{
+                                        'item_id': 'amrutbaa-chutney',
+                                        'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                                        'item_category': 'Condiment',
+                                        'item_brand': 'Amrut Baa',
+                                        'price': pricePerJar,
+                                        'quantity': formData.quantity
+                                    }]
+                                },
+                                'order_id': response.razorpay_order_id,
+                                'payment_id': response.razorpay_payment_id,
+                                'customer_email': formData.email,
+                                'customer_phone': formData.phone,
+                                'customer_city': formData.city,
+                                'customer_state': formData.state
+                            });
+                            
+                            // Track for Facebook Pixel (if implemented)
+                            if (typeof fbq !== 'undefined') {
+                                fbq('track', 'Purchase', {
+                                    value: totalAmount,
+                                    currency: 'INR',
+                                    content_ids: ['amrutbaa-chutney'],
+                                    content_type: 'product',
+                                    num_items: formData.quantity
+                                });
+                            }
+                            
                             // Create Shiprocket shipment
                             let trackingInfo = null;
                             try {
@@ -1008,11 +1150,9 @@ function initOrderModal() {
                             }
 
                             // Show success message IMMEDIATELY
-                            console.log('Displaying success message...');
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none !important';
                             registrationForm.hidden = true;
-                            console.log('✅ Success message is now visible');
 
                             // Submit order details to n8n in background (doesn't block success display)
                             submitOrderDetails({
@@ -1023,11 +1163,10 @@ function initOrderModal() {
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null
-                            }).catch(err => console.error('Background n8n submission error:', err));
+                            }).catch(() => {});
 
                             // Close modal after delay
                             setTimeout(() => {
-                                console.log('Closing modal and resetting form...');
                                 closeModal();
                                 registrationForm.style.display = 'block';
                                 registrationForm.reset();
@@ -1043,16 +1182,32 @@ function initOrderModal() {
                                 }
                             }, 5000);
                         } else {
-                            console.error('❌ Payment verification failed:', verifyResult);
                             alert('Payment verification failed. Please contact support.');
                             submitBtn.textContent = originalText;
                             submitBtn.disabled = false;
+                            
+                            // Track payment failure
+                            window.dataLayer = window.dataLayer || [];
+                            dataLayer.push({
+                                'event': 'payment_failed',
+                                'error_message': 'Payment verification failed',
+                                'payment_method': 'razorpay',
+                                'order_value': totalAmount
+                            });
                         }
                     } catch (error) {
-                        console.error('❌ Verification error:', error);
                         alert('Payment verification error. Please contact support with your payment ID.');
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
+                        
+                        // Track payment error
+                        window.dataLayer = window.dataLayer || [];
+                        dataLayer.push({
+                            'event': 'payment_failed',
+                            'error_message': error.message || 'Payment verification error',
+                            'payment_method': 'razorpay',
+                            'order_value': totalAmount
+                        });
                     }
                 },
                 prefill: {
@@ -1068,9 +1223,17 @@ function initOrderModal() {
                 },
                 modal: {
                     ondismiss: function () {
-                        console.log('Payment cancelled by user');
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
+                        
+                        // Track payment cancellation
+                        window.dataLayer = window.dataLayer || [];
+                        dataLayer.push({
+                            'event': 'payment_cancelled',
+                            'cancellation_step': 'payment_gateway',
+                            'order_value': totalAmount,
+                            'payment_method': 'razorpay'
+                        });
                     }
                 }
             };
@@ -1084,7 +1247,6 @@ function initOrderModal() {
             submitBtn.disabled = false;
 
         } catch (error) {
-            console.error('Payment initialization error:', error);
             alert('Failed to initialize payment. Please try again.');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
@@ -1094,8 +1256,6 @@ function initOrderModal() {
     // Helper function to submit order details in background
     async function submitOrderDetails(orderData) {
         try {
-            console.log('Submitting order to n8n in background:', orderData);
-
             // Send as JSON POST - this runs in background, doesn't block UI
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
@@ -1104,15 +1264,12 @@ function initOrderModal() {
             });
 
             if (response.ok) {
-                console.log('✅ Order submitted successfully to n8n');
                 return true;
             } else {
-                console.warn('⚠️ n8n webhook responded with status:', response.status);
                 // Don't fail - order is already confirmed to customer
                 return false;
             }
         } catch (error) {
-            console.error('⚠️ Error submitting to n8n (non-blocking):', error);
             // Don't fail - order is already confirmed to customer
             return false;
         }

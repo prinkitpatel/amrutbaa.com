@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Confirmation - Amrut Baa</title>
+</head>
+<body style="margin: 0; padding: 0; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif; background-color: #FAF7F2;">
+    
+    <!-- Main Container -->
+    <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background-color: #FAF7F2; padding: 40px 20px;">
+        <tr>
+            <td align="center">
+                
+                <!-- Email Content -->
+                <table width="600" cellpadding="0" cellspacing="0" border="0" style="background-color: #ffffff; border-radius: 16px; box-shadow: 0 4px 20px rgba(107, 28, 35, 0.1); overflow: hidden;">
+                    
+                    <!-- Header -->
+                    <tr>
+                        <td style="background: linear-gradient(135deg, #6B1C23 0%, #4D0E13 100%); padding: 50px 40px; text-align: center;">
+                            <h1 style="margin: 0; color: #ffffff; font-size: 36px; font-weight: 700; letter-spacing: -0.5px;">
+                                🎉 Order Confirmed!
+                            </h1>
+                            <p style="margin: 15px 0 0 0; color: #C9A961; font-size: 18px; font-weight: 500;">
+                                You're now part of a 90+ year legacy
+                            </p>
+                        </td>
+                    </tr>
+                    
+                    <!-- Body Content -->
+                    <tr>
+                        <td style="padding: 45px 40px;">
+                            
+                            <!-- Greeting -->
+                            <p style="margin: 0 0 10px 0; color: #2B2B2B; font-size: 18px; line-height: 1.6;">
+                                Dear <strong>{{ $json.name }}</strong>,
+                            </p>
+                            
+                            <p style="margin: 0 0 30px 0; color: #666; font-size: 16px; line-height: 1.7;">
+                                Your order is confirmed! We're preparing your jar using the same mortar-and-pestle rhythm Amrutbaa used. This weekly batch carries four generations of tradition—warmth, spice, garlic bite, and that comforting hug you'll remember.
+                            </p>
+                            
+                            <!-- Order Summary Box -->
+                            <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background: linear-gradient(135deg, #FAF7F2 0%, #FFF7ED 100%); border-radius: 12px; margin-bottom: 30px; border: 2px solid #C9A961;">
+                                <tr>
+                                    <td style="padding: 30px;">
+                                        <h2 style="margin: 0 0 20px 0; color: #6B1C23; font-size: 22px; font-weight: 700; display: flex; align-items: center;">
+                                            <span style="display: inline-block; width: 8px; height: 28px; background-color: #C9A961; margin-right: 12px; border-radius: 2px;"></span>
+                                            Order Summary
+                                        </h2>
+                                        
+                                        <table width="100%" cellpadding="0" cellspacing="0" border="0">
+                                            <tr>
+                                                <td style="padding: 12px 0; color: #666; font-size: 15px; border-bottom: 1px solid #E5E5E5;">
+                                                    Order ID
+                                                </td>
+                                                <td style="padding: 12px 0; color: #2B2B2B; font-size: 15px; font-weight: 600; text-align: right; border-bottom: 1px solid #E5E5E5; font-family: 'Courier New', monospace;">
+                                                    {{ $json["Order Id"] }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; color: #666; font-size: 15px; border-bottom: 1px solid #E5E5E5;">
+                                                    Order Date
+                                                </td>
+                                                <td style="padding: 12px 0; color: #2B2B2B; font-size: 15px; font-weight: 600; text-align: right; border-bottom: 1px solid #E5E5E5;">
+                                                    {{ $json.Date }}
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 12px 0; color: #666; font-size: 15px; border-bottom: 1px solid #E5E5E5;">
+                                                    Quantity
+                                                </td>
+                                                <td style="padding: 12px 0; color: #2B2B2B; font-size: 15px; font-weight: 600; text-align: right; border-bottom: 1px solid #E5E5E5;">
+                                                    {{ $json.quantity }} bottle(s)
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td style="padding: 16px 0 0 0; color: #6B1C23; font-size: 18px; font-weight: 700;">
+                                                    Total Amount Paid
+                                                </td>
+                                                <td style="padding: 16px 0 0 0; color: #6B1C23; font-size: 22px; font-weight: 700; text-align: right;">
+                                                    ₹{{ $json.Amount }}
+                                                </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </tr>
+                            </table>
+                            
+                            <!-- Payment Confirmation -->
+                            <div style="background-color: #D1FAE5; padding: 20px 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid #10B981;">
+                                <p style="margin: 0; color: #047857; font-size: 16px; font-weight: 600;">
+                                    ✅ Payment Confirmed
+                                </p>
+                                <p style="margin: 8px 0 0 0; color: #065F46; font-size: 14px; font-family: 'Courier New', monospace;">
+                                    Payment ID: {{ $json["Payment Id"] }}
+                                </p>
+                            </div>
+                            
+                            <!-- Shipping Address -->
+                            <div style="margin-bottom: 30px;">
+                                <h3 style="margin: 0 0 15px 0; color: #6B1C23; font-size: 18px; font-weight: 700; display: flex; align-items: center;">
+                                    📍 Shipping Address
+                                </h3>
+                                <div style="background-color: #FAF7F2; padding: 20px 25px; border-radius: 10px; border: 1px solid #E5E5E5;">
+                                    <p style="margin: 0; color: #2B2B2B; font-size: 15px; line-height: 1.8;">
+                                        <strong>{{ $json.name }}</strong><br>
+                                        {{ $json.Address }}<br>
+                                        {{ $json.City }}, {{ $json.State }} - {{ $json.Pincode }}<br>
+                                        <br>
+                                        📞 {{ $json.phone }}<br>
+                                        📧 {{ $json.email }}
+                                    </p>
+                                </div>
+                            </div>
+                            
+                            <!-- Delivery Information -->
+                            <div style="background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%); padding: 25px; border-radius: 10px; margin-bottom: 30px; border-left: 4px solid #F59E0B;">
+                                <h3 style="margin: 0 0 12px 0; color: #92400E; font-size: 18px; font-weight: 700;">
+                                    🚚 Weekly Batch Schedule
+                                </h3>
+                                <p style="margin: 0 0 10px 0; color: #78350F; font-size: 15px; line-height: 1.7;">
+                                    Your chutney is being prepared as part of this week's fresh batch. <strong>Tracking details will be shared once we dispatch your order</strong>—prepared the same way Amrutbaa did, with hand-picked ingredients and soul.
+                                </p>
+                                <p style="margin: 0; color: #78350F; font-size: 14px;">
+                                    <strong>Shipment ID:</strong> {{ $json["Shipment Id"] }}
+                                </p>
+                            </div>
+                            
+                            <!-- Contact Information -->
+                            <div style="text-align: center; padding: 25px 0; border-top: 2px solid #E5E5E5; border-bottom: 2px solid #E5E5E5; margin-bottom: 25px;">
+                                <p style="margin: 0 0 15px 0; color: #2B2B2B; font-size: 16px; font-weight: 600;">
+                                    Questions? We're here to help!
+                                </p>
+                                <p style="margin: 0; color: #666; font-size: 15px; line-height: 2;">
+                                    📧 <a href="mailto:namaste@amrutbaa.com" style="color: #6B1C23; text-decoration: none; font-weight: 600;">namaste@amrutbaa.com</a><br>
+                                    📞 <a href="tel:+916354306783" style="color: #6B1C23; text-decoration: none; font-weight: 600;">+91 6354-306783</a><br>
+                                    🌐 <a href="https://amrutbaa.com" style="color: #6B1C23; text-decoration: none; font-weight: 600;">amrutbaa.com</a>
+                                </p>
+                            </div>
+                            
+                            <!-- Thank You Message -->
+                            <p style="margin: 0; text-align: center; color: #666; font-size: 15px; line-height: 1.7;">
+                                Thank you for keeping our family's legacy alive.<br>
+                                You're now part of a story that started in Kathiyawad 90+ years ago. 🌶️
+                            </p>
+                            
+                        </td>
+                    </tr>
+                    
+                    <!-- Footer -->
+                    <tr>
+                        <td style="background-color: #FAF7F2; padding: 35px 40px; text-align: center; border-top: 1px solid #E5E5E5;">
+                            <p style="margin: 0 0 15px 0; color: #6B1C23; font-size: 20px; font-weight: 700; letter-spacing: 0.5px;">
+                                Amrut Baa
+                            </p>
+                            <p style="margin: 0 0 12px 0; color: #C9A961; font-size: 14px; font-weight: 600; font-style: italic;">
+                                A Kathiyawad Legacy Since 1935
+                            </p>
+                            <p style="margin: 0; color: #999; font-size: 12px; line-height: 1.6;">
+                                Four Generations · Zero Preservatives · Weekly Fresh Batches<br>
+                                © 2026 Amrut Baa. All rights reserved.
+                            </p>
+                        </td>
+                    </tr>
+                    
+                </table>
+                
+            </td>
+        </tr>
+    </table>
+    
+</body>
+</html>

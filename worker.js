@@ -344,8 +344,6 @@ export default {
     if (url.pathname === '/api/shiprocket-webhook' && request.method === 'POST') {
       try {
         const webhookData = await request.json();
-        
-        console.log('Shiprocket webhook received:', webhookData);
 
         // Forward to your n8n workflow or database
         if (env.N8N_WEBHOOK_URL) {

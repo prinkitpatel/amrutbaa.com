@@ -238,5 +238,3 @@ function isInViewport(element) {
 
 // Remove old slot-based system - no limits on weekly batches!
 // Orders are time-based (Sunday deadline), not quantity-based
-
-console.log('Made with ❤️ preserving 90+ years of tradition');

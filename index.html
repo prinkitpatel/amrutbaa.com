@@ -2,11 +2,46 @@
 <html lang="en">
 
 <head>
+    <!-- Google Tag Manager -->
+    <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-53CBVFF7');</script>
+    <!-- End Google Tag Manager -->
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description"
         content="Amrutbaa Ni Cutney - 90+ year old family chutney from Kathiyawad. Limited batch. Register now, taste legacy.">
     <title>Amrutbaa Ni Cutney - First Official Batch Registration</title>
+    
+    <!-- Initialize Data Layer -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        
+        // Helper function to get URL parameters
+        function getURLParam(name) {
+            const urlParams = new URLSearchParams(window.location.search);
+            return urlParams.get(name) || '';
+        }
+        
+        // Store UTM parameters in session storage for attribution
+        (function() {
+            const utmParams = {
+                utm_source: getURLParam('utm_source'),
+                utm_medium: getURLParam('utm_medium'),
+                utm_campaign: getURLParam('utm_campaign'),
+                utm_content: getURLParam('utm_content'),
+                utm_term: getURLParam('utm_term')
+            };
+            
+            // Only store if we have UTM params
+            if (utmParams.utm_source || utmParams.utm_medium) {
+                sessionStorage.setItem('utmParams', JSON.stringify(utmParams));
+            }
+        })();
+    </script>
 
     <!-- Fonts -->
     <link
@@ -2089,6 +2124,11 @@
 </head>
 
 <body>
+    <!-- Google Tag Manager (noscript) -->
+    <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53CBVFF7"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+    <!-- End Google Tag Manager (noscript) -->
+    
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
@@ -2105,17 +2145,18 @@
                 </div>
 
                 <div class="spots-counter">
-                    <span class="spots-icon">🔥</span>
-                    <span class="spots-text"><strong>127 spots</strong> left this week</span>
+                    <span class="spots-icon">⏰</span>
+                    <span class="spots-text">Orders close <strong>Sunday 9:00 PM</strong></span>
                 </div>
 
                 <button class="cta-button" id="openModalBtn">
-                    <span class="cta-text">Reserve Your Jar Now</span>
+                    <span class="cta-text">Reserve Your Jar</span>
+                    <span class="cta-subtext">Check delivery dates & secure your batch →</span>
                 </button>
 
                 <p class="batch-notice">⚠️ <strong>Note:</strong> All orders are prepared strictly as per our weekly batch schedule. No ready stock available. Urgent delivery requests cannot be accommodated at any cost.</p>
 
-                <p class="social-proof">⭐ Join 500+ customers who've already registered</p>
+                <p class="social-proof">⭐⭐⭐⭐⭐ "Best chutney I've tasted" — 820+ families across India</p>
             </div>
         </div>
     </section>
@@ -2170,8 +2211,8 @@
                             <span class="meta-pill">Family-kept process</span>
                         </div>
                         <div class="journey-cta-row">
-                            <button class="journey-cta" id="journeyCtaHeritage">Reserve My Jar</button>
-                            <span class="journey-note">Taste the story that started in Kathiyawad.</span>
+                            <button class="journey-cta" id="journeyCtaHeritage">Reserve Your Jar</button>
+                            <span class="journey-note">Taste 90+ years of tradition</span>
                         </div>
                     </div>
                 </article>
@@ -2196,8 +2237,8 @@
                             <div class="flavor-chip">Rock salt<span>Mineral depth, no fillers</span></div>
                         </div>
                         <div class="journey-cta-row">
-                            <button class="journey-cta" id="journeyCtaIngredients">I want this flavour</button>
-                            <span class="journey-note">Small batches keep the spices alive.</span>
+                            <button class="journey-cta" id="journeyCtaIngredients">Reserve Your Jar</button>
+                            <span class="journey-note">Hand-picked, toasted fresh every Monday</span>
                         </div>
                     </div>
                 </article>
@@ -2234,8 +2275,8 @@
                             </div>
                         </div>
                         <div class="journey-cta-row">
-                            <button class="journey-cta" id="journeyCtaBatch">Get on this batch</button>
-                            <span class="journey-note">Missed it? You’re first in line for the next.</span>
+                            <button class="journey-cta" id="journeyCtaBatch">Reserve Your Jar</button>
+                            <span class="journey-note">Get in this batch before Sunday 9 PM</span>
                         </div>
                     </div>
                 </article>
@@ -2259,8 +2300,8 @@
                             <span class="meta-pill">Human confirmation</span>
                         </div>
                         <div class="journey-cta-row">
-                            <button class="journey-cta" id="journeyCtaRegister">Reserve my slot</button>
-                            <span class="journey-note">Limited slots every cycle—claim yours early.</span>
+                            <button class="journey-cta" id="journeyCtaRegister">Reserve Your Jar</button>
+                            <span class="journey-note">Weekly fresh batches—register early</span>
                         </div>
                     </div>
                 </article>
@@ -2364,7 +2405,7 @@
 
             <div class="section-cta">
                 <p class="cta-intro">Find your go-to pairing. Reserve your jar today.</p>
-                <button class="cta-button-secondary" id="lovedByAllCta">I Want to Try This</button>
+                <button class="cta-button-secondary" id="lovedByAllCta">Reserve Your First Jar</button>
             </div>
         </div>
     </section>
@@ -2422,7 +2463,8 @@
 
                     <div class="promise-cta-section">
                         <p class="promise-cta-text">Ready to join our table?</p>
-                        <button class="cta-button-promise" id="promiseCtaBtn">Reserve Your Jar With Confidence</button>
+                        <button class="cta-button-promise" id="promiseCtaBtn">Reserve Your Jar Risk-Free</button>
+                        <p style="margin: 0.75rem 0 0 0; font-size: 0.9rem; color: #666;">✓ 100% money-back if not delighted</p>
                     </div>
                 </div>
             </div>
@@ -2734,6 +2776,141 @@
             </div>
         </div>
     </footer>
+    
+    <!-- Analytics Tracking Scripts -->
+    <script>
+        // Initial Page View Event
+        window.dataLayer = window.dataLayer || [];
+        
+        // Get stored UTM parameters
+        function getStoredUTMParams() {
+            try {
+                return JSON.parse(sessionStorage.getItem('utmParams') || '{}');
+            } catch(e) {
+                return {};
+            }
+        }
+        
+        // Send page view with UTM attribution
+        const utmData = getStoredUTMParams();
+        dataLayer.push({
+            'event': 'page_view',
+            'page_title': document.title,
+            'page_location': window.location.href,
+            'page_path': window.location.pathname,
+            'traffic_source': utmData.utm_source || '(direct)',
+            'campaign': utmData.utm_campaign || '(none)',
+            'medium': utmData.utm_medium || '(none)',
+            'content': utmData.utm_content || '',
+            'term': utmData.utm_term || ''
+        });
+        
+        // Track scroll depth
+        let scrollTracked = {
+            '25': false,
+            '50': false,
+            '75': false,
+            '100': false
+        };
+        
+        let engagementStartTime = Date.now();
+        
+        window.addEventListener('scroll', function() {
+            const scrollPercentage = Math.round((window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100);
+            
+            // Track 25%, 50%, 75%, 100%
+            ['25', '50', '75', '100'].forEach(threshold => {
+                if (scrollPercentage >= parseInt(threshold) && !scrollTracked[threshold]) {
+                    scrollTracked[threshold] = true;
+                    const engagementTime = Math.round((Date.now() - engagementStartTime) / 1000);
+                    
+                    dataLayer.push({
+                        'event': 'scroll_depth',
+                        'scroll_percentage': parseInt(threshold),
+                        'engagement_time_seconds': engagementTime
+                    });
+                }
+            });
+        });
+        
+        // Track CTA button clicks
+        document.addEventListener('click', function(e) {
+            // Register/Reserve buttons
+            if (e.target.matches('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button')) {
+                const buttonText = e.target.textContent.trim();
+                const buttonLocation = e.target.closest('.hero') ? 'hero' : 
+                                      e.target.closest('.sticky-cta-bar') ? 'sticky_footer' :
+                                      e.target.closest('footer') ? 'footer' : 'other';
+                
+                // Get countdown time remaining if available
+                const timerDisplay = document.querySelector('.timer-display');
+                const timeRemaining = timerDisplay ? timerDisplay.textContent : '';
+                
+                dataLayer.push({
+                    'event': 'cta_click',
+                    'button_text': buttonText,
+                    'button_location': buttonLocation,
+                    'countdown_time_remaining': timeRemaining
+                });
+            }
+            
+            // Story section engagement
+            if (e.target.closest('.story-card')) {
+                dataLayer.push({
+                    'event': 'story_card_click',
+                    'card_title': e.target.closest('.story-card').querySelector('h3')?.textContent || 'Unknown'
+                });
+            }
+            
+            // FAQ interactions
+            if (e.target.closest('.faq-question')) {
+                const faqTitle = e.target.closest('.faq-item')?.querySelector('.faq-question')?.textContent || 'Unknown';
+                dataLayer.push({
+                    'event': 'faq_click',
+                    'faq_question': faqTitle
+                });
+            }
+            
+            // Policy links
+            if (e.target.matches('.policy-links a')) {
+                dataLayer.push({
+                    'event': 'policy_link_click',
+                    'policy_type': e.target.textContent.trim()
+                });
+            }
+        });
+        
+        // Track time on page for engaged users
+        let timeOnPageInterval;
+        let totalTimeOnPage = 0;
+        
+        function startTimeTracking() {
+            timeOnPageInterval = setInterval(function() {
+                totalTimeOnPage += 10;
+                
+                // Send engagement event every 30 seconds for highly engaged users
+                if (totalTimeOnPage % 30 === 0) {
+                    dataLayer.push({
+                        'event': 'user_engagement',
+                        'engagement_time_seconds': totalTimeOnPage
+                    });
+                }
+            }, 10000); // Check every 10 seconds
+        }
+        
+        startTimeTracking();
+        
+        // Track page exit
+        window.addEventListener('beforeunload', function() {
+            if (totalTimeOnPage > 0) {
+                dataLayer.push({
+                    'event': 'page_exit',
+                    'total_time_on_page': totalTimeOnPage,
+                    'max_scroll_depth': Math.max(...Object.keys(scrollTracked).filter(k => scrollTracked[k]).map(Number))
+                });
+            }
+        });
+    </script>
 </body>
 
 </html>
