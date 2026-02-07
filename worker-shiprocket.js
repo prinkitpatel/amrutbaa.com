@@ -166,6 +166,82 @@ export default {
       }
     }
 
+    // Check Shiprocket serviceability for pincode
+    if (url.pathname === '/api/check-pincode' && request.method === 'POST') {
+      try {
+        const { pincode, weight = 0.15, cod = false } = await request.json();
+
+        if (!pincode || String(pincode).length !== 6) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Invalid pincode'
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        if (!env.SHIPROCKET_PICKUP_PINCODE) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Pickup pincode not configured'
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const token = await getShiprocketToken(env);
+        const serviceabilityResponse = await fetch('https://apiv2.shiprocket.in/v1/external/courier/serviceability/', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify({
+            pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
+            delivery_postcode: String(pincode),
+            cod: cod ? 1 : 0,
+            weight: Number(weight) || 0.15
+          })
+        });
+
+        if (!serviceabilityResponse.ok) {
+          const errorText = await serviceabilityResponse.text();
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Failed to check pincode serviceability',
+            details: errorText
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const serviceabilityData = await serviceabilityResponse.json();
+        const couriers = serviceabilityData?.data?.available_courier_companies || [];
+        const serviceable = Array.isArray(couriers) && couriers.length > 0;
+
+        return new Response(JSON.stringify({
+          success: true,
+          serviceable,
+          courier_count: couriers.length,
+          data: serviceabilityData?.data || null
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: error.message
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
     // Create Shiprocket Order
     if (url.pathname === '/api/create-shipment' && request.method === 'POST') {
       try {
@@ -182,7 +258,10 @@ export default {
           state,
           pincode,
           quantity,
-          amount
+          amount,
+          unit_price,
+          base_total,
+          discount
         } = orderData;
 
         // Validate required fields
@@ -200,6 +279,13 @@ export default {
         const token = await getShiprocketToken(env);
 
         // Prepare shipment data
+        const safeQuantity = Number.isFinite(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
+        const safeUnitPrice = Number.isFinite(Number(unit_price)) && Number(unit_price) > 0
+          ? Number(unit_price)
+          : (Number.isFinite(Number(base_total)) && Number(base_total) > 0 ? Number(base_total) / safeQuantity : Number(amount) / safeQuantity);
+        const safeDiscount = Number.isFinite(Number(discount)) && Number(discount) > 0 ? Number(discount) : 0;
+        const safeAmount = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : safeUnitPrice * safeQuantity;
+
         const shipmentData = {
           order_id: order_id || `AMB${Date.now()}`,
           order_date: new Date().toISOString().split('T')[0], // YYYY-MM-DD
@@ -221,9 +307,9 @@ export default {
             {
               name: "Amrut Baa Chilly Garlic Chutney",
               sku: "AMB-CGC-100G",
-              units: quantity,
-              selling_price: amount / quantity, // Price per unit
-              discount: 0,
+              units: safeQuantity,
+              selling_price: safeUnitPrice, // Price per unit (pre-discount)
+              discount: safeDiscount,
               tax: 0, // Adjust if you have GST
               hsn: 210390 // HSN code for chutneys
             }
@@ -232,12 +318,12 @@ export default {
           shipping_charges: 0, // Set if applicable
           giftwrap_charges: 0,
           transaction_charges: 0,
-          total_discount: 0,
-          sub_total: amount,
+          total_discount: safeDiscount,
+          sub_total: safeAmount,
           length: 10,  // Package dimensions in cm
           breadth: 10,
           height: 8,
-          weight: 0.15 * quantity // Weight in kg (150g per jar)
+          weight: 0.15 * safeQuantity // Weight in kg (150g per jar)
         };
 
         // Create order on Shiprocket

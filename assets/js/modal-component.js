@@ -232,6 +232,25 @@ function initOrderModal() {
             line-height: 1.3;
         }
 
+        .pincode-status {
+            font-size: 0.8rem;
+            margin-top: 0.35rem;
+            line-height: 1.3;
+            display: none;
+        }
+
+        .pincode-status.pending {
+            color: #6B2C2C;
+        }
+
+        .pincode-status.success {
+            color: #2E7D32;
+        }
+
+        .pincode-status.error {
+            color: #C0392B;
+        }
+
         .stepper {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -731,6 +750,7 @@ function initOrderModal() {
                             <label for="pincode">Pincode *</label>
                             <input type="text" id="pincode" name="pincode" placeholder="6-digit pincode" maxlength="6" required>
                             <p class="input-error" data-error-for="pincode" style="display:none;"></p>
+                            <p class="pincode-status" id="pincodeStatus"></p>
                             <p class="field-note">We deliver right after the batch is prepared. Add landmarks to help the rider.</p>
                         </div>
                         <div class="step-actions">
@@ -813,7 +833,11 @@ function initOrderModal() {
     const modalSavings = document.getElementById('modalSavings');
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
     const orderQuantityText = document.getElementById('orderQuantityText');
+    const pincodeInput = document.getElementById('pincode');
+    const pincodeStatus = document.getElementById('pincodeStatus');
     let currentStep = 1;
+    let pincodeServiceable = null;
+    let pincodeCheckTimer = null;
 
     const pricingConfig = {
         unitPrice: 349,
@@ -892,6 +916,61 @@ function initOrderModal() {
         if (errorEl) {
             errorEl.textContent = message;
             errorEl.style.display = 'block';
+        }
+    }
+
+    function setPincodeStatus(type, message) {
+        if (!pincodeStatus) return;
+        pincodeStatus.classList.remove('pending', 'success', 'error');
+        if (type) {
+            pincodeStatus.classList.add(type);
+            pincodeStatus.textContent = message;
+            pincodeStatus.style.display = 'block';
+        } else {
+            pincodeStatus.textContent = '';
+            pincodeStatus.style.display = 'none';
+        }
+    }
+
+    async function checkPincodeServiceability() {
+        const raw = pincodeInput?.value || '';
+        const pincode = raw.replace(/\D/g, '').trim();
+        if (pincode.length !== 6) {
+            pincodeServiceable = null;
+            setPincodeStatus(null, '');
+            return;
+        }
+
+        const qty = normalizeQuantity(quantityInput?.value || 1);
+        const weight = Number((0.15 * qty).toFixed(2));
+
+        setPincodeStatus('pending', 'Checking delivery availability...');
+        try {
+            const response = await fetch('/api/check-pincode', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    pincode,
+                    weight,
+                    cod: false
+                })
+            });
+
+            if (!response.ok) {
+                throw new Error('Serviceability check failed');
+            }
+
+            const result = await response.json();
+            pincodeServiceable = !!result.serviceable;
+            if (pincodeServiceable) {
+                const courierCount = result.courier_count || 0;
+                setPincodeStatus('success', `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
+            } else {
+                setPincodeStatus('error', 'Sorry, this pincode is not serviceable yet.');
+            }
+        } catch (error) {
+            pincodeServiceable = null;
+            setPincodeStatus('error', 'Could not verify pincode. Please try again.');
         }
     }
 
@@ -978,6 +1057,11 @@ function initOrderModal() {
             setError('pincode', 'Enter a 6-digit pincode.');
             valid = false;
         }
+
+        if (pincode.length === 6 && pincodeServiceable === false) {
+            setError('pincode', 'This pincode is not serviceable yet.');
+            valid = false;
+        }
         return valid;
     }
 
@@ -1059,7 +1143,30 @@ function initOrderModal() {
             const nextQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
             if (quantityInput) quantityInput.value = normalizeQuantity(nextQty);
             updatePricingUI();
+            pincodeServiceable = null;
+            if (pincodeInput?.value?.replace(/\D/g, '').length === 6) {
+                checkPincodeServiceability();
+            }
         });
+    });
+
+    pincodeInput?.addEventListener('input', () => {
+        pincodeServiceable = null;
+        if (pincodeCheckTimer) {
+            clearTimeout(pincodeCheckTimer);
+        }
+        const pincode = pincodeInput.value.replace(/\D/g, '').trim();
+        if (pincode.length === 6) {
+            pincodeCheckTimer = setTimeout(() => {
+                checkPincodeServiceability();
+            }, 400);
+        } else {
+            setPincodeStatus(null, '');
+        }
+    });
+
+    pincodeInput?.addEventListener('blur', () => {
+        checkPincodeServiceability();
     });
 
     document.addEventListener('keydown', (e) => {
@@ -1259,7 +1366,11 @@ function initOrderModal() {
                                         state: formData.state,
                                         pincode: formData.pincode,
                                         quantity: formData.quantity,
-                                        amount: totalAmount
+                                        amount: totalAmount,
+                                        unit_price: pricePerJar,
+                                        base_total: pricing.baseTotal,
+                                        discount: pricing.discount,
+                                        offer_label: pricing.offer ? pricing.offer.label : ''
                                     })
                                 });
 
