@@ -192,18 +192,18 @@ export default {
         }
 
         const token = await getShiprocketToken(env);
-        const serviceabilityResponse = await fetch('https://apiv2.shiprocket.in/v1/external/courier/serviceability/', {
-          method: 'POST',
+        const queryParams = new URLSearchParams({
+          pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
+          delivery_postcode: String(pincode),
+          cod: cod ? 1 : 0,
+          weight: Number(weight) || 0.15
+        });
+        const serviceabilityResponse = await fetch(`https://apiv2.shiprocket.in/v1/external/courier/serviceability/?${queryParams.toString()}`, {
+          method: 'GET',
           headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify({
-            pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
-            delivery_postcode: String(pincode),
-            cod: cod ? 1 : 0,
-            weight: Number(weight) || 0.15
-          })
+          }
         });
 
         if (!serviceabilityResponse.ok) {
