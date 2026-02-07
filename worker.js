@@ -293,6 +293,9 @@ export default {
         });
       }
     }
+
+    // Check pincode serviceability
+    if (url.pathname === '/api/check-pincode' && request.method === 'POST') {
       try {
         const { pincode, weight = 0.15, cod = false } = await request.json();
 
