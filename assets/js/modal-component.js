@@ -171,6 +171,54 @@ function initOrderModal() {
             line-height: 1.4;
         }
 
+        .modal-total {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: #4A4A4A;
+            margin-bottom: 1rem;
+        }
+
+        .modal-savings {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: #2E7D32;
+            margin-top: -0.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .quantity-row {
+            display: grid;
+            grid-template-columns: 44px 1fr 44px;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .qty-btn {
+            border: 1px solid rgba(107, 44, 44, 0.25);
+            background: #fff;
+            color: #6B2C2C;
+            font-size: 1.1rem;
+            font-weight: 700;
+            border-radius: 10px;
+            height: 42px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .qty-btn:hover {
+            background: rgba(212, 175, 55, 0.15);
+        }
+
+        .qty-input {
+            width: 100%;
+            text-align: center;
+            height: 42px;
+            border-radius: 10px;
+            border: 1px solid rgba(107, 44, 44, 0.25);
+            font-weight: 700;
+            color: #4A4A4A;
+        }
+
         .form-group.error input,
         .form-group.error textarea {
             border-color: #C0392B;
@@ -580,9 +628,12 @@ function initOrderModal() {
                 </div>
 
                 <div class="modal-price">
-                    <span class="price-amount">₹349</span>
+                    <span class="price-amount" id="unitPriceDisplay">₹349</span>
                     <span class="price-caption">per jar • Free shipping on all orders</span>
                 </div>
+
+                <div class="modal-total" id="modalTotal">Total today: ₹349</div>
+                <div class="modal-savings" id="modalSavings" style="display:none;"></div>
 
                 <div class="modal-urgency">Batch closes in <span id="modalTimer">--:--:--</span></div>
                 
@@ -605,7 +656,16 @@ function initOrderModal() {
                             <p class="input-error" data-error-for="phone" style="display:none;"></p>
                             <p class="field-note">We’ll confirm your batch slot over WhatsApp/SMS.</p>
                         </div>
-                        <input type="hidden" id="quantity" name="quantity" value="1">
+                        <div class="form-group">
+                            <label for="quantity">Quantity *</label>
+                            <div class="quantity-row">
+                                <button type="button" class="qty-btn" data-qty-action="decrease">−</button>
+                                <input type="number" id="quantity" name="quantity" class="qty-input" min="1" max="10" value="1" required>
+                                <button type="button" class="qty-btn" data-qty-action="increase">+</button>
+                            </div>
+                            <p class="input-error" data-error-for="quantity" style="display:none;"></p>
+                            <p class="field-note" id="offerNote">Offers: 5% off 2+ jars • 10% off 3+ jars</p>
+                        </div>
                         <div class="step-actions">
                             <button type="button" class="btn-primary-solid" id="nextStepBtn">Continue →</button>
                         </div>
@@ -613,7 +673,7 @@ function initOrderModal() {
 
                     <div class="step-pane" data-step-pane="2">
                         <div class="order-recap">
-                            <strong>Reserved:</strong> 1 fresh jar in this week's batch • Dispatch starts Monday after prep.
+                            <strong>Reserved:</strong> <span id="orderQuantityText">1 fresh jar</span> in this week's batch • Dispatch starts Monday after prep.
                         </div>
 
                         <div class="confidence-section">
@@ -747,7 +807,74 @@ function initOrderModal() {
     const stepPanes = document.querySelectorAll('.step-pane');
     const nextStepBtn = document.getElementById('nextStepBtn');
     const prevStepBtn = document.getElementById('prevStepBtn');
+    const quantityInput = document.getElementById('quantity');
+    const qtyButtons = document.querySelectorAll('[data-qty-action]');
+    const modalTotal = document.getElementById('modalTotal');
+    const modalSavings = document.getElementById('modalSavings');
+    const unitPriceDisplay = document.getElementById('unitPriceDisplay');
+    const orderQuantityText = document.getElementById('orderQuantityText');
     let currentStep = 1;
+
+    const pricingConfig = {
+        unitPrice: 349,
+        offers: [
+            { minQty: 2, discountPercent: 5, label: '5% off 2+ jars' },
+            { minQty: 3, discountPercent: 10, label: '10% off 3+ jars' }
+        ]
+    };
+
+    function getOfferForQty(qty) {
+        return pricingConfig.offers
+            .filter((offer) => qty >= offer.minQty)
+            .sort((a, b) => b.minQty - a.minQty)[0] || null;
+    }
+
+    function calculatePricing(qty) {
+        const safeQty = Number.isFinite(qty) ? qty : 1;
+        const baseTotal = safeQty * pricingConfig.unitPrice;
+        const offer = getOfferForQty(safeQty);
+        const discount = offer ? Math.round((baseTotal * offer.discountPercent) / 100) : 0;
+        const total = baseTotal - discount;
+        return {
+            qty: safeQty,
+            unitPrice: pricingConfig.unitPrice,
+            baseTotal,
+            discount,
+            total,
+            offer
+        };
+    }
+
+    function normalizeQuantity(value) {
+        const parsed = parseInt(value, 10);
+        if (Number.isNaN(parsed)) return 1;
+        return Math.min(10, Math.max(1, parsed));
+    }
+
+    function updatePricingUI() {
+        const qty = normalizeQuantity(quantityInput?.value || 1);
+        if (quantityInput) quantityInput.value = qty;
+
+        const pricing = calculatePricing(qty);
+        if (unitPriceDisplay) {
+            unitPriceDisplay.textContent = `₹${pricing.unitPrice}`;
+        }
+        if (modalTotal) {
+            modalTotal.textContent = `Total today: ₹${pricing.total}`;
+        }
+        if (orderQuantityText) {
+            orderQuantityText.textContent = `${pricing.qty} fresh jar${pricing.qty > 1 ? 's' : ''}`;
+        }
+        if (modalSavings) {
+            if (pricing.discount > 0 && pricing.offer) {
+                modalSavings.textContent = `You save ₹${pricing.discount} (${pricing.offer.label})`;
+                modalSavings.style.display = 'block';
+            } else {
+                modalSavings.textContent = '';
+                modalSavings.style.display = 'none';
+            }
+        }
+    }
 
     // Utility functions
     function clearErrors() {
@@ -790,16 +917,23 @@ function initOrderModal() {
                 pane.style.transition = 'none';
             }
         });
+        updatePricingUI();
     }
 
     function validateStep1() {
         const phone = document.getElementById('phone').value.trim();
+        const qty = normalizeQuantity(quantityInput?.value || 1);
 
         clearErrors();
 
         const phoneDigits = phone.replace(/\D/g, '');
         if (phoneDigits.length < 10) {
             setError('phone', 'Please add a 10-digit phone number.');
+            return false;
+        }
+
+        if (qty < 1) {
+            setError('quantity', 'Select at least 1 jar.');
             return false;
         }
 
@@ -851,6 +985,8 @@ function initOrderModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         setStep(1);
+
+        const pricing = calculatePricing(normalizeQuantity(quantityInput?.value || 1));
         
         // Track modal open (Begin Checkout)
         window.dataLayer = window.dataLayer || [];
@@ -858,14 +994,14 @@ function initOrderModal() {
             'event': 'begin_checkout',
             'ecommerce': {
                 'currency': 'INR',
-                'value': 0, // Unknown at this stage
+                'value': pricing.total,
                 'items': [{
                     'item_id': 'amrutbaa-chutney',
                     'item_name': 'Amrutbaa Chilly Garlic Chutney',
                     'item_category': 'Condiment',
                     'item_brand': 'Amrut Baa',
-                    'price': 349,
-                    'quantity': 1
+                    'price': pricing.unitPrice,
+                    'quantity': pricing.qty
                 }]
             }
         });
@@ -914,6 +1050,18 @@ function initOrderModal() {
 
     prevStepBtn?.addEventListener('click', () => setStep(1));
 
+    quantityInput?.addEventListener('change', () => updatePricingUI());
+    quantityInput?.addEventListener('input', () => updatePricingUI());
+    qtyButtons.forEach((btn) => {
+        btn.addEventListener('click', () => {
+            const currentQty = normalizeQuantity(quantityInput?.value || 1);
+            const action = btn.getAttribute('data-qty-action');
+            const nextQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
+            if (quantityInput) quantityInput.value = normalizeQuantity(nextQty);
+            updatePricingUI();
+        });
+    });
+
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal.classList.contains('active')) {
             closeModal();
@@ -946,9 +1094,9 @@ function initOrderModal() {
         submitBtn.disabled = true;
 
         try {
-            // Price per jar (in rupees) - adjust this as needed
-            const pricePerJar = 349;
-            const totalAmount = formData.quantity * pricePerJar;
+            const pricing = calculatePricing(formData.quantity);
+            const pricePerJar = pricing.unitPrice;
+            const totalAmount = pricing.total;
             
             // Track Add to Cart / Package Selection
             window.dataLayer = window.dataLayer || [];
@@ -957,6 +1105,7 @@ function initOrderModal() {
                 'ecommerce': {
                     'currency': 'INR',
                     'value': totalAmount,
+                        'coupon': pricing.offer ? pricing.offer.label : '',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
                         'item_name': 'Amrutbaa Chilly Garlic Chutney',
@@ -974,6 +1123,7 @@ function initOrderModal() {
                 'ecommerce': {
                     'currency': 'INR',
                     'value': totalAmount,
+                        'coupon': pricing.offer ? pricing.offer.label : '',
                     'shipping_tier': 'Standard',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
@@ -1015,6 +1165,7 @@ function initOrderModal() {
                 'ecommerce': {
                     'currency': 'INR',
                     'value': totalAmount,
+                        'coupon': pricing.offer ? pricing.offer.label : '',
                     'items': [{
                         'item_id': 'amrutbaa-chutney',
                         'item_name': 'Amrutbaa Chilly Garlic Chutney',
@@ -1061,7 +1212,7 @@ function initOrderModal() {
                                     'tax': 0,
                                     'shipping': 0,
                                     'currency': 'INR',
-                                    'coupon': '',
+                                    'coupon': pricing.offer ? pricing.offer.label : '',
                                     'items': [{
                                         'item_id': 'amrutbaa-chutney',
                                         'item_name': 'Amrutbaa Chilly Garlic Chutney',
