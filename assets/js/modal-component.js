@@ -8,9 +8,19 @@
  */
 
 function initOrderModal() {
-    // Check if already initialized
-    if (document.getElementById('registrationModal')) {
-        return;
+    // Check if modal already exists - if so, reuse it
+    const existingModal = document.getElementById('registrationModal');
+    if (existingModal) {
+        // Return the modal API even if already initialized
+        const openModal = () => {
+            existingModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        };
+        const closeModal = () => {
+            existingModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+        };
+        return { open: openModal, close: closeModal };
     }
 
     // Inject CSS
