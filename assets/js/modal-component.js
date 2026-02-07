@@ -855,6 +855,8 @@ function initOrderModal() {
     let pincodeServiceable = null;
     let pincodeCheckTimer = null;
     let isCodSelected = false;
+
+    const pricingConfig = {
         unitPrice: 349,
         offers: [
             { minQty: 2, discountPercent: 5, label: '5% off 2+ jars' },
