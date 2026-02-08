@@ -777,8 +777,8 @@ function initOrderModal() {
                             </div>
                         </div>
                         <div style="display:flex; justify-content:space-evenly; align-items:center; gap:2rem; margin:1.5rem auto 1rem; padding:1.25rem 2rem; max-width:480px; background:#f9f9f9; border-radius:12px; flex-wrap:wrap; border:1px solid #e0e0e0;">
-                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:52px; height:52px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
-                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:52px; height:52px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
                             <span style="width:44px; height:44px; border-radius:6px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
                                 <span style="width:22px; height:22px; border-radius:50%; background:#2E7D32;"></span>
                             </span>
