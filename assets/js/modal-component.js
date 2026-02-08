@@ -776,11 +776,11 @@ function initOrderModal() {
                                 </label>
                             </div>
                         </div>
-                        <div style="display:flex; justify-content:center; align-items:center; gap:1.25rem; margin:1.5rem 0 1rem; padding:0.875rem; background:#f9f9f9; border-radius:8px; flex-wrap:wrap; border:1px solid #e0e0e0;">
-                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:44px; height:44px; object-fit:contain;" />
-                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:44px; height:44px; object-fit:contain;" />
-                            <span style="width:36px; height:36px; border-radius:4px; border:2px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center;">
-                                <span style="width:18px; height:18px; border-radius:50%; background:#2E7D32;"></span>
+                        <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin:1.5rem 0 1rem; padding:1rem; background:#f9f9f9; border-radius:8px; flex-wrap:wrap; border:1px solid #e0e0e0;">
+                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:52px; height:52px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:52px; height:52px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            <span style="width:44px; height:44px; border-radius:6px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
+                                <span style="width:22px; height:22px; border-radius:50%; background:#2E7D32;"></span>
                             </span>
                         </div>
                         <div class="step-actions">
