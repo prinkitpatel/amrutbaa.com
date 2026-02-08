@@ -2161,13 +2161,43 @@
                 <p class="batch-notice">⚠️ <strong>Note:</strong> All orders are prepared strictly as per our weekly batch schedule. No ready stock available. Urgent delivery requests cannot be accommodated at any cost.</p>
 
                 <!-- Trust badges row -->
-                <div class="hero-trust-badges" style="display:flex; justify-content:center; align-items:center; gap:1.75rem; margin:1.5rem 0 1rem; flex-wrap:wrap;">
-                    <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12));" />
-                    <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12));" />
-                    <span style="width:52px; height:52px; border-radius:6px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.12);">
+                <div class="hero-trust-badges" style="display:flex; justify-content:space-evenly; align-items:center; gap:2rem; margin:1.5rem auto 1rem; padding:1.25rem 2rem; max-width:500px; flex-wrap:wrap; background:rgba(255,255,255,0.03); border-radius:12px; backdrop-filter:blur(8px);">
+                    <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12)); transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" />
+                    <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:64px; height:64px; object-fit:contain; filter:drop-shadow(0 2px 8px rgba(0,0,0,0.12)); transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'" />
+                    <span style="width:52px; height:52px; border-radius:6px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 8px rgba(0,0,0,0.12); transition:transform 0.2s ease;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
                         <span style="width:26px; height:26px; border-radius:50%; background:#2E7D32;"></span>
                     </span>
                 </div>
+
+                <style>
+                @media (max-width: 768px) {
+                    .hero-trust-badges {
+                        padding: 1rem 1.25rem !important;
+                        gap: 1.5rem !important;
+                        max-width: 100% !important;
+                    }
+                    .hero-trust-badges img,
+                    .hero-trust-badges > span {
+                        width: 56px !important;
+                        height: 56px !important;
+                    }
+                    .hero-trust-badges > span > span {
+                        width: 22px !important;
+                        height: 22px !important;
+                    }
+                }
+                @media (max-width: 480px) {
+                    .hero-trust-badges {
+                        padding: 0.875rem 1rem !important;
+                        gap: 1.25rem !important;
+                    }
+                    .hero-trust-badges img,
+                    .hero-trust-badges > span {
+                        width: 52px !important;
+                        height: 52px !important;
+                    }
+                }
+                </style>
 
                 <p class="social-proof">⭐⭐⭐⭐⭐ "Best chutney I've tasted" — 820+ families across India</p>
             </div>
@@ -2789,7 +2819,7 @@
                     <span class="policy-separator">·</span>
                     <a href="/shipping-policy/">Shipping</a>
                 </div>
-                <div style="display:flex; justify-content:center; align-items:center; gap:1.5rem; margin-top:1.5rem; flex-wrap:wrap;">
+                <div style="display:flex; justify-content:center; align-items:center; gap:2rem; margin-top:1.5rem; padding:0.75rem 0; flex-wrap:wrap;">
                     <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Licensed" style="width:48px; height:48px; object-fit:contain; opacity:0.7;" />
                     <span style="width:40px; height:40px; border-radius:4px; border:2px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; opacity:0.7;">
                         <span style="width:20px; height:20px; border-radius:50%; background:#2E7D32;"></span>
