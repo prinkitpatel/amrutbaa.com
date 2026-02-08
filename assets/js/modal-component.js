@@ -776,21 +776,12 @@ function initOrderModal() {
                                 </label>
                             </div>
                         </div>
-                        <div style="display:flex; justify-content:center; align-items:center; gap:1.25rem; margin:1.5rem 0 1rem; padding:1rem; background:#f9f9f9; border-radius:8px; flex-wrap:wrap; border:1px solid #e0e0e0;">
-                            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; font-weight:600; color:#2B2B2B;">
-                                <img src="assets/images/money-back-seal.png" alt="100% Money Back" style="width:38px; height:38px; object-fit:contain;" />
-                                <span>7-Day Money Back</span>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; font-weight:600; color:#2B2B2B;">
-                                <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:38px; height:38px; object-fit:contain;" />
-                                <span>FSSAI Certified</span>
-                            </div>
-                            <div style="display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; font-weight:600; color:#2B2B2B;">
-                                <span style="width:30px; height:30px; border-radius:4px; border:2px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center;">
-                                    <span style="width:15px; height:15px; border-radius:50%; background:#2E7D32;"></span>
-                                </span>
-                                <span>100% Veg</span>
-                            </div>
+                        <div style="display:flex; justify-content:center; align-items:center; gap:1.25rem; margin:1.5rem 0 1rem; padding:0.875rem; background:#f9f9f9; border-radius:8px; flex-wrap:wrap; border:1px solid #e0e0e0;">
+                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:44px; height:44px; object-fit:contain;" />
+                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:44px; height:44px; object-fit:contain;" />
+                            <span style="width:36px; height:36px; border-radius:4px; border:2px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center;">
+                                <span style="width:18px; height:18px; border-radius:50%; background:#2E7D32;"></span>
+                            </span>
                         </div>
                         <div class="step-actions">
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
