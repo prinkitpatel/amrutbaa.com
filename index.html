@@ -589,12 +589,6 @@
                 margin: 0.9rem auto 0.7rem;
             }
 
-            .cta-button.hero-cta {
-                padding: 0.95rem 1.7rem;
-                max-width: 320px;
-                margin: 0.8rem auto 0.6rem;
-            }
-
             .cta-text {
                 font-size: 0.95rem;
             }
@@ -683,12 +677,6 @@
                 font-size: 0.86rem;
                 max-width: 280px;
                 margin: 0.7rem auto 0.55rem;
-            }
-
-            .cta-button.hero-cta {
-                padding: 0.85rem 1.4rem;
-                max-width: 280px;
-                margin: 0.6rem auto 0.5rem;
             }
 
             .cta-text {
@@ -794,6 +782,7 @@
         /* CTA BUTTON - Premium */
         .cta-button {
             background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+            background-color: var(--golden);
             color: var(--charcoal);
             border: 3px solid var(--golden);
             padding: 1.4rem 3.5rem;
@@ -819,35 +808,6 @@
             animation: glow 2.5s ease-in-out infinite;
         }
 
-        .cta-button.hero-cta {
-            background: #0a0a0a;
-            color: #ffffff;
-            border: none;
-            border-radius: 14px;
-            padding: 1.1rem 2.4rem;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.35);
-            text-transform: none;
-            letter-spacing: 0.4px;
-            animation: none;
-        }
-
-        .cta-button.hero-cta .cta-text {
-            font-size: 1.35rem;
-            font-weight: 900;
-            font-style: italic;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            color: #ffffff;
-        }
-
-        .cta-button.hero-cta .cta-subtext {
-            font-size: 0.72rem;
-            font-weight: 600;
-            letter-spacing: 0.6px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.75);
-        }
-
         .cta-button::before {
             content: '';
             position: absolute;
@@ -863,11 +823,6 @@
             transform: translateY(-6px);
             box-shadow: 0 16px 40px rgba(212, 175, 55, 0.5),
                 0 6px 20px rgba(0, 0, 0, 0.25);
-        }
-
-        .cta-button.hero-cta:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 16px 34px rgba(0, 0, 0, 0.45);
         }
 
         .cta-button:active {
@@ -2552,7 +2507,7 @@
                     <span class="spots-text">Orders close <strong>Sunday 9:00 PM</strong></span>
                 </div>
 
-                <button class="cta-button hero-cta" id="openModalBtn">
+                <button class="cta-button" id="openModalBtn">
                     <span class="cta-text">Secure My Jar</span>
                     <span class="cta-subtext">Check delivery dates & secure your batch →</span>
                 </button>
