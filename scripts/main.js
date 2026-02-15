@@ -39,22 +39,31 @@ function updateCountdown() {
 function getNextSundayDeadline(fromDate) {
     const date = new Date(fromDate);
     const dayOfWeek = date.getDay(); // 0 = Sunday, 1 = Monday, etc.
+    const currentHour = date.getHours();
+    const currentMinute = date.getMinutes();
     
-    // If it's Sunday and before 9:00 PM, deadline is today
+    // Calculate seconds since midnight
+    const secondsSinceMidnight = currentHour * 3600 + currentMinute * 60 + date.getSeconds();
+    const deadline9PM = 21 * 3600; // 9 PM in seconds
+    
+    // If it's Sunday
     if (dayOfWeek === 0) {
-        const deadline = new Date(date);
-        deadline.setHours(21, 0, 0, 0);
-        
-        if (date < deadline) {
+        // If before 9 PM on Sunday, deadline is TODAY at 9 PM
+        if (secondsSinceMidnight < deadline9PM) {
+            const deadline = new Date(date);
+            deadline.setHours(21, 0, 0, 0);
             return deadline;
         }
+        // If 9 PM or later on Sunday, deadline is NEXT Sunday (7 days)
+        // Fall through to calculate next Sunday
     }
     
-    // Otherwise, find next Sunday
-    const daysUntilSunday = dayOfWeek === 0 ? 7 : 7 - dayOfWeek;
+    // Calculate days until next Sunday
+    const daysUntilSunday = dayOfWeek === 0 ? 7 : (7 - dayOfWeek);
     const nextSunday = new Date(date);
     nextSunday.setDate(date.getDate() + daysUntilSunday);
     nextSunday.setHours(21, 0, 0, 0);
+    nextSunday.setMinutes(0, 0);
     
     return nextSunday;
 }
