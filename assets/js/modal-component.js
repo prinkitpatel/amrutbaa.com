@@ -369,6 +369,38 @@ function initOrderModal() {
             box-shadow: 0 12px 28px rgba(212, 175, 55, 0.4);
         }
 
+        .btn-primary-solid:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .btn-primary-solid.is-loading {
+            position: relative;
+            color: #4A4A4A;
+        }
+
+        .btn-primary-solid.is-loading::after {
+            content: '';
+            position: absolute;
+            right: 1rem;
+            top: 50%;
+            width: 16px;
+            height: 16px;
+            margin-top: -8px;
+            border: 2px solid rgba(74, 74, 74, 0.35);
+            border-top-color: #4A4A4A;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
         .order-recap {
             background: rgba(212, 175, 55, 0.12);
             border: 1px solid rgba(212, 175, 55, 0.3);
@@ -691,7 +723,7 @@ function initOrderModal() {
                     <div class="step-pane active" data-step-pane="1">
                         <div class="form-group">
                             <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone" required>
+                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone" required inputmode="numeric" autocomplete="tel" maxlength="10">
                             <p class="input-error" data-error-for="phone" style="display:none;"></p>
                             <p class="field-note">We’ll confirm your batch slot over WhatsApp/SMS.</p>
                         </div>
@@ -736,19 +768,19 @@ function initOrderModal() {
                         <div class="form-row" style="margin-top: 1.25rem;">
                             <div class="form-group">
                                 <label for="name">Your Name *</label>
-                                <input type="text" id="name" name="name" placeholder="Full name" required>
+                                <input type="text" id="name" name="name" placeholder="Full name" required autocomplete="name">
                                 <p class="input-error" data-error-for="name" style="display:none;"></p>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email">
                                 <p class="input-error" data-error-for="email" style="display:none;"></p>
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="address1">Full Address *</label>
-                            <textarea id="address1" name="address1" placeholder="House/flat, street, area" required style="resize: none; min-height: 60px;"></textarea>
+                            <textarea id="address1" name="address1" placeholder="House/flat, street, area" required style="resize: none; min-height: 60px;" autocomplete="address-line1"></textarea>
                             <p class="input-error" data-error-for="address1" style="display:none;"></p>
                             <p class="field-note">Include: House/flat number, street, area (landmarks help too)</p>
                         </div>
@@ -756,20 +788,20 @@ function initOrderModal() {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="pincode">Pincode *</label>
-                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required>
+                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required inputmode="numeric" autocomplete="postal-code">
                                 <p class="input-error" data-error-for="pincode" style="display:none;"></p>
                                 <p class="pincode-status" id="pincodeStatus"></p>
                             </div>
                             <div class="form-group">
                                 <label for="city">City *</label>
-                                <input type="text" id="city" name="city" placeholder="Auto-detected" required>
+                                <input type="text" id="city" name="city" placeholder="Auto-detected" required autocomplete="address-level2">
                                 <p class="input-error" data-error-for="city" style="display:none;"></p>
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="state">State *</label>
-                            <input type="text" id="state" name="state" placeholder="Auto-detected" required>
+                            <input type="text" id="state" name="state" placeholder="Auto-detected" required autocomplete="address-level1">
                             <p class="input-error" data-error-for="state" style="display:none;"></p>
                         </div>
                         
@@ -872,6 +904,8 @@ function initOrderModal() {
     let pincodeServiceable = null;
     let pincodeCheckTimer = null;
     let isCodSelected = false;
+    let lastFocusedElement = null;
+    let isModalOpen = false;
 
     const pricingConfig = {
         unitPrice: 499,
@@ -1052,6 +1086,16 @@ function initOrderModal() {
             }
         });
         updatePricingUI();
+        updateStep1CTA();
+    }
+
+    function updateStep1CTA() {
+        if (!nextStepBtn) return;
+        const phoneDigits = (phoneInput?.value || '').replace(/\D/g, '');
+        const qty = normalizeQuantity(quantityInput?.value || 1);
+        const isReady = phoneDigits.length === 10 && qty >= 1;
+        nextStepBtn.disabled = !isReady;
+        nextStepBtn.setAttribute('aria-disabled', String(!isReady));
     }
 
     function validateStep1() {
@@ -1124,12 +1168,20 @@ function initOrderModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         setStep(1);
+        isModalOpen = true;
+        lastFocusedElement = document.activeElement;
+        document.addEventListener('keydown', handleModalKeydown);
 
         // Restore phone from localStorage if exists
         const savedPhone = localStorage.getItem('amrutbaa_phone');
         if (savedPhone) {
             phoneInput.value = savedPhone;
         }
+
+        updateStep1CTA();
+        setTimeout(() => {
+            phoneInput?.focus();
+        }, 0);
 
         // Visual update for quantity buttons based on current value
         const currentQty = normalizeQuantity(quantityInput?.value || 1);
@@ -1170,6 +1222,12 @@ function initOrderModal() {
     function closeModal() {
         modal.classList.remove('active');
         document.body.style.overflow = 'auto';
+        isModalOpen = false;
+        document.removeEventListener('keydown', handleModalKeydown);
+        if (lastFocusedElement && typeof lastFocusedElement.focus === 'function') {
+            lastFocusedElement.focus();
+        }
+        lastFocusedElement = null;
         
         // Track modal close / abandonment
         const currentStep = modal.querySelector('.step-pane.active')?.dataset?.step || '1';
@@ -1179,6 +1237,33 @@ function initOrderModal() {
             'abandonment_step': `step_${currentStep}`,
             'form_name': 'registration_form'
         });
+    }
+
+    function handleModalKeydown(e) {
+        if (!isModalOpen) return;
+        if (e.key === 'Escape') {
+            closeModal();
+            return;
+        }
+
+        if (e.key === 'Tab') {
+            const focusableSelectors = 'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])';
+            const focusableElements = Array.from(modal.querySelectorAll(focusableSelectors))
+                .filter((el) => !el.hasAttribute('disabled'));
+            if (focusableElements.length === 0) {
+                e.preventDefault();
+                return;
+            }
+            const firstElement = focusableElements[0];
+            const lastElement = focusableElements[focusableElements.length - 1];
+            if (e.shiftKey && document.activeElement === firstElement) {
+                e.preventDefault();
+                lastElement.focus();
+            } else if (!e.shiftKey && document.activeElement === lastElement) {
+                e.preventDefault();
+                firstElement.focus();
+            }
+        }
     }
 
     // Event listeners
@@ -1205,6 +1290,7 @@ function initOrderModal() {
             
             updatePricingUI();
             pincodeServiceable = null;
+            updateStep1CTA();
         });
     });
 
@@ -1245,6 +1331,8 @@ function initOrderModal() {
                 }, 300);
             }
         }
+
+        updateStep1CTA();
     });
 
     nextStepBtn?.addEventListener('click', () => {
@@ -1320,12 +1408,6 @@ function initOrderModal() {
         if (submitBtn) submitBtn.textContent = 'Reserve & Pay on Delivery';
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && modal.classList.contains('active')) {
-            closeModal();
-        }
-    });
-
     // Form submission with Razorpay payment
     registrationForm.addEventListener('submit', async (e) => {
         e.preventDefault();
@@ -1351,6 +1433,8 @@ function initOrderModal() {
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Initializing Payment...';
         submitBtn.disabled = true;
+        submitBtn.classList.add('is-loading');
+        submitBtn.setAttribute('aria-busy', 'true');
 
         try {
             const pricing = calculatePricing(formData.quantity);
@@ -1682,6 +1766,8 @@ function initOrderModal() {
                                 setStep(1);
                                 submitBtn.textContent = originalText;
                                 submitBtn.disabled = false;
+                                submitBtn.classList.remove('is-loading');
+                                submitBtn.setAttribute('aria-busy', 'false');
                                 // Clear tracking info
                                 const trackingElement = document.getElementById('tracking-info');
                                 if (trackingElement) {
@@ -1693,6 +1779,8 @@ function initOrderModal() {
                             alert('Payment verification failed. Please contact support.');
                             submitBtn.textContent = originalText;
                             submitBtn.disabled = false;
+                            submitBtn.classList.remove('is-loading');
+                            submitBtn.setAttribute('aria-busy', 'false');
                             
                             // Track payment failure
                             window.dataLayer = window.dataLayer || [];
@@ -1707,6 +1795,8 @@ function initOrderModal() {
                         alert('Payment verification error. Please contact support with your payment ID.');
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
+                        submitBtn.classList.remove('is-loading');
+                        submitBtn.setAttribute('aria-busy', 'false');
                         
                         // Track payment error
                         window.dataLayer = window.dataLayer || [];
@@ -1733,6 +1823,8 @@ function initOrderModal() {
                     ondismiss: function () {
                         submitBtn.textContent = originalText;
                         submitBtn.disabled = false;
+                        submitBtn.classList.remove('is-loading');
+                        submitBtn.setAttribute('aria-busy', 'false');
                         
                         // Track payment cancellation
                         window.dataLayer = window.dataLayer || [];
@@ -1753,11 +1845,15 @@ function initOrderModal() {
             // Reset button state immediately after opening
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+            submitBtn.classList.remove('is-loading');
+            submitBtn.setAttribute('aria-busy', 'false');
 
         } catch (error) {
             alert('Failed to initialize payment. Please try again.');
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
+            submitBtn.classList.remove('is-loading');
+            submitBtn.setAttribute('aria-busy', 'false');
         }
     });
 
