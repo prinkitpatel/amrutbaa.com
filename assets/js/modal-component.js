@@ -715,45 +715,45 @@ function initOrderModal() {
                             <strong>Reserved:</strong> <span id="orderQuantityText">1 fresh jar</span> in this week's batch • Dispatch starts Monday after prep.
                         </div>
 
-                        <div class="confidence-section">
-                            <div class="confidence-item">
-                                <span class="confidence-icon">✨</span>
-                                <div class="confidence-title">7-Day Guarantee</div>
-                                <div class="confidence-description">Not happy? Full refund, no questions asked.</div>
+                        <div style="margin: 1.5rem 0;">
+                            <label style="font-weight: 700; color: #6B2C2C; margin-bottom: 0.75rem; display: block;">How should we reach you? *</label>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 0.8rem;">
+                                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; padding: 0.7rem; border: 2px solid #D4AF37; border-radius: 8px; background: rgba(212, 175, 55, 0.1);">
+                                    <input type="radio" id="paymentMethodOnline" name="payment_method" value="online" checked style="width: 18px; height: 18px; cursor: pointer;"> 
+                                    <span style="font-weight: 600; color: #6B2C2C; font-size: 0.95rem;">Pay Now</span>
+                                </label>
+                                <label style="display: flex; align-items: center; gap: 0.6rem; cursor: pointer; padding: 0.7rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px;">
+                                    <input type="radio" id="paymentMethodCod" name="payment_method" value="cod" style="width: 18px; height: 18px; cursor: pointer;"> 
+                                    <span style="font-weight: 600; color: #6B2C2C; font-size: 0.95rem;">Pay on Delivery</span>
+                                </label>
                             </div>
-                            <div class="confidence-item">
-                                <span class="confidence-icon">👥</span>
-                                <div class="confidence-title">42 Reserved This Batch</div>
-                                <div class="confidence-description">Join 500+ families who trust Amrutbaa.</div>
-                            </div>
-                            <div class="confidence-item">
-                                <span class="confidence-icon">🔒</span>
-                                <div class="confidence-title">100% Secure Payment</div>
-                                <div class="confidence-description">Encrypted by Razorpay, card never stored.</div>
-                            </div>
+                            <p style="font-size: 0.85rem; color: #4A4A4A; margin-top: 0.6rem; opacity: 0.85;">Both options ship the same day and arrive Wed–Fri.</p>
                         </div>
 
                         <div class="form-row" style="margin-top: 1.25rem;">
                             <div class="form-group">
                                 <label for="name">Your Name *</label>
-                                <input type="text" id="name" name="name" placeholder="Enter your name" required>
+                                <input type="text" id="name" name="name" placeholder="Full name" required>
                                 <p class="input-error" data-error-for="name" style="display:none;"></p>
                             </div>
                             <div class="form-group">
-                                <label for="email">Email Address *</label>
-                                <input type="email" id="email" name="email" placeholder="Enter your email" required>
+                                <label for="email">Email *</label>
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required>
                                 <p class="input-error" data-error-for="email" style="display:none;"></p>
                             </div>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="address1">Address Line 1 *</label>
-                            <input type="text" id="address1" name="address1" placeholder="House / flat number, street" required>
+                            <label for="address1">Address *</label>
+                            <input type="text" id="address1" name="address1" placeholder="House, flat number, street" required>
                             <p class="input-error" data-error-for="address1" style="display:none;"></p>
                         </div>
+                        
                         <div class="form-group">
-                            <label for="address2">Address Line 2 (Optional)</label>
-                            <input type="text" id="address2" name="address2" placeholder="Apartment, building, landmark">
+                            <label for="address2">Building, Landmark (Optional)</label>
+                            <input type="text" id="address2" name="address2" placeholder="Apartment number, landmark">
                         </div>
+
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="city">City *</label>
@@ -766,38 +766,27 @@ function initOrderModal() {
                                 <p class="input-error" data-error-for="state" style="display:none;"></p>
                             </div>
                         </div>
+
                         <div class="form-group">
                             <label for="pincode">Pincode *</label>
                             <input type="text" id="pincode" name="pincode" placeholder="6-digit pincode" maxlength="6" required>
                             <p class="input-error" data-error-for="pincode" style="display:none;"></p>
                             <p class="pincode-status" id="pincodeStatus"></p>
-                            <p class="field-note">We deliver right after the batch is prepared. Add landmarks to help the rider.</p>
                         </div>
-                        <div class="form-group">
-                            <label>Payment Method *</label>
-                            <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
-                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                    <input type="radio" id="paymentMethodOnline" name="payment_method" value="online" checked> 
-                                    <span>Pay Now (Razorpay)</span>
-                                </label>
-                                <label style="display: flex; align-items: center; gap: 0.5rem; cursor: pointer;">
-                                    <input type="radio" id="paymentMethodCod" name="payment_method" value="cod"> 
-                                    <span>Pay on Delivery (COD)</span>
-                                </label>
-                            </div>
+
+                        <div style="display:flex; justify-content:space-evenly; align-items:center; gap:1.5rem; margin:1.5rem auto 1rem; padding:1rem; max-width:520px; background:#f9f9f9; border-radius:12px; flex-wrap:wrap; border:1px solid #e0e0e0;">
+                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:80px; height:80px; object-fit:contain;" />
+                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:90px; height:90px; object-fit:contain;" />
                         </div>
-                        <div style="display:flex; justify-content:space-evenly; align-items:center; gap:2rem; margin:1.5rem auto 1rem; padding:1.25rem 2rem; max-width:520px; background:#f9f9f9; border-radius:12px; flex-wrap:wrap; border:1px solid #e0e0e0;">
-                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:96px; height:96px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
-                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:111px; height:111px; object-fit:contain; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
-                            <span style="width:44px; height:44px; border-radius:6px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 2px 6px rgba(0,0,0,0.1);">
-                                <span style="width:22px; height:22px; border-radius:50%; background:#2E7D32;"></span>
-                            </span>
-                        </div>
+
                         <div class="step-actions">
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
                             <button type="submit" class="btn-primary-solid" id="submitBtn">Reserve & Pay Securely</button>
                         </div>
-                        <div class="refund-note">💬 Need to make a change? Contact us before Sunday 9 PM.</div>
+                        
+                        <div style="text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.75rem;">
+                            💬 Questions? Edit before Sunday 9 PM
+                        </div>
                     </div>
                 </form>
 
