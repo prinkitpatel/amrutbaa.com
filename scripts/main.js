@@ -9,7 +9,42 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initParallaxEffects();
     initCountdownTimer();
+    initModalTriggers();
 });
+
+// ===============================================
+// MODAL TRIGGERS - All CTA buttons open modal
+// ===============================================
+
+function initModalTriggers() {
+    // Main CTA buttons
+    const openModalBtn = document.getElementById('openModalBtn');
+    const openModalBtnSticky = document.getElementById('openModalBtnSticky');
+    const promiseCtaBtn = document.getElementById('promiseCtaBtn');
+    
+    // Journey CTA buttons
+    const journeyCtaHeritage = document.getElementById('journeyCtaHeritage');
+    const journeyCtaIngredients = document.getElementById('journeyCtaIngredients');
+    const journeyCtaBatch = document.getElementById('journeyCtaBatch');
+    const journeyCtaRegister = document.getElementById('journeyCtaRegister');
+    
+    // Add click handlers to all buttons
+    const allButtons = [
+        openModalBtn,
+        openModalBtnSticky,
+        promiseCtaBtn,
+        journeyCtaHeritage,
+        journeyCtaIngredients,
+        journeyCtaBatch,
+        journeyCtaRegister
+    ];
+    
+    allButtons.forEach(btn => {
+        if (btn && window.OrderModal && window.OrderModal.open) {
+            btn.addEventListener('click', window.OrderModal.open);
+        }
+    });
+}
 
 // ===============================================
 // COUNTDOWN TIMER - Weekly Batch Deadline
