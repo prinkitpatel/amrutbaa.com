@@ -689,7 +689,7 @@
         .hero-features {
             display: flex;
             justify-content: center;
-            gap: 2rem;
+            gap: 2.8rem;
             margin-bottom: 3rem;
             flex-wrap: wrap;
             animation: fadeInUp 0.8s ease 0.2s both;
@@ -707,6 +707,13 @@
             border-radius: 0;
             border: none;
             letter-spacing: 0.2px;
+            white-space: nowrap;
+        }
+
+        .feature-item + .feature-item::before {
+            content: '•';
+            color: rgba(201, 169, 97, 0.65);
+            margin-right: 1rem;
         }
 
         .spots-counter {
