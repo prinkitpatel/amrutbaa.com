@@ -661,7 +661,7 @@ function initOrderModal() {
                 <div class="modal-trust">
                     <span class="trust-item">Free Delivery</span>
                     <span class="trust-item">Amrutbaa Family Member Status</span>
-                    <span class="trust-item">100% Money-Back (+ Family Opt Out)</span>
+                    <span class="trust-item">100% Money-Back Guarantee</span>
                 </div>
 
                 <div class="modal-price">

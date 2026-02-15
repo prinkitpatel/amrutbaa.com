@@ -796,6 +796,210 @@
             font-weight: 500;
         }
 
+        /* Testimonials Section */
+        .testimonials-section {
+            background: linear-gradient(180deg, #FFF9F0 0%, #FFFEF9 100%);
+            padding: 4rem 0 4.5rem;
+            position: relative;
+        }
+
+        .testimonials-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(107, 28, 35, 0.1), transparent);
+        }
+
+        .testimonials-wrap {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 2rem;
+        }
+
+        .testimonials-title {
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            color: var(--maroon);
+            text-align: center;
+            margin-bottom: 2.5rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .testimonial-card {
+            background: #FFFFFF;
+            border: 1px solid rgba(201, 169, 97, 0.2);
+            border-radius: 20px;
+            padding: 2.5rem 3rem;
+            box-shadow: 
+                0 10px 40px rgba(0, 0, 0, 0.06),
+                0 2px 8px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .testimonial-card::before {
+            content: '\201C';
+            position: absolute;
+            top: -10px;
+            left: 30px;
+            font-family: Georgia, serif;
+            font-size: 6rem;
+            color: rgba(201, 169, 97, 0.15);
+            line-height: 1;
+        }
+
+        .testimonial-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .testimonial-stars .star {
+            color: #FFB800;
+            font-size: 1.1rem;
+        }
+
+        .testimonial-quote {
+            font-size: 1.15rem;
+            line-height: 1.8;
+            color: #2A1810;
+            margin-bottom: 2rem;
+            font-style: italic;
+            position: relative;
+            z-index: 1;
+        }
+
+        .testimonial-footer {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid rgba(107, 28, 35, 0.08);
+        }
+
+        .testimonial-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--maroon), var(--golden));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #FFFFFF;
+            font-family: var(--font-display);
+            font-size: 1.5rem;
+            font-weight: 700;
+            box-shadow: 0 4px 12px rgba(107, 28, 35, 0.2);
+        }
+
+        .testimonial-author-info {
+            text-align: left;
+        }
+
+        .testimonial-author {
+            font-weight: 700;
+            color: var(--maroon);
+            font-size: 1rem;
+            letter-spacing: 0.3px;
+            margin-bottom: 0.25rem;
+        }
+
+        .testimonial-role {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .testimonial-verified {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            font-size: 0.75rem;
+            color: #2E7D32;
+            font-weight: 600;
+            margin-top: 0.3rem;
+        }
+
+        .testimonial-verified::before {
+            content: '\2713';
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 16px;
+            height: 16px;
+            background: #2E7D32;
+            color: white;
+            border-radius: 50%;
+            font-size: 0.65rem;
+        }
+
+        @media (max-width: 768px) {
+            .testimonials-section {
+                padding: 3rem 0 3.5rem;
+            }
+
+            .testimonials-wrap {
+                padding: 0 1.5rem;
+            }
+
+            .testimonials-title {
+                font-size: 1.3rem;
+                margin-bottom: 2rem;
+            }
+
+            .testimonial-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .testimonial-card::before {
+                font-size: 4rem;
+                top: -5px;
+                left: 15px;
+            }
+
+            .testimonial-stars {
+                margin-bottom: 1.25rem;
+            }
+
+            .testimonial-stars .star {
+                font-size: 1rem;
+            }
+
+            .testimonial-quote {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .testimonial-footer {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 1.25rem;
+            }
+
+            .testimonial-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
+            }
+
+            .testimonial-author-info {
+                text-align: center;
+            }
+
+            .testimonial-author {
+                font-size: 0.95rem;
+            }
+
+            .testimonial-role {
+                font-size: 0.8rem;
+            }
+        }
+
         .batch-notice {
             font-size: 0.75rem;
             color: rgba(255, 252, 247, 0.5);
@@ -2039,6 +2243,67 @@
             }
         }
 
+            /* Testimonials Responsive */
+            .testimonials-section {
+                padding: 3rem 0 3.5rem;
+            }
+
+            .testimonials-wrap {
+                padding: 0 1.5rem;
+            }
+
+            .testimonials-title {
+                font-size: 1.3rem;
+                margin-bottom: 2rem;
+            }
+
+            .testimonial-card {
+                padding: 2rem 1.5rem;
+            }
+
+            .testimonial-card::before {
+                font-size: 4rem;
+                top: -5px;
+                left: 15px;
+            }
+
+            .testimonial-stars {
+                margin-bottom: 1.25rem;
+            }
+
+            .testimonial-stars .star {
+                font-size: 1rem;
+            }
+
+            .testimonial-quote {
+                font-size: 1rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .testimonial-footer {
+                flex-direction: column;
+                text-align: center;
+                padding-top: 1.25rem;
+            }
+
+            .testimonial-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 1.3rem;
+            }
+
+            .testimonial-author-info {
+                text-align: center;
+            }
+
+            .testimonial-author {
+                font-size: 0.95rem;
+            }
+
+            .testimonial-role {
+                font-size: 0.8rem;
+            }
+
             /* Ensure page content doesn't sit under sticky footer */
             body {
                 padding-bottom: 170px;
@@ -2213,7 +2478,31 @@
                 }
                 </style>
 
-                <p class="social-proof">⭐⭐⭐⭐⭐ "Best chutney I've tasted" — 820+ families across India</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="testimonials-section" aria-label="Customer testimonial">
+        <div class="testimonials-wrap">
+            <h2 class="testimonials-title">What our customers say</h2>
+            <div class="testimonial-card">
+                <div class="testimonial-stars">
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                    <span class="star">★</span>
+                </div>
+                <p class="testimonial-quote">I was guilty of ordering online food 5 times a week inspite of having a fully functional kitchen. Once I ordered Amrutbaa's Jadooi Chutney, and I never ordered online since then. My go to food is tastier, faster, and guiltfree.</p>
+                <div class="testimonial-footer">
+                    <div class="testimonial-avatar">PP</div>
+                    <div class="testimonial-author-info">
+                        <div class="testimonial-author">Prinkit Patel</div>
+                        <div class="testimonial-role">Time Pressed Working Professional</div>
+                        <div class="testimonial-verified">Verified Customer</div>
+                    </div>
+                </div>
             </div>
         </div>
     </section>
