@@ -701,7 +701,7 @@ function initOrderModal() {
                     <span class="price-amount" id="unitPriceDisplay">₹499</span>
                 </div>
 
-                <span class="price-caption">Per 250g jar • Limited weekly batch</span>
+                <span class="price-caption" id="priceCaption">Per 250g jar • Limited weekly batch</span>
 
                 <div class="modal-total" id="modalTotal">Total today: ₹499</div>
                 <div class="modal-savings" id="modalSavings" style="display:none;"></div>
@@ -892,6 +892,7 @@ function initOrderModal() {
     const prevStepBtn = document.getElementById('prevStepBtn');
     const quantityInput = document.getElementById('quantity');
     const modalTotal = document.getElementById('modalTotal');
+    const priceCaption = document.getElementById('priceCaption');
     const modalSavings = document.getElementById('modalSavings');
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
     const orderQuantityText = document.getElementById('orderQuantityText');
@@ -973,6 +974,12 @@ function initOrderModal() {
             if (orderQuantityText) {
                 orderQuantityText.textContent = "Select jars to reserve this week's batch";
             }
+            if (unitPriceDisplay) {
+                unitPriceDisplay.textContent = `₹${pricingConfig.unitPrice}`;
+            }
+            if (priceCaption) {
+                priceCaption.textContent = 'Per 250g jar • Limited weekly batch';
+            }
             if (modalSavings) {
                 modalSavings.textContent = '';
                 modalSavings.style.display = 'none';
@@ -984,7 +991,10 @@ function initOrderModal() {
 
         const pricing = calculatePricing(qty);
         if (unitPriceDisplay) {
-            unitPriceDisplay.textContent = `₹${pricing.unitPrice}`;
+            unitPriceDisplay.textContent = `₹${pricing.total}`;
+        }
+        if (priceCaption) {
+            priceCaption.textContent = `Total for ${pricing.qty} jar${pricing.qty > 1 ? 's' : ''} • Limited weekly batch`;
         }
         if (modalTotal) {
             modalTotal.textContent = `Total today: ₹${pricing.total}`;
