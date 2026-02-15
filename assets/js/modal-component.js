@@ -701,7 +701,7 @@ function initOrderModal() {
                     <span class="price-amount" id="unitPriceDisplay">₹499</span>
                 </div>
 
-                <span class="price-caption" id="priceCaption">Per 250g jar • Limited weekly batch</span>
+                <span class="price-caption" id="priceCaption">Per 250g jar • Weekly batch</span>
 
                 <div class="modal-total" id="modalTotal">Total today: ₹499</div>
                 <div class="modal-savings" id="modalSavings" style="display:none;"></div>
@@ -712,7 +712,7 @@ function initOrderModal() {
                     <div class="stepper" id="formStepper">
                         <div class="step active" data-step="1">
                             <span class="step-number">1</span>
-                            <span class="step-title">Reserve</span>
+                            <span class="step-title">Secure</span>
                         </div>
                         <div class="step" data-step="2">
                             <span class="step-number">2</span>
@@ -725,7 +725,7 @@ function initOrderModal() {
                             <label for="phone">Mobile Number (India) *</label>
                             <input type="tel" id="phone" name="phone" placeholder="10-digit number (no +91)" required inputmode="numeric" autocomplete="tel" maxlength="10">
                             <p class="input-error" data-error-for="phone" style="display:none;"></p>
-                            <p class="field-note">+91 will be added automatically. Enter exactly 10 digits. We’ll confirm your batch slot over WhatsApp/SMS.</p>
+                            <p class="field-note">+91 will be added automatically. Enter exactly 10 digits. We’ll confirm your batch over WhatsApp/SMS.</p>
                         </div>
                         <div class="form-group">
                             <label for="quantity">How many jars? *</label>
@@ -747,7 +747,7 @@ function initOrderModal() {
 
                     <div class="step-pane" data-step-pane="2">
                         <div class="order-recap">
-                            <strong>Reserved:</strong> <span id="orderQuantityText">Select jars to reserve this week's batch</span> • Dispatch starts Monday after prep.
+                            <strong>Secured:</strong> <span id="orderQuantityText">Select jars to secure from this week's batch</span> • Dispatch starts Monday after prep.
                         </div>
 
                         <div style="margin: 1.5rem 0;">
@@ -815,7 +815,7 @@ function initOrderModal() {
 
                         <div class="step-actions">
                             <button type="button" class="btn-secondary-outline" id="prevStepBtn">← Back</button>
-                            <button type="submit" class="btn-primary-solid" id="submitBtn">Reserve & Pay Securely</button>
+                            <button type="submit" class="btn-primary-solid" id="submitBtn">Secure & Pay Securely</button>
                         </div>
                         
                         <div style="text-align: center; font-size: 0.8rem; color: #999; margin-top: 0.75rem;">
@@ -828,30 +828,28 @@ function initOrderModal() {
                     <div class="success-checkmark">
                         <div class="checkmark-circle">✓</div>
                     </div>
-                    <h2 style="font-size: 1.8rem; color: #2E7D32; margin: 1rem 0 0.5rem;">Order Confirmed! 🎉</h2>
-                    <p style="font-size: 0.95rem; color: #555; margin-bottom: 1.5rem;">Your fresh chutney is reserved for this week's batch</p>
+                    <h2 style="font-size: 1.8rem; color: #2E7D32; margin: 1rem 0 0.5rem;">Jar Secured for Batch #<span id="success-batch-number">4</span>! 🎉</h2>
+                    <p style="font-size: 0.95rem; color: #555; margin-bottom: 1.5rem;">Your jar is locked in. Fresh batch preparing Monday.</p>
                     
                     <div id="order-details-box" style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
                             <div>
-                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">ORDER NUMBER</div>
-                                <div id="order-number" style="font-size: 1.1rem; font-weight: 700; color: #2B2B2B;">---</div>
+                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">BATCH NUMBER</div>
+                                <div style="font-size: 1.1rem; font-weight: 700; color: #2B2B2B;">#<span id="success-batch-number-detail">4</span></div>
                             </div>
                             <div>
                                 <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">AMOUNT PAID</div>
                                 <div id="order-amount" style="font-size: 1.1rem; font-weight: 700; color: #2E7D32;">---</div>
                             </div>
                         </div>
-                        <div id="tracking-section" style="display: none; border-top: 1px solid #ddd; padding-top: 1rem;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                <div>
-                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">TRACKING NUMBER</div>
-                                    <div id="tracking-display" style="font-size: 1rem; font-weight: 700; color: #1976D2; font-family: monospace;">---</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">COURIER</div>
-                                    <div id="courier-display" style="font-size: 1rem; font-weight: 700; color: #2B2B2B;">---</div>
-                                </div>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; border-top: 1px solid #ddd; padding-top: 1rem;">
+                            <div>
+                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">ORDER NUMBER</div>
+                                <div id="order-number" style="font-size: 1rem; font-weight: 700; color: #2B2B2B;">---</div>
+                            </div>
+                            <div id="tracking-section" style="display: none;">
+                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">TRACKING NUMBER</div>
+                                <div id="tracking-display" style="font-size: 1rem; font-weight: 700; color: #1976D2; font-family: monospace;">---</div>
                             </div>
                         </div>
                     </div>
@@ -972,7 +970,7 @@ function initOrderModal() {
                 modalTotal.textContent = 'Select jars to see total';
             }
             if (orderQuantityText) {
-                orderQuantityText.textContent = "Select jars to reserve this week's batch";
+                orderQuantityText.textContent = "Select jars to secure from this week's batch";
             }
             if (unitPriceDisplay) {
                 unitPriceDisplay.textContent = `₹${pricingConfig.unitPrice}`;
@@ -1425,13 +1423,13 @@ function initOrderModal() {
     paymentMethodOnline?.addEventListener('change', () => {
         isCodSelected = false;
         updatePricingUI();
-        if (submitBtn) submitBtn.textContent = 'Reserve & Pay Securely';
+        if (submitBtn) submitBtn.textContent = 'Secure & Pay Securely';
     });
 
     paymentMethodCod?.addEventListener('change', () => {
         isCodSelected = true;
         updatePricingUI();
-        if (submitBtn) submitBtn.textContent = 'Reserve & Pay on Delivery';
+        if (submitBtn) submitBtn.textContent = 'Secure & Pay on Delivery';
     });
 
     // Form submission with Razorpay payment
@@ -1528,6 +1526,9 @@ function initOrderModal() {
                 // Update success message
                 document.getElementById('order-number').textContent = `COD-${Date.now()}`.substring(0, 15) + '...';
                 document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                const batchNumber = window.currentBatchNumber || 4;
+                document.getElementById('success-batch-number')?.textContent = batchNumber;
+                document.getElementById('success-batch-number-detail')?.textContent = batchNumber;
                 
                 // Show success message immediately
                 successMessage.classList.add('show');
@@ -1540,6 +1541,7 @@ function initOrderModal() {
                     payment_type: 'cod',
                     order_id: `COD-${Date.now()}`,
                     amount: totalAmount,
+                    batch_number: batchNumber,
                     tracking_number: null,
                     shipment_id: null,
                     courier_name: null
@@ -1740,6 +1742,9 @@ function initOrderModal() {
                             // Update success message with ALL order details
                             document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
                             document.getElementById('order-amount').textContent = `₹${totalAmount}`;
+                            const batchNumber = window.currentBatchNumber || 4;
+                            document.getElementById('success-batch-number')?.textContent = batchNumber;
+                            document.getElementById('success-batch-number-detail')?.textContent = batchNumber;
                             
                             if (trackingInfo?.awb_code && trackingInfo.awb_code.trim() !== '') {
                                 // Courier assigned - show tracking
@@ -1778,6 +1783,7 @@ function initOrderModal() {
                                 payment_id: response.razorpay_payment_id,
                                 order_id: response.razorpay_order_id,
                                 amount: totalAmount,
+                                batch_number: batchNumber,
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null

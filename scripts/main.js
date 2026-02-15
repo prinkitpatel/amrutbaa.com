@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initSmoothScrolling();
     initParallaxEffects();
     initCountdownTimer();
+    updateBatchNumbers(); // Add batch number display
     initModalTriggers();
 });
 
@@ -65,10 +66,12 @@ function updateCountdown() {
         // Deadline passed, show next week
         const nextDeadline = getNextSundayDeadline(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
         displayCountdown(nextDeadline - now, true);
+        updateBatchNumbers();
         return;
     }
     
     displayCountdown(timeRemaining, false);
+    updateBatchNumbers();
 }
 
 function getNextSundayDeadline(fromDate) {
@@ -153,6 +156,41 @@ function displayCountdown(milliseconds, isNextWeek) {
             deadlineMessage.classList.remove('urgent', 'closed');
         }
     }
+}
+
+// ===============================================
+// BATCH NUMBER MANAGEMENT
+// ===============================================
+
+function getCurrentBatchNumber() {
+    // Batch 4 is current starting from the reference deadline
+    // Batch increments by 1 when the Sunday 9 PM deadline restarts
+    const baseBatchNumber = 4;
+    const baseDeadline = new Date(2026, 1, 15, 21, 0, 0); // Feb 15, 2026, 9 PM IST
+    const now = new Date();
+
+    const nextDeadline = getNextSundayDeadline(now);
+    const weekMs = 7 * 24 * 60 * 60 * 1000;
+    let weeksDiff = Math.floor((nextDeadline - baseDeadline) / weekMs);
+
+    if (weeksDiff < 0) {
+        weeksDiff = 0;
+    }
+
+    return baseBatchNumber + weeksDiff;
+}
+
+function updateBatchNumbers() {
+    const batchNumber = getCurrentBatchNumber();
+    
+    // Update all batch number displays
+    const batchElements = document.querySelectorAll('[id*="batch-number"]');
+    batchElements.forEach(el => {
+        el.textContent = batchNumber;
+    });
+    
+    // Store batch number in window for modal access
+    window.currentBatchNumber = batchNumber;
 }
 
 // ===============================================
