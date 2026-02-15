@@ -722,10 +722,10 @@ function initOrderModal() {
 
                     <div class="step-pane active" data-step-pane="1">
                         <div class="form-group">
-                            <label for="phone">Phone Number *</label>
-                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone" required inputmode="numeric" autocomplete="tel" maxlength="10">
+                            <label for="phone">Mobile Number (India) *</label>
+                            <input type="tel" id="phone" name="phone" placeholder="10-digit number (no +91)" required inputmode="numeric" autocomplete="tel" maxlength="10">
                             <p class="input-error" data-error-for="phone" style="display:none;"></p>
-                            <p class="field-note">We’ll confirm your batch slot over WhatsApp/SMS.</p>
+                            <p class="field-note">+91 will be added automatically. Enter exactly 10 digits. We’ll confirm your batch slot over WhatsApp/SMS.</p>
                         </div>
                         <div class="form-group">
                             <label for="quantity">How many jars? *</label>
