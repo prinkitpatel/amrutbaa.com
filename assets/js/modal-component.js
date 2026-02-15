@@ -696,14 +696,17 @@ function initOrderModal() {
                             <p class="field-note">We’ll confirm your batch slot over WhatsApp/SMS.</p>
                         </div>
                         <div class="form-group">
-                            <label for="quantity">Quantity *</label>
-                            <div class="quantity-row">
-                                <button type="button" class="qty-btn" data-qty-action="decrease">−</button>
-                                <input type="number" id="quantity" name="quantity" class="qty-input" min="1" max="10" value="1" required>
-                                <button type="button" class="qty-btn" data-qty-action="increase">+</button>
+                            <label for="quantity">How many jars? *</label>
+                            <div style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 0.5rem; margin-top: 0.75rem;">
+                                <button type="button" class="qty-button" data-qty="1" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">1</button>
+                                <button type="button" class="qty-button" data-qty="2" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">2</button>
+                                <button type="button" class="qty-button" data-qty="3" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">3</button>
+                                <button type="button" class="qty-button" data-qty="4" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">4</button>
+                                <button type="button" class="qty-button" data-qty="5" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">5</button>
                             </div>
+                            <input type="number" id="quantity" name="quantity" class="qty-input" min="1" max="10" value="1" required style="display: none;">
                             <p class="input-error" data-error-for="quantity" style="display:none;"></p>
-                            <p class="field-note" id="offerNote">Offers: 5% off 2+ jars • 10% off 3+ jars</p>
+                            <p class="field-note" id="offerNote" style="margin-top: 0.75rem;">Offers: 5% off 2+ jars • 10% off 3+ jars</p>
                         </div>
                         <div class="step-actions">
                             <button type="button" class="btn-primary-solid" id="nextStepBtn">Continue →</button>
@@ -744,35 +747,34 @@ function initOrderModal() {
                         </div>
                         
                         <div class="form-group">
-                            <label for="address1">Address *</label>
-                            <input type="text" id="address1" name="address1" placeholder="House, flat number, street" required>
+                            <label for="address1">Full Address *</label>
+                            <textarea id="address1" name="address1" placeholder="House/flat, street, area" required style="resize: none; min-height: 60px;"></textarea>
                             <p class="input-error" data-error-for="address1" style="display:none;"></p>
+                            <p class="field-note">Include: House/flat number, street, area (landmarks help too)</p>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="pincode">Pincode *</label>
+                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required>
+                                <p class="input-error" data-error-for="pincode" style="display:none;"></p>
+                                <p class="pincode-status" id="pincodeStatus"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="city">City *</label>
+                                <input type="text" id="city" name="city" placeholder="Auto-detected" required>
+                                <p class="input-error" data-error-for="city" style="display:none;"></p>
+                            </div>
                         </div>
                         
                         <div class="form-group">
-                            <label for="address2">Building, Landmark (Optional)</label>
-                            <input type="text" id="address2" name="address2" placeholder="Apartment number, landmark">
+                            <label for="state">State *</label>
+                            <input type="text" id="state" name="state" placeholder="Auto-detected" required>
+                            <p class="input-error" data-error-for="state" style="display:none;"></p>
                         </div>
-
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="city">City *</label>
-                                <input type="text" id="city" name="city" placeholder="City" required>
-                                <p class="input-error" data-error-for="city" style="display:none;"></p>
-                            </div>
-                            <div class="form-group">
-                                <label for="state">State *</label>
-                                <input type="text" id="state" name="state" placeholder="State" required>
-                                <p class="input-error" data-error-for="state" style="display:none;"></p>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="pincode">Pincode *</label>
-                            <input type="text" id="pincode" name="pincode" placeholder="6-digit pincode" maxlength="6" required>
-                            <p class="input-error" data-error-for="pincode" style="display:none;"></p>
-                            <p class="pincode-status" id="pincodeStatus"></p>
-                        </div>
+                        
+                        <input type="text" id="address2" name="address2" style="display: none;" />
+                        <div style="display: none;"></div>
 
                         <div style="display:flex; justify-content:space-evenly; align-items:center; gap:1.5rem; margin:1.5rem auto 1rem; padding:1rem; max-width:520px; background:#f9f9f9; border-radius:12px; flex-wrap:wrap; border:1px solid #e0e0e0;">
                             <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:80px; height:80px; object-fit:contain;" />
@@ -991,7 +993,7 @@ function initOrderModal() {
         const qty = normalizeQuantity(quantityInput?.value || 1);
         const weight = Number((0.15 * qty).toFixed(2));
 
-        setPincodeStatus('pending', 'Checking delivery availability...');
+        setPincodeStatus('pending', 'Checking availability...');
         try {
             const response = await fetch('/api/check-pincode', {
                 method: 'POST',
@@ -1009,15 +1011,22 @@ function initOrderModal() {
 
             const result = await response.json();
             pincodeServiceable = !!result.serviceable;
+            
+            // Auto-fill city and state if available
+            if (result.city && result.state) {
+                document.getElementById('city').value = result.city;
+                document.getElementById('state').value = result.state;
+            }
+            
             if (pincodeServiceable) {
                 const courierCount = result.courier_count || 0;
                 setPincodeStatus('success', `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
             } else {
-                setPincodeStatus('error', 'Sorry, this pincode is not serviceable yet.');
+                setPincodeStatus('error', 'Delivery not available yet.');
             }
         } catch (error) {
             pincodeServiceable = null;
-            setPincodeStatus('error', 'Could not verify pincode. Please try again.');
+            setPincodeStatus('error', 'Could not verify pincode.');
         }
     }
 
@@ -1117,7 +1126,28 @@ function initOrderModal() {
         document.body.style.overflow = 'hidden';
         setStep(1);
 
-        const pricing = calculatePricing(normalizeQuantity(quantityInput?.value || 1));
+        // Restore phone from localStorage if exists
+        const savedPhone = localStorage.getItem('amrutbaa_phone');
+        if (savedPhone) {
+            phoneInput.value = savedPhone;
+        }
+
+        // Visual update for quantity buttons based on current value
+        const currentQty = normalizeQuantity(quantityInput?.value || 1);
+        qtyButtons.forEach(btn => {
+            const btnQty = parseInt(btn.getAttribute('data-qty'));
+            if (btnQty === currentQty) {
+                btn.style.background = 'linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%)';
+                btn.style.borderColor = '#D4AF37';
+                btn.style.color = '#4A4A4A';
+            } else {
+                btn.style.background = '#fff';
+                btn.style.borderColor = 'rgba(107, 44, 44, 0.2)';
+                btn.style.color = '#6B2C2C';
+            }
+        });
+
+        const pricing = calculatePricing(currentQty);
         
         // Track modal open (Begin Checkout)
         window.dataLayer = window.dataLayer || [];
@@ -1156,9 +1186,70 @@ function initOrderModal() {
     closeModalBtn.addEventListener('click', closeModal);
     modalOverlay.addEventListener('click', closeModal);
 
+    // Handle quantity buttons (1-5 grid)
+    const qtyButtons = document.querySelectorAll('.qty-button');
+    qtyButtons.forEach((btn) => {
+        btn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const qty = parseInt(btn.getAttribute('data-qty'));
+            quantityInput.value = qty;
+            
+            // Visual feedback
+            qtyButtons.forEach(b => {
+                b.style.background = '#fff';
+                b.style.borderColor = 'rgba(107, 44, 44, 0.2)';
+                b.style.color = '#6B2C2C';
+            });
+            btn.style.background = 'linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%)';
+            btn.style.borderColor = '#D4AF37';
+            btn.style.color = '#4A4A4A';
+            
+            updatePricingUI();
+            pincodeServiceable = null;
+        });
+    });
+
+    // Phone input with auto-advance on valid entry
+    const phoneInput = document.getElementById('phone');
+    phoneInput?.addEventListener('input', (e) => {
+        const phoneValue = e.target.value.replace(/\D/g, '');
+        e.target.value = phoneValue;
+        
+        // Auto-advance when exactly 10 digits entered
+        if (phoneValue.length === 10) {
+            clearErrors();
+            if (validateStep1()) {
+                setTimeout(() => {
+                    // Track Step 1 completion
+                    window.dataLayer = window.dataLayer || [];
+                    dataLayer.push({
+                        'event': 'form_step_1_complete',
+                        'form_name': 'registration_form',
+                        'step': 'phone_submit',
+                        'phone_verified': true
+                    });
+                    
+                    // Save phone to localStorage for future visits
+                    localStorage.setItem('amrutbaa_phone', phoneValue);
+                    
+                    setStep(2);
+                    
+                    // Track Step 2 start
+                    dataLayer.push({
+                        'event': 'form_step_2_start',
+                        'form_name': 'registration_form',
+                        'step': 'details_form'
+                    });
+                    
+                    // Focus on first field of Step 2
+                    document.getElementById('name')?.focus();
+                }, 300);
+            }
+        }
+    });
+
     nextStepBtn?.addEventListener('click', () => {
         if (validateStep1()) {
-            // Track Step 1 completion (Phone submitted)
             window.dataLayer = window.dataLayer || [];
             const phoneValue = document.getElementById('phone').value;
             dataLayer.push({
@@ -1168,9 +1259,11 @@ function initOrderModal() {
                 'phone_verified': phoneValue.length === 10
             });
             
+            // Save phone to localStorage
+            localStorage.setItem('amrutbaa_phone', phoneValue.replace(/\D/g, ''));
+            
             setStep(2);
             
-            // Track Step 2 start
             dataLayer.push({
                 'event': 'form_step_2_start',
                 'form_name': 'registration_form',
