@@ -654,7 +654,7 @@ function initOrderModal() {
                 <button class="modal-close" id="closeModalBtn">&times;</button>
                 
                 <div class="modal-header">
-                    <h2>Reserve Your Jar in This Week’s Batch</h2>
+                    <h2>Secure Your Jar in This Week’s Batch</h2>
                     <p class="modal-tagline">Fresh prep begins Monday • Dispatch Tuesday • Delivered Wed–Fri</p>
                 </div>
 
