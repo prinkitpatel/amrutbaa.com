@@ -736,9 +736,9 @@ function initOrderModal() {
                                 <button type="button" class="qty-button" data-qty="4" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">4</button>
                                 <button type="button" class="qty-button" data-qty="5" style="padding: 0.75rem; border: 2px solid rgba(107, 44, 44, 0.2); border-radius: 8px; background: #fff; color: #6B2C2C; font-weight: 700; cursor: pointer; transition: all 0.2s;">5</button>
                             </div>
-                            <input type="number" id="quantity" name="quantity" class="qty-input" min="1" max="10" value="1" required style="display: none;">
+                            <input type="number" id="quantity" name="quantity" class="qty-input" min="1" max="10" value="" required style="display: none;">
                             <p class="input-error" data-error-for="quantity" style="display:none;"></p>
-                            <p class="field-note" id="offerNote" style="margin-top: 0.75rem;">Offers: 5% off 2+ jars • 10% off 3+ jars</p>
+                            <p class="field-note" id="offerNote" style="margin-top: 0.75rem;">Recommended: 2 jars • Offers: 5% off 2+ jars • 10% off 3+ jars</p>
                         </div>
                         <div class="step-actions">
                             <button type="button" class="btn-primary-solid" id="nextStepBtn">Continue →</button>
@@ -747,7 +747,7 @@ function initOrderModal() {
 
                     <div class="step-pane" data-step-pane="2">
                         <div class="order-recap">
-                            <strong>Reserved:</strong> <span id="orderQuantityText">1 fresh jar</span> in this week's batch • Dispatch starts Monday after prep.
+                            <strong>Reserved:</strong> <span id="orderQuantityText">Select jars to reserve this week's batch</span> • Dispatch starts Monday after prep.
                         </div>
 
                         <div style="margin: 1.5rem 0;">
@@ -957,8 +957,29 @@ function initOrderModal() {
         return Math.min(10, Math.max(1, parsed));
     }
 
+    function getSelectedQuantity() {
+        const parsed = parseInt(quantityInput?.value, 10);
+        if (Number.isNaN(parsed)) return null;
+        return Math.min(10, Math.max(1, parsed));
+    }
+
     function updatePricingUI() {
-        const qty = normalizeQuantity(quantityInput?.value || 1);
+        const qty = getSelectedQuantity();
+
+        if (!qty) {
+            if (modalTotal) {
+                modalTotal.textContent = 'Select jars to see total';
+            }
+            if (orderQuantityText) {
+                orderQuantityText.textContent = "Select jars to reserve this week's batch";
+            }
+            if (modalSavings) {
+                modalSavings.textContent = '';
+                modalSavings.style.display = 'none';
+            }
+            return;
+        }
+
         if (quantityInput) quantityInput.value = qty;
 
         const pricing = calculatePricing(qty);
@@ -1023,7 +1044,7 @@ function initOrderModal() {
             return;
         }
 
-        const qty = normalizeQuantity(quantityInput?.value || 1);
+        const qty = getSelectedQuantity() || 1;
         const weight = Number((0.15 * qty).toFixed(2));
 
         setPincodeStatus('pending', 'Checking availability...');
@@ -1092,15 +1113,15 @@ function initOrderModal() {
     function updateStep1CTA() {
         if (!nextStepBtn) return;
         const phoneDigits = (phoneInput?.value || '').replace(/\D/g, '');
-        const qty = normalizeQuantity(quantityInput?.value || 1);
-        const isReady = phoneDigits.length === 10 && qty >= 1;
+        const qty = getSelectedQuantity();
+        const isReady = phoneDigits.length === 10 && !!qty;
         nextStepBtn.disabled = !isReady;
         nextStepBtn.setAttribute('aria-disabled', String(!isReady));
     }
 
     function validateStep1() {
         const phone = document.getElementById('phone').value.trim();
-        const qty = normalizeQuantity(quantityInput?.value || 1);
+        const qty = getSelectedQuantity();
 
         clearErrors();
 
@@ -1110,8 +1131,8 @@ function initOrderModal() {
             return false;
         }
 
-        if (qty < 1) {
-            setError('quantity', 'Select at least 1 jar.');
+        if (!qty) {
+            setError('quantity', 'Select the number of jars.');
             return false;
         }
 
@@ -1167,6 +1188,9 @@ function initOrderModal() {
     function openModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
+        if (quantityInput) {
+            quantityInput.value = '';
+        }
         setStep(1);
         isModalOpen = true;
         lastFocusedElement = document.activeElement;
@@ -1184,10 +1208,10 @@ function initOrderModal() {
         }, 0);
 
         // Visual update for quantity buttons based on current value
-        const currentQty = normalizeQuantity(quantityInput?.value || 1);
+        const currentQty = getSelectedQuantity();
         qtyButtons.forEach(btn => {
             const btnQty = parseInt(btn.getAttribute('data-qty'));
-            if (btnQty === currentQty) {
+            if (currentQty && btnQty === currentQty) {
                 btn.style.background = 'linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%)';
                 btn.style.borderColor = '#D4AF37';
                 btn.style.color = '#4A4A4A';
@@ -1198,7 +1222,7 @@ function initOrderModal() {
             }
         });
 
-        const pricing = calculatePricing(currentQty);
+        const pricing = currentQty ? calculatePricing(currentQty) : { total: 0, unitPrice: pricingConfig.unitPrice, qty: 0 };
         
         // Track modal open (Begin Checkout)
         window.dataLayer = window.dataLayer || [];
@@ -1361,22 +1385,14 @@ function initOrderModal() {
 
     prevStepBtn?.addEventListener('click', () => setStep(1));
 
-    quantityInput?.addEventListener('change', () => updatePricingUI());
-    quantityInput?.addEventListener('input', () => updatePricingUI());
-    qtyButtons.forEach((btn) => {
-        btn.addEventListener('click', () => {
-            const currentQty = normalizeQuantity(quantityInput?.value || 1);
-            const action = btn.getAttribute('data-qty-action');
-            const nextQty = action === 'increase' ? currentQty + 1 : currentQty - 1;
-            if (quantityInput) quantityInput.value = normalizeQuantity(nextQty);
-            updatePricingUI();
-            pincodeServiceable = null;
-            if (pincodeInput?.value?.replace(/\D/g, '').length === 6) {
-                checkPincodeServiceability();
-            }
-        });
+    quantityInput?.addEventListener('change', () => {
+        updatePricingUI();
+        updateStep1CTA();
     });
-
+    quantityInput?.addEventListener('input', () => {
+        updatePricingUI();
+        updateStep1CTA();
+    });
     pincodeInput?.addEventListener('input', () => {
         pincodeServiceable = null;
         if (pincodeCheckTimer) {
