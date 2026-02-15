@@ -16,7 +16,7 @@ const RAZORPAY_CONFIG = {
   
   // Pricing
   pricing: {
-    pricePerJar: 349,
+    pricePerJar: 499,
     currency: 'INR'
   },
   

@@ -157,6 +157,13 @@ function initOrderModal() {
             margin-bottom: 0.5rem;
         }
 
+        .price-mrp {
+            font-size: 0.95rem;
+            color: #8A6B6B;
+            text-decoration: line-through;
+            font-weight: 600;
+        }
+
         .price-amount {
             font-size: 1.6rem;
             font-weight: 800;
@@ -164,6 +171,7 @@ function initOrderModal() {
         }
 
         .price-caption {
+            display: block;
             font-size: 0.8rem;
             color: #4A4A4A;
             opacity: 0.9;
@@ -651,17 +659,19 @@ function initOrderModal() {
                 </div>
 
                 <div class="modal-trust">
-                    <span class="trust-item">4.9★ from 500+ families</span>
-                    <span class="trust-item">No preservatives</span>
-                    <span class="trust-item">Weekly fresh batch</span>
+                    <span class="trust-item">Free Delivery</span>
+                    <span class="trust-item">Amrutbaa Family Member Status</span>
+                    <span class="trust-item">100% Money-Back (+ Family Opt Out)</span>
                 </div>
 
                 <div class="modal-price">
-                    <span class="price-amount" id="unitPriceDisplay">₹349</span>
-                    <span class="price-caption">per jar • Free shipping on all orders</span>
+                    <span class="price-mrp">MRP ₹800</span>
+                    <span class="price-amount" id="unitPriceDisplay">₹499</span>
                 </div>
 
-                <div class="modal-total" id="modalTotal">Total today: ₹349</div>
+                <span class="price-caption">Per 250g jar • Limited weekly batch</span>
+
+                <div class="modal-total" id="modalTotal">Total today: ₹499</div>
                 <div class="modal-savings" id="modalSavings" style="display:none;"></div>
 
                 <div class="modal-urgency">Batch closes in <span id="modalTimer">--:--:--</span></div>
@@ -874,7 +884,7 @@ function initOrderModal() {
     let isCodSelected = false;
 
     const pricingConfig = {
-        unitPrice: 349,
+        unitPrice: 499,
         offers: [
             { minQty: 2, discountPercent: 5, label: '5% off 2+ jars' },
             { minQty: 3, discountPercent: 10, label: '10% off 3+ jars' }
