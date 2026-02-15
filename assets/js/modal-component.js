@@ -859,7 +859,6 @@ function initOrderModal() {
     const nextStepBtn = document.getElementById('nextStepBtn');
     const prevStepBtn = document.getElementById('prevStepBtn');
     const quantityInput = document.getElementById('quantity');
-    const qtyButtons = document.querySelectorAll('[data-qty-action]');
     const modalTotal = document.getElementById('modalTotal');
     const modalSavings = document.getElementById('modalSavings');
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
