@@ -2979,16 +2979,29 @@
             });
         }
 
-        // Timer for sticky footer countdown and journey chip
-        function getNextSundayMidnight() {
+        // Timer for sticky footer countdown and journey chip (Sunday 9 PM IST)
+        function getNowInIST() {
             const now = new Date();
-            const currentDay = now.getDay();
-            let daysUntilSunday = (7 - currentDay) % 7;
-            if (daysUntilSunday === 0) daysUntilSunday = 7;
+            const utcTime = now.getTime() + now.getTimezoneOffset() * 60000;
+            return new Date(utcTime + 330 * 60000);
+        }
 
-            const nextSunday = new Date(now);
-            nextSunday.setDate(nextSunday.getDate() + daysUntilSunday);
-            nextSunday.setHours(0, 0, 0, 0);
+        function getNextSundayDeadlineIST(fromDate) {
+            const date = new Date(fromDate);
+            const dayOfWeek = date.getDay();
+            const secondsSinceMidnight = date.getHours() * 3600 + date.getMinutes() * 60 + date.getSeconds();
+            const deadline9PM = 21 * 3600;
+
+            if (dayOfWeek === 0 && secondsSinceMidnight < deadline9PM) {
+                const deadline = new Date(date);
+                deadline.setHours(21, 0, 0, 0);
+                return deadline;
+            }
+
+            const daysUntilSunday = dayOfWeek === 0 ? 7 : (7 - dayOfWeek);
+            const nextSunday = new Date(date);
+            nextSunday.setDate(date.getDate() + daysUntilSunday);
+            nextSunday.setHours(21, 0, 0, 0);
             return nextSunday;
         }
 
@@ -2997,14 +3010,12 @@
             const journeyCountdown = document.getElementById('journeyCountdown');
             const modalTimer = document.getElementById('modalTimer');
 
-            let targetTime = getNextSundayMidnight();
-            const now = new Date();
+            let targetTime = getNextSundayDeadlineIST(getNowInIST());
+            const now = getNowInIST();
             let difference = targetTime - now;
 
-            // If difference is negative or very small, get next week's Sunday
             if (difference <= 0) {
-                targetTime = new Date(targetTime);
-                targetTime.setDate(targetTime.getDate() + 7);
+                targetTime = getNextSundayDeadlineIST(new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000));
                 difference = targetTime - now;
             }
 
