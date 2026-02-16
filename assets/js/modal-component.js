@@ -1472,8 +1472,8 @@ function initOrderModal() {
         const pricing = calculatePricing(quantity);
         trackMetaInitiateCheckout(formData, quantity, pricing.total).catch(err => console.warn('Meta InitiateCheckout tracking failed:', err));
 
-        // Track Lead event to Meta (form submission - before payment)
-        trackMetaLead(formData, 0).catch(err => console.warn('Meta lead tracking failed:', err));
+        // Track AddPaymentInfo event to Meta (form submission - ready to pay)
+        trackMetaAddPaymentInfo(formData, 0).catch(err => console.warn('Meta addpaymentinfo tracking failed:', err));
 
         const submitBtn = registrationForm.querySelector('.btn-primary-solid[type="submit"]');
         const originalText = submitBtn.textContent;
@@ -1981,10 +1981,10 @@ function initOrderModal() {
     }
 
     // Helper function to submit order details in background
-    // Track Lead Event to Meta (form submission)
-    async function trackMetaLead(formData, amount) {
+    // Track AddPaymentInfo Event to Meta (form submission - ready to pay)
+    async function trackMetaAddPaymentInfo(formData, amount) {
         try {
-            const response = await fetch('/api/track-lead', {
+            const response = await fetch('/api/track-addpaymentinfo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1997,14 +1997,14 @@ function initOrderModal() {
             });
 
             if (response.ok) {
-                console.log('✅ Lead tracked to Meta');
+                console.log('✅ AddPaymentInfo tracked to Meta');
                 return true;
             } else {
-                console.warn('⚠️ Failed to track lead');
+                console.warn('⚠️ Failed to track addpaymentinfo');
                 return false;
             }
         } catch (error) {
-            console.error('❌ Lead tracking error:', error);
+            console.error('❌ AddPaymentInfo tracking error:', error);
             return false;
         }
     }

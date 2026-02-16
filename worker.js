@@ -620,8 +620,8 @@ export default {
       return request.headers.get('user-agent') || '';
     }
 
-    // Track Lead Event (form submission)
-    if (url.pathname === '/api/track-lead' && request.method === 'POST') {
+    // Track AddPaymentInfo Event (form submitted - ready to pay)
+    if (url.pathname === '/api/track-addpaymentinfo' && request.method === 'POST') {
       try {
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
           return new Response(JSON.stringify({
@@ -663,7 +663,7 @@ export default {
         const metaPayload = {
           data: [
             {
-              event_name: 'Lead',
+              event_name: 'AddPaymentInfo',
               event_time: Math.floor(Date.now() / 1000),
               event_id: `lead_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
@@ -716,19 +716,19 @@ export default {
         }
 
         const metaResult = await metaResponse.json();
-        console.log('Lead tracked successfully:', metaResult);
+        console.log('AddPaymentInfo tracked successfully:', metaResult);
 
         return new Response(JSON.stringify({ 
           success: true,
-          message: 'Lead tracked successfully',
-          event_id: `lead_${Date.now()}`
+          message: 'AddPaymentInfo tracked successfully',
+          event_id: `addpaymentinfo_${Date.now()}`
         }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
 
       } catch (error) {
-        console.error('Track lead error:', error);
+        console.error('Track addpaymentinfo error:', error);
         return new Response(JSON.stringify({ 
           success: false,
           error: error.message 
