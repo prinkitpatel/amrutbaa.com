@@ -974,7 +974,7 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, postcode, city, fbc, fbp, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, fbc, fbp, event_id, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
@@ -1068,7 +1068,7 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, postcode, city, fbc, fbp, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, fbc, fbp, event_id, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
