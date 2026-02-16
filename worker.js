@@ -609,6 +609,17 @@ export default {
       return request.headers.get('referer') || request.headers.get('origin') || 'https://amrutbaa.com';
     }
 
+    function getClientIP(request) {
+      return request.headers.get('cf-connecting-ip') || 
+             request.headers.get('x-forwarded-for') || 
+             request.headers.get('x-real-ip') || 
+             '';
+    }
+
+    function getUserAgent(request) {
+      return request.headers.get('user-agent') || '';
+    }
+
     // Track Lead Event (form submission)
     if (url.pathname === '/api/track-lead' && request.method === 'POST') {
       try {
@@ -622,7 +633,8 @@ export default {
           });
         }
 
-        const { name, email, phone, quantity, test_event_code } = await request.json();
+        const data = await request.json();
+        const { name, email, phone, quantity, postcode, city, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -631,17 +643,22 @@ export default {
           });
         }
 
+        const clientIP = getClientIP(request);
+        const userAgent = getUserAgent(request);
+
         // Prepare Meta Conversions API payload
         const safeName = name ? String(name).trim() : '';
         const nameParts = safeName.split(/\s+/).filter(Boolean);
         const firstName = nameParts[0] || '';
         const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
 
-        const [em, ph, fn, ln] = await Promise.all([
+        const [em, ph, fn, ln, zp, ct] = await Promise.all([
           email ? hashPII(email) : Promise.resolve(null),
           phone ? hashPII(phone) : Promise.resolve(null),
           firstName ? hashPII(firstName) : Promise.resolve(null),
-          lastName ? hashPII(lastName) : Promise.resolve(null)
+          lastName ? hashPII(lastName) : Promise.resolve(null),
+          postcode ? hashPII(postcode) : Promise.resolve(null),
+          city ? hashPII(city) : Promise.resolve(null)
         ]);
 
         const metaPayload = {
@@ -656,7 +673,11 @@ export default {
                 em: em || undefined,
                 ph: ph || undefined,
                 fn: fn || undefined,
-                ln: ln || undefined
+                ln: ln || undefined,
+                zp: zp || undefined,
+                ct: ct || undefined,
+                client_ip_address: clientIP || undefined,
+                client_user_agent: userAgent || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -732,7 +753,7 @@ export default {
           });
         }
 
-        const { name, email, phone, amount, quantity, payment_id, test_event_code } = await request.json();
+        const { name, email, phone, amount, quantity, payment_id, postcode, city, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -741,17 +762,22 @@ export default {
           });
         }
 
+        const clientIP = getClientIP(request);
+        const userAgent = getUserAgent(request);
+
         // Prepare Meta Conversions API payload
         const safeName = name ? String(name).trim() : '';
         const nameParts = safeName.split(/\s+/).filter(Boolean);
         const firstName = nameParts[0] || '';
         const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
 
-        const [em, ph, fn, ln] = await Promise.all([
+        const [em, ph, fn, ln, zp, ct] = await Promise.all([
           email ? hashPII(email) : Promise.resolve(null),
           phone ? hashPII(phone) : Promise.resolve(null),
           firstName ? hashPII(firstName) : Promise.resolve(null),
-          lastName ? hashPII(lastName) : Promise.resolve(null)
+          lastName ? hashPII(lastName) : Promise.resolve(null),
+          postcode ? hashPII(postcode) : Promise.resolve(null),
+          city ? hashPII(city) : Promise.resolve(null)
         ]);
 
         const metaPayload = {
@@ -766,7 +792,11 @@ export default {
                 em: em || undefined,
                 ph: ph || undefined,
                 fn: fn || undefined,
-                ln: ln || undefined
+                ln: ln || undefined,
+                zp: zp || undefined,
+                ct: ct || undefined,
+                client_ip_address: clientIP || undefined,
+                client_user_agent: userAgent || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -846,12 +876,17 @@ export default {
         }
 
         const data = await request.json();
-        const { email, phone, test_event_code } = data;
+        const { email, phone, postcode, city, test_event_code } = data;
+        
+        const clientIP = getClientIP(request);
+        const userAgent = getUserAgent(request);
 
         // Hash PII if provided
-        const [em, ph] = await Promise.all([
+        const [em, ph, zp, ct] = await Promise.all([
           email ? hashPII(email) : Promise.resolve(null),
-          phone ? hashPII(phone) : Promise.resolve(null)
+          phone ? hashPII(phone) : Promise.resolve(null),
+          postcode ? hashPII(postcode) : Promise.resolve(null),
+          city ? hashPII(city) : Promise.resolve(null)
         ]);
 
         const metaPayload = {
@@ -864,7 +899,11 @@ export default {
               action_source: 'website',
               user_data: {
                 em: em || undefined,
-                ph: ph || undefined
+                ph: ph || undefined,
+                zp: zp || undefined,
+                ct: ct || undefined,
+                client_ip_address: clientIP || undefined,
+                client_user_agent: userAgent || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -927,12 +966,17 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, test_event_code } = data;
+        
+        const clientIP = getClientIP(request);
+        const userAgent = getUserAgent(request);
 
         // Hash PII if provided
-        const [em, ph] = await Promise.all([
+        const [em, ph, zp, ct] = await Promise.all([
           email ? hashPII(email) : Promise.resolve(null),
-          phone ? hashPII(phone) : Promise.resolve(null)
+          phone ? hashPII(phone) : Promise.resolve(null),
+          postcode ? hashPII(postcode) : Promise.resolve(null),
+          city ? hashPII(city) : Promise.resolve(null)
         ]);
 
         const metaPayload = {
@@ -945,7 +989,11 @@ export default {
               action_source: 'website',
               user_data: {
                 em: em || undefined,
-                ph: ph || undefined
+                ph: ph || undefined,
+                zp: zp || undefined,
+                ct: ct || undefined,
+                client_ip_address: clientIP || undefined,
+                client_user_agent: userAgent || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -1009,12 +1057,17 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, test_event_code } = data;
+        
+        const clientIP = getClientIP(request);
+        const userAgent = getUserAgent(request);
 
         // Hash PII if provided
-        const [em, ph] = await Promise.all([
+        const [em, ph, zp, ct] = await Promise.all([
           email ? hashPII(email) : Promise.resolve(null),
-          phone ? hashPII(phone) : Promise.resolve(null)
+          phone ? hashPII(phone) : Promise.resolve(null),
+          postcode ? hashPII(postcode) : Promise.resolve(null),
+          city ? hashPII(city) : Promise.resolve(null)
         ]);
 
         const metaPayload = {
@@ -1027,7 +1080,11 @@ export default {
               action_source: 'website',
               user_data: {
                 em: em || undefined,
-                ph: ph || undefined
+                ph: ph || undefined,
+                zp: zp || undefined,
+                ct: ct || undefined,
+                client_ip_address: clientIP || undefined,
+                client_user_agent: userAgent || undefined
               },
               custom_data: {
                 currency: 'INR',

@@ -1938,6 +1938,8 @@ function initOrderModal() {
                     value: value || 0,
                     email: formData?.email || '',
                     phone: formData?.phone || '',
+                    postcode: formData?.pincode || '',
+                    city: formData?.city || '',
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1962,6 +1964,8 @@ function initOrderModal() {
                     value: value || 0,
                     email: formData?.email || '',
                     phone: formData?.phone || '',
+                    postcode: formData?.pincode || '',
+                    city: formData?.city || '',
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -2017,6 +2021,8 @@ function initOrderModal() {
                     amount: amount,
                     quantity: formData.quantity || 1,
                     payment_id: paymentId,
+                    postcode: formData.pincode || '',
+                    city: formData.city || '',
                     test_event_code: window.META_TEST_EVENT_CODE || undefined
                 })
             });
