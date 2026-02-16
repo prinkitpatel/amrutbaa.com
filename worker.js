@@ -590,13 +590,256 @@ export default {
       }
     }
 
+    // ========================
+    // META CONVERSIONS API ENDPOINTS
+    // ========================
+
+    // Hash helper function for PII (Personally Identifiable Information)
+    async function hashPII(value) {
+      if (!value) return null;
+      const normalized = String(value).toLowerCase().trim();
+      const data = new TextEncoder().encode(normalized);
+      const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+      return Array.from(new Uint8Array(hashBuffer))
+        .map(b => b.toString(16).padStart(2, '0'))
+        .join('');
+    }
+
+    function getEventSourceUrl(request) {
+      return request.headers.get('referer') || request.headers.get('origin') || 'https://amrutbaa.com';
+    }
+
+    // Track Lead Event (form submission)
+    if (url.pathname === '/api/track-lead' && request.method === 'POST') {
+      try {
+        if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Meta credentials not configured'
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const { name, email, phone, quantity, test_event_code } = await request.json();
+
+        if (!email && !phone) {
+          return new Response(JSON.stringify({ error: 'Email or phone required' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        // Prepare Meta Conversions API payload
+        const safeName = name ? String(name).trim() : '';
+        const nameParts = safeName.split(/\s+/).filter(Boolean);
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+
+        const [em, ph, fn, ln] = await Promise.all([
+          email ? hashPII(email) : Promise.resolve(null),
+          phone ? hashPII(phone) : Promise.resolve(null),
+          firstName ? hashPII(firstName) : Promise.resolve(null),
+          lastName ? hashPII(lastName) : Promise.resolve(null)
+        ]);
+
+        const metaPayload = {
+          data: [
+            {
+              event_name: 'Lead',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: `lead_${Date.now()}`,
+              event_source_url: getEventSourceUrl(request),
+              action_source: 'website',
+              user_data: {
+                em: em || undefined,
+                ph: ph || undefined,
+                fn: fn || undefined,
+                ln: ln || undefined
+              },
+              custom_data: {
+                currency: 'INR',
+                value: quantity || 1,
+                content_name: 'Amrut Baa Chutney',
+                content_type: 'product'
+              }
+            }
+          ]
+        };
+
+        if (test_event_code) {
+          metaPayload.test_event_code = test_event_code;
+        }
+
+        // Send to Meta Conversions API
+        const metaResponse = await fetch(
+          `https://graph.facebook.com/v19.0/${env.META_DATASET_ID}/events?access_token=${env.META_ACCESS_TOKEN}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metaPayload)
+          }
+        );
+
+        if (!metaResponse.ok) {
+          const error = await metaResponse.text();
+          console.error('Meta API error:', error);
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Failed to track lead',
+            details: error 
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const metaResult = await metaResponse.json();
+        console.log('Lead tracked successfully:', metaResult);
+
+        return new Response(JSON.stringify({ 
+          success: true,
+          message: 'Lead tracked successfully',
+          event_id: `lead_${Date.now()}`
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+
+      } catch (error) {
+        console.error('Track lead error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Track Purchase Event (successful payment)
+    if (url.pathname === '/api/track-purchase' && request.method === 'POST') {
+      try {
+        if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Meta credentials not configured'
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const { name, email, phone, amount, quantity, payment_id, test_event_code } = await request.json();
+
+        if (!email && !phone) {
+          return new Response(JSON.stringify({ error: 'Email or phone required' }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        // Prepare Meta Conversions API payload
+        const safeName = name ? String(name).trim() : '';
+        const nameParts = safeName.split(/\s+/).filter(Boolean);
+        const firstName = nameParts[0] || '';
+        const lastName = nameParts.length > 1 ? nameParts[nameParts.length - 1] : '';
+
+        const [em, ph, fn, ln] = await Promise.all([
+          email ? hashPII(email) : Promise.resolve(null),
+          phone ? hashPII(phone) : Promise.resolve(null),
+          firstName ? hashPII(firstName) : Promise.resolve(null),
+          lastName ? hashPII(lastName) : Promise.resolve(null)
+        ]);
+
+        const metaPayload = {
+          data: [
+            {
+              event_name: 'Purchase',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: `purchase_${payment_id || Date.now()}`,
+              event_source_url: getEventSourceUrl(request),
+              action_source: 'website',
+              user_data: {
+                em: em || undefined,
+                ph: ph || undefined,
+                fn: fn || undefined,
+                ln: ln || undefined
+              },
+              custom_data: {
+                currency: 'INR',
+                value: Number(amount) || 0,
+                content_name: 'Amrut Baa Chutney',
+                content_type: 'product',
+                content_id: 'AMB-CGC-100G',
+                num_items: quantity || 1,
+                transaction_id: payment_id
+              }
+            }
+          ]
+        };
+
+        if (test_event_code) {
+          metaPayload.test_event_code = test_event_code;
+        }
+
+        // Send to Meta Conversions API
+        const metaResponse = await fetch(
+          `https://graph.facebook.com/v19.0/${env.META_DATASET_ID}/events?access_token=${env.META_ACCESS_TOKEN}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metaPayload)
+          }
+        );
+
+        if (!metaResponse.ok) {
+          const error = await metaResponse.text();
+          console.error('Meta API error:', error);
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Failed to track purchase',
+            details: error 
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const metaResult = await metaResponse.json();
+        console.log('Purchase tracked successfully:', metaResult);
+
+        return new Response(JSON.stringify({ 
+          success: true,
+          message: 'Purchase tracked successfully',
+          event_id: `purchase_${payment_id || Date.now()}`
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+
+      } catch (error) {
+        console.error('Track purchase error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
     // Health check
     if (url.pathname === '/api/health') {
       return new Response(JSON.stringify({ 
         status: 'ok',
         services: {
           razorpay: !!env.RAZORPAY_KEY_ID,
-          shiprocket: !!env.SHIPROCKET_EMAIL
+          shiprocket: !!env.SHIPROCKET_EMAIL,
+          meta: !!env.META_DATASET_ID && !!env.META_ACCESS_TOKEN
         }
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }

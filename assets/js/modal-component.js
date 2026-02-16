@@ -1455,6 +1455,9 @@ function initOrderModal() {
             return;
         }
 
+        // Track Lead event to Meta (form submission - before payment)
+        trackMetaLead(formData, 0).catch(err => console.warn('Meta lead tracking failed:', err));
+
         const submitBtn = registrationForm.querySelector('.btn-primary-solid[type="submit"]');
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Initializing Payment...';
@@ -1772,6 +1775,9 @@ function initOrderModal() {
                             registrationForm.style.display = 'none !important';
                             registrationForm.hidden = true;
 
+                            // Track Purchase event to Meta (Razorpay)
+                            trackMetaPurchase(formData, totalAmount, response.razorpay_payment_id).catch(() => {});
+
                             // Submit order details to n8n in background (doesn't block success display)
                             submitOrderDetails({
                                 ...formData,
@@ -1884,6 +1890,64 @@ function initOrderModal() {
     });
 
     // Helper function to submit order details in background
+    // Track Lead Event to Meta (form submission)
+    async function trackMetaLead(formData, amount) {
+        try {
+            const response = await fetch('/api/track-lead', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    quantity: formData.quantity || 1,
+                    test_event_code: window.META_TEST_EVENT_CODE || undefined
+                })
+            });
+
+            if (response.ok) {
+                console.log('✅ Lead tracked to Meta');
+                return true;
+            } else {
+                console.warn('⚠️ Failed to track lead');
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Lead tracking error:', error);
+            return false;
+        }
+    }
+
+    // Track Purchase Event to Meta (successful payment)
+    async function trackMetaPurchase(formData, amount, paymentId) {
+        try {
+            const response = await fetch('/api/track-purchase', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    phone: formData.phone,
+                    amount: amount,
+                    quantity: formData.quantity || 1,
+                    payment_id: paymentId,
+                    test_event_code: window.META_TEST_EVENT_CODE || undefined
+                })
+            });
+
+            if (response.ok) {
+                console.log('✅ Purchase tracked to Meta');
+                return true;
+            } else {
+                console.warn('⚠️ Failed to track purchase');
+                return false;
+            }
+        } catch (error) {
+            console.error('❌ Purchase tracking error:', error);
+            return false;
+        }
+    }
+
     async function submitOrderDetails(orderData) {
         try {
             // Send as JSON POST - this runs in background, doesn't block UI
