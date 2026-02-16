@@ -633,7 +633,7 @@ export default {
           });
         }
 
-        const { name, email, phone, quantity, postcode, city, test_event_code } = await request.json();
+        const { name, email, phone, quantity, postcode, city, fbc, fbp, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -676,7 +676,9 @@ export default {
                 zp: zp || undefined,
                 ct: ct || undefined,
                 client_ip_address: clientIP || undefined,
-                client_user_agent: userAgent || undefined
+                client_user_agent: userAgent || undefined,
+                fbc: fbc || undefined,
+                fbp: fbp || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -752,7 +754,7 @@ export default {
           });
         }
 
-        const { name, email, phone, amount, quantity, payment_id, postcode, city, test_event_code } = await request.json();
+        const { name, email, phone, amount, quantity, payment_id, postcode, city, fbc, fbp, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -795,7 +797,9 @@ export default {
                 zp: zp || undefined,
                 ct: ct || undefined,
                 client_ip_address: clientIP || undefined,
-                client_user_agent: userAgent || undefined
+                client_user_agent: userAgent || undefined,
+                fbc: fbc || undefined,
+                fbp: fbp || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -875,7 +879,7 @@ export default {
         }
 
         const data = await request.json();
-        const { email, phone, postcode, city, test_event_code } = data;
+        const { email, phone, postcode, city, fbc, fbp, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
@@ -902,7 +906,9 @@ export default {
                 zp: zp || undefined,
                 ct: ct || undefined,
                 client_ip_address: clientIP || undefined,
-                client_user_agent: userAgent || undefined
+                client_user_agent: userAgent || undefined,
+                fbc: fbc || undefined,
+                fbp: fbp || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -965,7 +971,7 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, postcode, city, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, fbc, fbp, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
@@ -992,7 +998,9 @@ export default {
                 zp: zp || undefined,
                 ct: ct || undefined,
                 client_ip_address: clientIP || undefined,
-                client_user_agent: userAgent || undefined
+                client_user_agent: userAgent || undefined,
+                fbc: fbc || undefined,
+                fbp: fbp || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -1056,7 +1064,7 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, email, phone, postcode, city, test_event_code } = data;
+        const { quantity, value, email, phone, postcode, city, fbc, fbp, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
@@ -1083,7 +1091,9 @@ export default {
                 zp: zp || undefined,
                 ct: ct || undefined,
                 client_ip_address: clientIP || undefined,
-                client_user_agent: userAgent || undefined
+                client_user_agent: userAgent || undefined,
+                fbc: fbc || undefined,
+                fbp: fbp || undefined
               },
               custom_data: {
                 currency: 'INR',

@@ -1907,6 +1907,14 @@ function initOrderModal() {
     });
 
     // Helper function to submit order details in background
+    // Helper function to get cookie value
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+        return null;
+    }
+
     // Track ViewContent Event to Meta (CTA click / modal open)
     async function trackMetaViewContent(phone) {
         try {
@@ -1915,6 +1923,8 @@ function initOrderModal() {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
                     phone: phone || '',
+                    fbc: getCookie('_fbc'),
+                    fbp: getCookie('_fbp'),
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1992,6 +2002,8 @@ function initOrderModal() {
                     email: formData.email,
                     phone: formData.phone,
                     quantity: formData.quantity || 1,
+                    fbc: getCookie('_fbc'),
+                    fbp: getCookie('_fbp'),
                     test_event_code: window.META_TEST_EVENT_CODE || undefined
                 })
             });
@@ -2024,6 +2036,8 @@ function initOrderModal() {
                     payment_id: paymentId,
                     postcode: formData.pincode || '',
                     city: formData.city || '',
+                    fbc: getCookie('_fbc'),
+                    fbp: getCookie('_fbp'),
                     test_event_code: window.META_TEST_EVENT_CODE || undefined
                 })
             });
