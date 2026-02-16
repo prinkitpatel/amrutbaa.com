@@ -1545,8 +1545,12 @@ function initOrderModal() {
 
                 const codResult = await codOrderResponse.json();
 
+                // Track Purchase event to Meta for COD
+                const codOrderId = `COD-${Date.now()}`;
+                trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => {});
+
                 // Update success message
-                document.getElementById('order-number').textContent = `COD-${Date.now()}`.substring(0, 15) + '...';
+                document.getElementById('order-number').textContent = codOrderId.substring(0, 15) + '...';
                 document.getElementById('order-amount').textContent = `₹${totalAmount}`;
                 
                 // Show success message immediately
@@ -1558,7 +1562,7 @@ function initOrderModal() {
                 submitOrderDetails({
                     ...formData,
                     payment_type: 'cod',
-                    order_id: `COD-${Date.now()}`,
+                    order_id: codOrderId,
                     amount: totalAmount,
                     tracking_number: null,
                     shipment_id: null,
@@ -1712,17 +1716,6 @@ function initOrderModal() {
                                 'customer_city': formData.city,
                                 'customer_state': formData.state
                             });
-                            
-                            // Track for Facebook Pixel (if implemented)
-                            if (typeof fbq !== 'undefined') {
-                                fbq('track', 'Purchase', {
-                                    value: totalAmount,
-                                    currency: 'INR',
-                                    content_ids: ['amrutbaa-chutney'],
-                                    content_type: 'product',
-                                    num_items: formData.quantity
-                                });
-                            }
                             
                             // Create Shiprocket shipment
                             let trackingInfo = null;
@@ -1984,6 +1977,9 @@ function initOrderModal() {
                     phone: formData?.phone || '',
                     postcode: formData?.pincode || '',
                     city: formData?.city || '',
+                    fbc: getCookie('_fbc'),
+                    fbp: getCookie('_fbp'),
+                    event_id: eventId,
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });

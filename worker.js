@@ -678,7 +678,8 @@ export default {
                 client_ip_address: clientIP || undefined,
                 client_user_agent: userAgent || undefined,
                 fbc: fbc || undefined,
-                fbp: fbp || undefined
+                fbp: fbp || undefined,
+                external_id: em || ph || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -799,7 +800,8 @@ export default {
                 client_ip_address: clientIP || undefined,
                 client_user_agent: userAgent || undefined,
                 fbc: fbc || undefined,
-                fbp: fbp || undefined
+                fbp: fbp || undefined,
+                external_id: em || ph || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -908,7 +910,8 @@ export default {
                 client_ip_address: clientIP || undefined,
                 client_user_agent: userAgent || undefined,
                 fbc: fbc || undefined,
-                fbp: fbp || undefined
+                fbp: fbp || undefined,
+                external_id: em || ph || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -1000,7 +1003,8 @@ export default {
                 client_ip_address: clientIP || undefined,
                 client_user_agent: userAgent || undefined,
                 fbc: fbc || undefined,
-                fbp: fbp || undefined
+                fbp: fbp || undefined,
+                external_id: em || ph || undefined
               },
               custom_data: {
                 currency: 'INR',
@@ -1093,7 +1097,8 @@ export default {
                 client_ip_address: clientIP || undefined,
                 client_user_agent: userAgent || undefined,
                 fbc: fbc || undefined,
-                fbp: fbp || undefined
+                fbp: fbp || undefined,
+                external_id: em || ph || undefined
               },
               custom_data: {
                 currency: 'INR',
