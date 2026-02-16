@@ -633,7 +633,7 @@ export default {
           });
         }
 
-        const { name, email, phone, quantity, postcode, city, fbc, fbp, test_event_code } = await request.json();
+        const { name, email, phone, quantity, postcode, city, fbc, fbp, event_id, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -665,7 +665,7 @@ export default {
             {
               event_name: 'AddPaymentInfo',
               event_time: Math.floor(Date.now() / 1000),
-              event_id: `lead_${Date.now()}`,
+              event_id: event_id || `addpaymentinfo_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
               user_data: {
@@ -754,7 +754,7 @@ export default {
           });
         }
 
-        const { name, email, phone, amount, quantity, payment_id, postcode, city, fbc, fbp, test_event_code } = await request.json();
+        const { name, email, phone, amount, quantity, payment_id, postcode, city, fbc, fbp, event_id, test_event_code } = await request.json();
 
         if (!email && !phone) {
           return new Response(JSON.stringify({ error: 'Email or phone required' }), {
@@ -786,7 +786,7 @@ export default {
             {
               event_name: 'Purchase',
               event_time: Math.floor(Date.now() / 1000),
-              event_id: `purchase_${payment_id || Date.now()}`,
+              event_id: event_id || `purchase_${payment_id || Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
               user_data: {
@@ -879,7 +879,7 @@ export default {
         }
 
         const data = await request.json();
-        const { email, phone, postcode, city, fbc, fbp, test_event_code } = data;
+        const { email, phone, postcode, city, fbc, fbp, event_id, test_event_code } = data;
         
         const clientIP = getClientIP(request);
         const userAgent = getUserAgent(request);
@@ -897,7 +897,7 @@ export default {
             {
               event_name: 'ViewContent',
               event_time: Math.floor(Date.now() / 1000),
-              event_id: `view_${Date.now()}`,
+              event_id: event_id || `view_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
               user_data: {
@@ -989,7 +989,7 @@ export default {
             {
               event_name: 'AddToCart',
               event_time: Math.floor(Date.now() / 1000),
-              event_id: `addtocart_${Date.now()}`,
+              event_id: event_id || `addtocart_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
               user_data: {
@@ -1082,7 +1082,7 @@ export default {
             {
               event_name: 'InitiateCheckout',
               event_time: Math.floor(Date.now() / 1000),
-              event_id: `checkout_${Date.now()}`,
+              event_id: event_id || `checkout_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
               user_data: {

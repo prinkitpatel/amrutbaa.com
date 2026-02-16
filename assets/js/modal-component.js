@@ -1907,6 +1907,11 @@ function initOrderModal() {
     });
 
     // Helper function to submit order details in background
+    // Generate unique event ID for deduplication between Pixel and Conversions API
+    function generateEventId() {
+        return `${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    }
+
     // Helper function to get cookie value
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -1918,6 +1923,19 @@ function initOrderModal() {
     // Track ViewContent Event to Meta (CTA click / modal open)
     async function trackMetaViewContent(phone) {
         try {
+            const eventId = generateEventId();
+            
+            // Fire Meta Pixel event
+            if (typeof fbq === 'function') {
+                fbq('track', 'ViewContent', {
+                    content_name: 'Amrut Baa Chilly Garlic Chutney',
+                    content_type: 'product',
+                    content_ids: ['AMB-CGC-100G'],
+                    currency: 'INR',
+                    value: 299
+                }, { eventID: eventId });
+            }
+            
             const response = await fetch('/api/track-view', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1925,6 +1943,7 @@ function initOrderModal() {
                     phone: phone || '',
                     fbc: getCookie('_fbc'),
                     fbp: getCookie('_fbp'),
+                    event_id: eventId,
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1941,6 +1960,20 @@ function initOrderModal() {
     // Track AddToCart Event to Meta (Jar quantity selected)
     async function trackMetaAddToCart(formData, quantity, value) {
         try {
+            const eventId = generateEventId();
+            
+            // Fire Meta Pixel event
+            if (typeof fbq === 'function') {
+                fbq('track', 'AddToCart', {
+                    content_name: 'Amrut Baa Chilly Garlic Chutney',
+                    content_type: 'product',
+                    content_ids: ['AMB-CGC-100G'],
+                    currency: 'INR',
+                    value: value || 0,
+                    num_items: quantity || 1
+                }, { eventID: eventId });
+            }
+            
             const response = await fetch('/api/track-addtocart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1967,6 +2000,20 @@ function initOrderModal() {
     // Track InitiateCheckout Event to Meta (Delivery address entry)
     async function trackMetaInitiateCheckout(formData, quantity, value) {
         try {
+            const eventId = generateEventId();
+            
+            // Fire Meta Pixel event
+            if (typeof fbq === 'function') {
+                fbq('track', 'InitiateCheckout', {
+                    content_name: 'Amrut Baa Chilly Garlic Chutney',
+                    content_type: 'product',
+                    content_ids: ['AMB-CGC-100G'],
+                    currency: 'INR',
+                    value: value || 0,
+                    num_items: quantity || 1
+                }, { eventID: eventId });
+            }
+            
             const response = await fetch('/api/track-initiate-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1977,6 +2024,9 @@ function initOrderModal() {
                     phone: formData?.phone || '',
                     postcode: formData?.pincode || '',
                     city: formData?.city || '',
+                    fbc: getCookie('_fbc'),
+                    fbp: getCookie('_fbp'),
+                    event_id: eventId,
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1994,6 +2044,11 @@ function initOrderModal() {
     // Track AddPaymentInfo Event to Meta (form submission - ready to pay)
     async function trackMetaAddPaymentInfo(formData, amount) {
         try {
+            const eventId = generateEventId();
+            
+            // Note: AddPaymentInfo is standard Meta event, but not tracked by default Pixel
+            // Only sending via Conversions API for server-side tracking
+            
             const response = await fetch('/api/track-addpaymentinfo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2004,6 +2059,7 @@ function initOrderModal() {
                     quantity: formData.quantity || 1,
                     fbc: getCookie('_fbc'),
                     fbp: getCookie('_fbp'),
+                    event_id: eventId,
                     test_event_code: window.META_TEST_EVENT_CODE || undefined
                 })
             });
@@ -2024,6 +2080,21 @@ function initOrderModal() {
     // Track Purchase Event to Meta (successful payment)
     async function trackMetaPurchase(formData, amount, paymentId) {
         try {
+            const eventId = generateEventId();
+            
+            // Fire Meta Pixel event
+            if (typeof fbq === 'function') {
+                fbq('track', 'Purchase', {
+                    content_name: 'Amrut Baa Chutney',
+                    content_type: 'product',
+                    content_ids: ['AMB-CGC-100G'],
+                    currency: 'INR',
+                    value: amount || 0,
+                    num_items: formData.quantity || 1,
+                    transaction_id: paymentId
+                }, { eventID: eventId });
+            }
+            
             const response = await fetch('/api/track-purchase', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2038,6 +2109,7 @@ function initOrderModal() {
                     city: formData.city || '',
                     fbc: getCookie('_fbc'),
                     fbp: getCookie('_fbp'),
+                    event_id: eventId,
                     test_event_code: window.META_TEST_EVENT_CODE || undefined
                 })
             });
