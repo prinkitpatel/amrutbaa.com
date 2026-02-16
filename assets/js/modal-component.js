@@ -1211,7 +1211,6 @@ function initOrderModal() {
         trackMetaViewContent(savedPhone).catch(err => console.warn('Meta ViewContent tracking failed:', err));
 
         // Restore phone from localStorage if exists
-        const savedPhone = localStorage.getItem('amrutbaa_phone');
         if (savedPhone) {
             phoneInput.value = savedPhone;
         }
