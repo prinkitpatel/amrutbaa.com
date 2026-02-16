@@ -1206,9 +1206,11 @@ function initOrderModal() {
         lastFocusedElement = document.activeElement;
         document.addEventListener('keydown', handleModalKeydown);
         
-        // Track ViewContent event (CTA click / modal open)
+        // Track ViewContent event (CTA click / modal open) - non-blocking
         const savedPhone = localStorage.getItem('amrutbaa_phone');
-        trackMetaViewContent(savedPhone).catch(err => console.warn('Meta ViewContent tracking failed:', err));
+        if (trackMetaViewContent) {
+            trackMetaViewContent(savedPhone).catch(err => console.warn('Meta ViewContent tracking failed:', err));
+        }
 
         // Restore phone from localStorage if exists
         if (savedPhone) {
