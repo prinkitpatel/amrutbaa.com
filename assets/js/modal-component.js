@@ -1205,6 +1205,9 @@ function initOrderModal() {
         isModalOpen = true;
         lastFocusedElement = document.activeElement;
         document.addEventListener('keydown', handleModalKeydown);
+        
+        // Track ViewContent event (CTA click / modal open)
+        trackMetaViewContent().catch(err => console.warn('Meta ViewContent tracking failed:', err));
 
         // Restore phone from localStorage if exists
         const savedPhone = localStorage.getItem('amrutbaa_phone');
@@ -1383,6 +1386,13 @@ function initOrderModal() {
             // Save phone to localStorage
             localStorage.setItem('amrutbaa_phone', phoneValue.replace(/\D/g, ''));
             
+            // Get quantity and calculate value for tracking
+            const quantity = getSelectedQuantity();
+            const pricing = calculatePricing(quantity);
+            
+            // Track AddToCart event (Jar reserved / quantity selected)
+            trackMetaAddToCart(null, quantity, pricing.total).catch(err => console.warn('Meta AddToCart tracking failed:', err));
+            
             setStep(2);
             
             dataLayer.push({
@@ -1454,6 +1464,11 @@ function initOrderModal() {
         if (!validateStep2()) {
             return;
         }
+
+        // Track InitiateCheckout event (Delivery address entered)
+        const quantity = formData.quantity || 1;
+        const pricing = calculatePricing(quantity);
+        trackMetaInitiateCheckout(formData, quantity, pricing.total).catch(err => console.warn('Meta InitiateCheckout tracking failed:', err));
 
         // Track Lead event to Meta (form submission - before payment)
         trackMetaLead(formData, 0).catch(err => console.warn('Meta lead tracking failed:', err));
@@ -1888,6 +1903,71 @@ function initOrderModal() {
             submitBtn.setAttribute('aria-busy', 'false');
         }
     });
+
+    // Helper function to submit order details in background
+    // Track ViewContent Event to Meta (CTA click / modal open)
+    async function trackMetaViewContent() {
+        try {
+            const response = await fetch('/api/track-view', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    test_event_code: window.META_TEST_EVENT_CODE
+                })
+            });
+            
+            const result = await response.json();
+            console.log('✅ ViewContent tracked to Meta', result);
+            return result;
+        } catch (error) {
+            console.error('ViewContent tracking error:', error);
+            throw error;
+        }
+    }
+
+    // Track AddToCart Event to Meta (Jar quantity selected)
+    async function trackMetaAddToCart(formData, quantity, value) {
+        try {
+            const response = await fetch('/api/track-addtocart', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    quantity: quantity || 1,
+                    value: value || 0,
+                    test_event_code: window.META_TEST_EVENT_CODE
+                })
+            });
+            
+            const result = await response.json();
+            console.log('✅ AddToCart tracked to Meta', result);
+            return result;
+        } catch (error) {
+            console.error('AddToCart tracking error:', error);
+            throw error;
+        }
+    }
+
+    // Track InitiateCheckout Event to Meta (Delivery address entry)
+    async function trackMetaInitiateCheckout(formData, quantity, value) {
+        try {
+            const response = await fetch('/api/track-initiate-checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    quantity: quantity || 1,
+                    value: value || 0,
+                    test_event_code: window.META_TEST_EVENT_CODE
+                })
+            });
+            
+            const result = await response.json();
+            console.log('✅ InitiateCheckout tracked to Meta', result);
+            return result;
+        } catch (error) {
+            console.error('InitiateCheckout tracking error:', error);
+            throw error;
+        }
+    }
 
     // Helper function to submit order details in background
     // Track Lead Event to Meta (form submission)

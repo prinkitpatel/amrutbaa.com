@@ -832,6 +832,221 @@ export default {
       }
     }
 
+    // Track ViewContent (CTA click / modal open)
+    if (url.pathname === '/api/track-view' && request.method === 'POST') {
+      try {
+        if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Meta credentials not configured' 
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const data = await request.json();
+        const { test_event_code } = data;
+
+        const metaPayload = {
+          data: [
+            {
+              event_name: 'ViewContent',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: `view_${Date.now()}`,
+              event_source_url: getEventSourceUrl(request),
+              action_source: 'website',
+              custom_data: {
+                currency: 'INR',
+                value: 299,
+                content_name: 'Amrut Baa Chilly Garlic Chutney',
+                content_type: 'product',
+                content_id: 'AMB-CGC-100G'
+              }
+            }
+          ]
+        };
+
+        if (test_event_code) {
+          metaPayload.test_event_code = test_event_code;
+        }
+
+        const metaResponse = await fetch(
+          `https://graph.facebook.com/v19.0/${env.META_DATASET_ID}/events?access_token=${env.META_ACCESS_TOKEN}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metaPayload)
+          }
+        );
+
+        const metaResult = await metaResponse.json();
+        console.log('ViewContent tracked:', metaResult);
+
+        return new Response(JSON.stringify({ 
+          success: true,
+          message: 'ViewContent tracked successfully',
+          event_id: `view_${Date.now()}`
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error('Track view error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Track AddToCart (Jar quantity selected)
+    if (url.pathname === '/api/track-addtocart' && request.method === 'POST') {
+      try {
+        if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Meta credentials not configured' 
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const data = await request.json();
+        const { quantity, value, test_event_code } = data;
+
+        const metaPayload = {
+          data: [
+            {
+              event_name: 'AddToCart',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: `addtocart_${Date.now()}`,
+              event_source_url: getEventSourceUrl(request),
+              action_source: 'website',
+              custom_data: {
+                currency: 'INR',
+                value: Number(value) || 0,
+                content_name: 'Amrut Baa Chilly Garlic Chutney',
+                content_type: 'product',
+                content_id: 'AMB-CGC-100G',
+                num_items: Number(quantity) || 1
+              }
+            }
+          ]
+        };
+
+        if (test_event_code) {
+          metaPayload.test_event_code = test_event_code;
+        }
+
+        const metaResponse = await fetch(
+          `https://graph.facebook.com/v19.0/${env.META_DATASET_ID}/events?access_token=${env.META_ACCESS_TOKEN}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metaPayload)
+          }
+        );
+
+        const metaResult = await metaResponse.json();
+        console.log('AddToCart tracked:', metaResult);
+
+        return new Response(JSON.stringify({ 
+          success: true,
+          message: 'AddToCart tracked successfully',
+          event_id: `addtocart_${Date.now()}`
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error('Track addtocart error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Track InitiateCheckout (Delivery address entry)
+    if (url.pathname === '/api/track-initiate-checkout' && request.method === 'POST') {
+      try {
+        if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
+          return new Response(JSON.stringify({ 
+            success: false,
+            error: 'Meta credentials not configured' 
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const data = await request.json();
+        const { quantity, value, test_event_code } = data;
+
+        const metaPayload = {
+          data: [
+            {
+              event_name: 'InitiateCheckout',
+              event_time: Math.floor(Date.now() / 1000),
+              event_id: `checkout_${Date.now()}`,
+              event_source_url: getEventSourceUrl(request),
+              action_source: 'website',
+              custom_data: {
+                currency: 'INR',
+                value: Number(value) || 0,
+                content_name: 'Amrut Baa Chilly Garlic Chutney',
+                content_type: 'product',
+                content_id: 'AMB-CGC-100G',
+                num_items: Number(quantity) || 1
+              }
+            }
+          ]
+        };
+
+        if (test_event_code) {
+          metaPayload.test_event_code = test_event_code;
+        }
+
+        const metaResponse = await fetch(
+          `https://graph.facebook.com/v19.0/${env.META_DATASET_ID}/events?access_token=${env.META_ACCESS_TOKEN}`,
+          {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(metaPayload)
+          }
+        );
+
+        const metaResult = await metaResponse.json();
+        console.log('InitiateCheckout tracked:', metaResult);
+
+        return new Response(JSON.stringify({ 
+          success: true,
+          message: 'InitiateCheckout tracked successfully',
+          event_id: `checkout_${Date.now()}`
+        }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        console.error('Track initiate checkout error:', error);
+        return new Response(JSON.stringify({ 
+          success: false,
+          error: error.message 
+        }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
     // Health check
     if (url.pathname === '/api/health') {
       return new Response(JSON.stringify({ 
