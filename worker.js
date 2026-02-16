@@ -846,7 +846,13 @@ export default {
         }
 
         const data = await request.json();
-        const { test_event_code } = data;
+        const { email, phone, test_event_code } = data;
+
+        // Hash PII if provided
+        const [em, ph] = await Promise.all([
+          email ? hashPII(email) : Promise.resolve(null),
+          phone ? hashPII(phone) : Promise.resolve(null)
+        ]);
 
         const metaPayload = {
           data: [
@@ -856,6 +862,10 @@ export default {
               event_id: `view_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
+              user_data: {
+                em: em || undefined,
+                ph: ph || undefined
+              },
               custom_data: {
                 currency: 'INR',
                 value: 299,
@@ -917,7 +927,13 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, test_event_code } = data;
+        const { quantity, value, email, phone, test_event_code } = data;
+
+        // Hash PII if provided
+        const [em, ph] = await Promise.all([
+          email ? hashPII(email) : Promise.resolve(null),
+          phone ? hashPII(phone) : Promise.resolve(null)
+        ]);
 
         const metaPayload = {
           data: [
@@ -927,6 +943,10 @@ export default {
               event_id: `addtocart_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
+              user_data: {
+                em: em || undefined,
+                ph: ph || undefined
+              },
               custom_data: {
                 currency: 'INR',
                 value: Number(value) || 0,
@@ -989,7 +1009,13 @@ export default {
         }
 
         const data = await request.json();
-        const { quantity, value, test_event_code } = data;
+        const { quantity, value, email, phone, test_event_code } = data;
+
+        // Hash PII if provided
+        const [em, ph] = await Promise.all([
+          email ? hashPII(email) : Promise.resolve(null),
+          phone ? hashPII(phone) : Promise.resolve(null)
+        ]);
 
         const metaPayload = {
           data: [
@@ -999,6 +1025,10 @@ export default {
               event_id: `checkout_${Date.now()}`,
               event_source_url: getEventSourceUrl(request),
               action_source: 'website',
+              user_data: {
+                em: em || undefined,
+                ph: ph || undefined
+              },
               custom_data: {
                 currency: 'INR',
                 value: Number(value) || 0,

@@ -1207,7 +1207,8 @@ function initOrderModal() {
         document.addEventListener('keydown', handleModalKeydown);
         
         // Track ViewContent event (CTA click / modal open)
-        trackMetaViewContent().catch(err => console.warn('Meta ViewContent tracking failed:', err));
+        const savedPhone = localStorage.getItem('amrutbaa_phone');
+        trackMetaViewContent(savedPhone).catch(err => console.warn('Meta ViewContent tracking failed:', err));
 
         // Restore phone from localStorage if exists
         const savedPhone = localStorage.getItem('amrutbaa_phone');
@@ -1906,12 +1907,13 @@ function initOrderModal() {
 
     // Helper function to submit order details in background
     // Track ViewContent Event to Meta (CTA click / modal open)
-    async function trackMetaViewContent() {
+    async function trackMetaViewContent(phone) {
         try {
             const response = await fetch('/api/track-view', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    phone: phone || '',
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1934,6 +1936,8 @@ function initOrderModal() {
                 body: JSON.stringify({
                     quantity: quantity || 1,
                     value: value || 0,
+                    email: formData?.email || '',
+                    phone: formData?.phone || '',
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
@@ -1956,6 +1960,8 @@ function initOrderModal() {
                 body: JSON.stringify({
                     quantity: quantity || 1,
                     value: value || 0,
+                    email: formData?.email || '',
+                    phone: formData?.phone || '',
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
