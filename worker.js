@@ -633,7 +633,6 @@ export default {
           });
         }
 
-        const data = await request.json();
         const { name, email, phone, quantity, postcode, city, test_event_code } = await request.json();
 
         if (!email && !phone) {
