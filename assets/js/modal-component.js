@@ -952,12 +952,6 @@ function initOrderModal() {
         };
     }
 
-    function normalizeQuantity(value) {
-        const parsed = parseInt(value, 10);
-        if (Number.isNaN(parsed)) return 1;
-        return Math.min(10, Math.max(1, parsed));
-    }
-
     function getSelectedQuantity() {
         const parsed = parseInt(quantityInput?.value, 10);
         if (Number.isNaN(parsed)) return null;
@@ -1545,8 +1539,38 @@ function initOrderModal() {
 
                 const codResult = await codOrderResponse.json();
 
-                // Track Purchase event to Meta for COD
-                const codOrderId = `COD-${Date.now()}`;
+                // Track Purchase event to GA4 for COD with payment_method
+                window.dataLayer = window.dataLayer || [];
+                dataLayer.push({
+                    'event': 'purchase',
+                    'payment_method': 'cod',
+                    'ecommerce': {
+                        'transaction_id': codResult.order_id || `COD-${Date.now()}`,
+                        'value': totalAmount,
+                        'tax': 0,
+                        'shipping': 0,
+                        'currency': 'INR',
+                        'coupon': '',
+                        'items': [{
+                            'item_id': 'amrutbaa-chutney',
+                            'item_name': 'Amrutbaa Chilly Garlic Chutney',
+                            'item_category': 'Condiment',
+                            'item_brand': 'Amrut Baa',
+                            'price': pricePerJar,
+                            'quantity': formData.quantity
+                        }]
+                    },
+                    'order_id': codResult.order_id || `COD-${Date.now()}`,
+                    'payment_id': codResult.shipment_id || '',
+                    'customer_email': formData.email,
+                    'customer_phone': formData.phone,
+                    'customer_city': formData.city,
+                    'customer_state': formData.state,
+                    'shipping_pincode': formData.pincode
+                });
+
+                // Track Purchase event to Meta for COD with payment_method
+                const codOrderId = codResult.order_id || `COD-${Date.now()}`;
                 trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => {});
 
                 // Update success message
@@ -1688,11 +1712,11 @@ function initOrderModal() {
                         const verifyResult = await verifyResponse.json();
 
                         if (verifyResult.success) {
-                            // 🎯 CRITICAL: Track Purchase (Conversion Event)
+                            // 🎯 CRITICAL: Track Purchase (Conversion Event) with payment_method
                             window.dataLayer = window.dataLayer || [];
                             dataLayer.push({
                                 'event': 'purchase',
-                                'payment_type': 'razorpay',
+                                'payment_method': 'online',
                                 'ecommerce': {
                                     'transaction_id': response.razorpay_order_id,
                                     'value': totalAmount,
@@ -1714,7 +1738,8 @@ function initOrderModal() {
                                 'customer_email': formData.email,
                                 'customer_phone': formData.phone,
                                 'customer_city': formData.city,
-                                'customer_state': formData.state
+                                'customer_state': formData.state,
+                                'shipping_pincode': formData.pincode
                             });
                             
                             // Create Shiprocket shipment
@@ -2078,6 +2103,10 @@ function initOrderModal() {
         try {
             const eventId = generateEventId();
             
+            // Determine payment method from current form state
+            const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
+            const paymentMethod = paymentMethodRadio ? paymentMethodRadio.value : 'unknown';
+            
             // Fire Meta Pixel event
             if (typeof fbq === 'function') {
                 fbq('track', 'Purchase', {
@@ -2101,6 +2130,7 @@ function initOrderModal() {
                     amount: amount,
                     quantity: formData.quantity || 1,
                     payment_id: paymentId,
+                    payment_method: paymentMethod,
                     postcode: formData.pincode || '',
                     city: formData.city || '',
                     fbc: getCookie('_fbc'),
