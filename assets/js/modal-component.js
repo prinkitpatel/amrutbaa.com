@@ -1741,79 +1741,21 @@ function initOrderModal() {
                                 'customer_state': formData.state,
                                 'shipping_pincode': formData.pincode
                             });
-                            
-                            // Create Shiprocket shipment
-                            let trackingInfo = null;
-                            try {
-                                const shipmentResponse = await fetch('/api/create-shipment', {
-                                    method: 'POST',
-                                    headers: { 'Content-Type': 'application/json' },
-                                    body: JSON.stringify({
-                                        order_id: response.razorpay_order_id,
-                                        payment_id: response.razorpay_payment_id,
-                                        customer_name: formData.name,
-                                        customer_email: formData.email,
-                                        customer_phone: formData.phone,
-                                        address1: formData.address1,
-                                        address2: formData.address2,
-                                        city: formData.city,
-                                        state: formData.state,
-                                        pincode: formData.pincode,
-                                        quantity: formData.quantity,
-                                        amount: totalAmount,
-                                        unit_price: pricePerJar,
-                                        base_total: pricing.baseTotal,
-                                        discount: pricing.discount,
-                                        offer_label: pricing.offer ? pricing.offer.label : ''
-                                    })
-                                });
-
-                                if (shipmentResponse.ok) {
-                                    trackingInfo = await shipmentResponse.json();
-                                }
-                            } catch (shipmentError) {
-                                // Don't fail the whole flow - payment succeeded
-                            }
 
                             // Update success message with ALL order details
                             document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
                             document.getElementById('order-amount').textContent = `₹${totalAmount}`;
                             
-                            if (trackingInfo?.awb_code && trackingInfo.awb_code.trim() !== '') {
-                                // Courier assigned - show tracking
-                                document.getElementById('tracking-display').textContent = trackingInfo.awb_code;
-                                document.getElementById('courier-display').textContent = trackingInfo.courier_name || 'Processing';
-                                document.getElementById('tracking-section').style.display = 'block';
-                                
-                                const trackBtn = document.getElementById('track-order-btn');
-                                if (trackBtn) {
-                                    trackBtn.style.display = 'block';
-                                    trackBtn.onclick = () => {
-                                        window.open(`/tracking.html?awb=${trackingInfo.awb_code}`, '_blank');
-                                    };
-                                }
-                            } else {
-                                // Courier not yet assigned - show message
-                                document.getElementById('tracking-section').style.display = 'none';
-                                const trackBtn = document.getElementById('track-order-btn');
-                                if (trackBtn) {
-                                    trackBtn.style.display = 'block';
-                                    trackBtn.textContent = '📧 Tracking Details Coming Soon';
-                                    trackBtn.style.background = '#FF9800';
-                                    trackBtn.disabled = true;
-                                    trackBtn.title = 'Courier will be assigned within 2-4 hours. Check email for tracking.';
-                                }
-                            }
-
                             // Show success message IMMEDIATELY
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none !important';
                             registrationForm.hidden = true;
 
-                            // Track Purchase event to Meta (Razorpay)
-                            trackMetaPurchase(formData, totalAmount, response.razorpay_payment_id).catch(() => {});
-
-                            // Submit order details to n8n in background (doesn't block success display)
+                            // ✅ Track Purchase + Create Shipment + Submit to n8n (all in ONE call)
+                            // This single n8n webhook call will handle:
+                            // 1. Track Purchase to Meta (Conversions API)
+                            // 2. Create Shiprocket shipment (no duplicate)
+                            // 3. Send order confirmation email
                             submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
@@ -1822,7 +1764,22 @@ function initOrderModal() {
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null
-                            }).catch(() => {});
+                            }, response.razorpay_payment_id, totalAmount).catch(() => {});
+                            
+                            // Let n8n handle tracking display after shipment creation
+                            setTimeout(() => {
+                                // Attempt to fetch tracking info from n8n response
+                                // For now, show message that tracking details coming soon
+                                const trackBtn = document.getElementById('track-order-btn');
+                                if (trackBtn) {
+                                    trackBtn.style.display = 'block';
+                                    trackBtn.textContent = '📧 Tracking Details Coming Soon';
+                                    trackBtn.style.background = '#FF9800';
+                                    trackBtn.disabled = true;
+                                    trackBtn.title = 'Courier will be assigned within 2-4 hours. Check email for tracking.';
+                                }
+                                document.getElementById('tracking-section').style.display = 'none';
+                            }, 500);
 
                             // Close modal after delay
                             setTimeout(() => {
@@ -2107,19 +2064,8 @@ function initOrderModal() {
             const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
             const paymentMethod = paymentMethodRadio ? paymentMethodRadio.value : 'unknown';
             
-            // Fire Meta Pixel event
-            if (typeof fbq === 'function') {
-                fbq('track', 'Purchase', {
-                    content_name: 'Amrut Baa Chutney',
-                    content_type: 'product',
-                    content_ids: ['AMB-CGC-100G'],
-                    currency: 'INR',
-                    value: amount || 0,
-                    num_items: formData.quantity || 1,
-                    transaction_id: paymentId
-                }, { eventID: eventId });
-            }
-            
+            // ✅ ONLY using Conversions API (server-side) to avoid duplicate tracking
+            // Meta will handle deduplication via event_id
             const response = await fetch('/api/track-purchase', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2153,13 +2099,23 @@ function initOrderModal() {
         }
     }
 
-    async function submitOrderDetails(orderData) {
+    async function submitOrderDetails(orderData, paymentId, totalAmount) {
         try {
             // Send as JSON POST - this runs in background, doesn't block UI
+            // n8n will handle:
+            // 1. Track Purchase to Meta (Conversions API) using event_id for deduplication
+            // 2. Create Shiprocket shipment
+            // 3. Send order confirmation email
+            const eventId = generateEventId();
+            
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(orderData)
+                body: JSON.stringify({
+                    ...orderData,
+                    event_id: eventId,
+                    source: 'frontend_checkout'
+                })
             });
 
             if (response.ok) {
