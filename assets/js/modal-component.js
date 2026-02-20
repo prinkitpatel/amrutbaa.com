@@ -1609,14 +1609,19 @@ function initOrderModal() {
                     courier_name: null
                 }).catch(() => {});
 
-                // Close modal after delay
+                // Redirect to thank-you page after 2 seconds
                 setTimeout(() => {
-                    closeModal();
-                    registrationForm.style.display = 'block';
-                    registrationForm.hidden = false;
-                    successMessage.classList.remove('show');
-                    registrationForm.reset();
-                }, 4000);
+                    const params = new URLSearchParams({
+                        order: codOrderId,
+                        amount: totalAmount,
+                        method: 'cod',
+                        email: formData.email || '',
+                        city: formData.city || '',
+                        address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                        event_id: generateEventId()
+                    });
+                    window.location.href = `/thank-you.html?${params.toString()}`;
+                }, 2000);
 
                 return;
             }
@@ -1806,23 +1811,19 @@ function initOrderModal() {
                                 document.getElementById('tracking-section').style.display = 'none';
                             }, 500);
 
-                            // Close modal after delay
+                            // Redirect to thank-you page after 2 seconds
                             setTimeout(() => {
-                                closeModal();
-                                registrationForm.style.display = 'block';
-                                registrationForm.reset();
-                                successMessage.classList.remove('show');
-                                setStep(1);
-                                submitBtn.textContent = originalText;
-                                submitBtn.disabled = false;
-                                submitBtn.classList.remove('is-loading');
-                                submitBtn.setAttribute('aria-busy', 'false');
-                                // Clear tracking info
-                                const trackingElement = document.getElementById('tracking-info');
-                                if (trackingElement) {
-                                    trackingElement.innerHTML = '';
-                                    trackingElement.style.display = 'none';
-                                }
+                                const params = new URLSearchParams({
+                                    order: response.razorpay_order_id,
+                                    amount: totalAmount,
+                                    method: 'online',
+                                    email: formData.email || '',
+                                    city: formData.city || '',
+                                    address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                                    event_id: generateEventId()
+                                });
+                                window.location.href = `/thank-you.html?${params.toString()}`;
+                            }, 2000);
                             }, 5000);
                         } else {
                             alert('Payment verification failed. Please contact support.');
