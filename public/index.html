@@ -2,15 +2,17 @@
 <html lang="en">
 
 <head>
-    <!-- Google Tag Manager -->
-    <script>(function (w, d, s, l, i) {
-            w[l] = w[l] || []; w[l].push({
-                'gtm.start':
-                    new Date().getTime(), event: 'gtm.js'
-            }); var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                    'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-        })(window, document, 'script', 'dataLayer', 'GTM-53CBVFF7');</script>
+    <!-- Google Tag Manager (moved to async) -->
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        window.setTimeout(function () {
+            var s = document.createElement('script');
+            s.src = 'https://www.googletagmanager.com/gtm.js?id=GTM-53CBVFF7&l=dataLayer';
+            s.async = true;
+            document.head.appendChild(s);
+            window.dataLayer.push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+        }, 1);
+    </script>
     <!-- End Google Tag Manager -->
 
     <meta charset="UTF-8">
@@ -56,33 +58,53 @@
         fetchpriority="high">
     <link rel="preload" as="image" href="assets/images/5-logos.webp" media="(min-width: 601px)" fetchpriority="high">
 
-    <!-- Fonts Preconnect -->
+    <!-- Fonts: Non-blocking via JavaScript injection -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
-        rel="stylesheet">
+    <script>
+        (function () {
+            var l = document.createElement('link');
+            l.rel = 'stylesheet';
+            l.href = 'https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap';
+            l.media = 'print';
+            l.onload = function () { this.media = 'all'; };
+            document.head.appendChild(l);
+        })();
+    </script>
+    <noscript>
+        <link
+            href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
+            rel="stylesheet">
+    </noscript>
 
-    <!-- Core Styles -->
+    <!-- Core Styles (async - non-render-blocking) -->
     <link rel="stylesheet" href="styles/main.min.css" media="print" onload="this.media='all'">
     <noscript>
         <link rel="stylesheet" href="styles/main.min.css">
     </noscript>
 
+
+    <!-- Critical CSS: Inlined for zero-render-block LCP -->
     <style>
+        /* === CSS Variables === */
         :root {
             --maroon: #6B1C23;
             --deep-maroon: #4D0E13;
+            --dark-purple: #3D1F47;
             --golden: #C9A961;
             --golden-light: #E6D5B8;
             --cream: #FAF7F2;
             --warm-white: #FFFCF7;
             --charcoal: #1A1A1A;
-            --font-display: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
+            --gray: #666666;
+            --font-display: 'Playfair Display', Georgia, serif;
+            --font-body: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
-        * {
+        /* === Critical Reset === */
+        *,
+        *::before,
+        *::after {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
@@ -101,11 +123,12 @@
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 0 2rem;
         }
 
+        /* === Critical Hero === */
         .hero {
             min-height: 100vh;
             background: linear-gradient(135deg, #7A0000 0%, #8B0000 50%, #6B0000 100%);
@@ -115,73 +138,302 @@
             position: relative;
             padding: 4rem 0;
             color: white;
+        }
+
+        .hero-content-center {
+            max-width: 900px;
             text-align: center;
+            color: var(--cream);
+        }
+
+        .hero-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            font-weight: 900;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            color: var(--golden);
+            margin-bottom: 1rem;
+            padding: 0.5rem 1rem;
+            border: 1px solid rgba(201, 169, 97, 0.5);
+            border-radius: 50px;
+            background: rgba(201, 169, 97, 0.1);
+        }
+
+        .hero-headline {
+            margin-bottom: 1.2rem;
+        }
+
+        .hero-headline h1 {
+            font-family: var(--font-display);
+            font-size: clamp(1.8rem, 5vw, 4.8rem);
+            font-weight: 800;
+            line-height: 1.2;
+            margin-bottom: 1.5rem;
+            color: var(--golden-light);
+            letter-spacing: -1px;
+            text-shadow: 3px 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .hero-subheadline {
+            font-size: 1.1rem;
+            color: var(--cream);
+            margin-bottom: 2.5rem;
+            line-height: 1.6;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .hero-image-wrapper {
-            position: relative;
             margin: 2rem auto;
+            position: relative;
             max-width: 600px;
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
-            background: #4A0000;
         }
 
         .hero-image-wrapper img {
             width: 100%;
+            max-height: 550px;
             height: auto;
             display: block;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
         }
 
+        .hero-features {
+            list-style: none;
+            display: flex;
+            justify-content: center;
+            gap: 1.8rem;
+            margin: 0 0 2.5rem;
+            padding: 0;
+            flex-wrap: wrap;
+        }
+
+        .feature-item {
+            font-size: 1rem;
+            color: var(--golden-light);
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .feature-item::before {
+            content: '✓';
+            color: var(--golden);
+            font-weight: 700;
+        }
+
+        .hero-trust-badges {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2.5rem;
+            margin: 1.5rem auto 1rem;
+            padding: 1.5rem;
+            flex-wrap: wrap;
+        }
+
+        .spots-counter {
+            display: none;
+        }
+
+        .batch-notice {
+            font-size: 0.82rem;
+            color: var(--golden-light);
+            line-height: 1.5;
+            margin-top: 1rem;
+        }
+
+        /* === Critical CTA === */
         .cta-button {
-            background: var(--golden);
-            color: var(--deep-maroon);
-            border: none;
-            padding: 1.5rem 3rem;
-            font-size: 1.25rem;
+            background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+            color: var(--charcoal);
+            border: 3px solid var(--golden);
+            padding: 1.4rem 3.5rem;
+            font-size: 1.2rem;
             font-weight: 800;
-            border-radius: 50px;
+            border-radius: 8px;
             cursor: pointer;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s;
+            display: flex;
+            flex-direction: column;
+            gap: 0.4rem;
+            align-items: center;
+            justify-content: center;
+            max-width: 400px;
+            width: 100%;
+            margin: 2rem auto;
         }
 
+        .cta-text {
+            font-size: 1.1rem;
+            letter-spacing: 0.5px;
+        }
+
+        .cta-subtext {
+            font-size: 0.85rem;
+            font-weight: 600;
+            opacity: 0.95;
+        }
+
+        /* === Sticky CTA Bar === */
+        .sticky-cta-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #2E0C3A 0%, #3B1148 50%, #240829 100%);
+            border-top: 4px solid var(--golden);
+            padding: 1rem 1.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 1.5rem;
+            z-index: 150;
+        }
+
+        .timer-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .timer-label {
+            font-size: 0.72rem;
+            color: var(--golden);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 900;
+            white-space: nowrap;
+        }
+
+        .timer-display {
+            font-family: 'Courier New', monospace;
+            font-size: 2rem;
+            font-weight: 900;
+            color: #FFD700;
+            letter-spacing: 3px;
+            min-width: 140px;
+        }
+
+        .price-anchor {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.25rem;
+            padding: 0 1.5rem;
+            border-left: 2px solid rgba(201, 169, 97, 0.3);
+            border-right: 2px solid rgba(201, 169, 97, 0.3);
+        }
+
+        .price-value {
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--golden);
+            line-height: 1;
+        }
+
+        .price-label {
+            font-size: 0.65rem;
+            color: var(--golden-light);
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 600;
+        }
+
+        .price-compact {
+            display: none;
+        }
+
+        .cta-button-sticky {
+            background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
+            color: var(--charcoal);
+            border: 3px solid var(--golden);
+            padding: 0.85rem 1.8rem;
+            font-size: 0.95rem;
+            font-weight: 800;
+            border-radius: 10px;
+            cursor: pointer;
+            white-space: nowrap;
+            flex-shrink: 0;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        /* === Mobile Critical === */
         @media (max-width: 768px) {
             .hero {
-                padding: 2rem 1rem;
-            }
-
-            .hero-headline h1 {
-                font-size: 1.75rem;
+                padding: 1rem 0;
             }
 
             .container {
-                padding: 0 1rem;
+                padding: 0 1.25rem;
+            }
+
+            .hero-headline h1 {
+                font-size: clamp(1.6rem, 7vw, 2.6rem);
+                letter-spacing: 0;
+            }
+
+            .hero-features {
+                gap: 0.6rem;
+                justify-content: flex-start;
+            }
+
+            .cta-button {
+                padding: 0.95rem 1.8rem;
+                font-size: 0.95rem;
+                max-width: 320px;
+            }
+
+            .timer-display {
+                font-size: 1.4rem;
+                min-width: auto;
+            }
+
+            .price-label,
+            .timer-label {
+                display: none;
+            }
+
+            .price-compact {
+                display: block;
+                font-size: 1.1rem;
+                font-weight: 900;
+                color: var(--golden);
+            }
+
+            .cta-button-sticky {
+                padding: 0.75rem 1.25rem;
+                font-size: 0.9rem;
             }
         }
     </style>
 
 
 
-    <!-- Meta Pixel Code -->
+    <!-- Meta Pixel Code: Deferred to not block LCP -->
     <script>
-        !function (f, b, e, v, n, t, s) {
-            if (f.fbq) return; n = f.fbq = function () {
-                n.callMethod ?
-                    n.callMethod.apply(n, arguments) : n.queue.push(arguments)
-            };
-            if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-            n.queue = []; t = b.createElement(e); t.async = !0;
-            t.src = v; s = b.getElementsByTagName(e)[0];
-            s.parentNode.insertBefore(t, s)
-        }(window, document, 'script',
-            'https://connect.facebook.net/en_US/fbevents.js');
-        fbq('init', '2736116190056650');
-        fbq('track', 'PageView');
+        window.addEventListener('load', function () {
+            !function (f, b, e, v, n, t, s) {
+                if (f.fbq) return; n = f.fbq = function () {
+                    n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments)
+                };
+                if (!f._fbq) f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
+                n.queue = []; t = b.createElement(e); t.async = !0;
+                t.src = v; s = b.getElementsByTagName(e)[0];
+                s.parentNode.insertBefore(t, s);
+                fbq('init', '2736116190056650');
+                fbq('track', 'PageView');
+            }(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
+        }, { once: true });
     </script>
-    <noscript><img height="1" width="1" style="display:none"
-            src="https://www.facebook.com/tr?id=2736116190056650&ev=PageView&noscript=1" /></noscript>
     <!-- End Meta Pixel Code -->
 
 
