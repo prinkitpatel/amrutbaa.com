@@ -51,29 +51,41 @@
         })();
     </script>
 
-    <!-- Fonts -->
+    <!-- Preload Critical LCP Assets -->
+    <link rel="preload" as="image" href="assets/images/5-logos-mobile.webp" media="(max-width: 600px)"
+        fetchpriority="high">
+    <link rel="preload" as="image" href="assets/images/5-logos.webp" media="(min-width: 601px)" fetchpriority="high">
+
+    <!-- Fonts Preconnect -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
         href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=Inter:wght@400;500;600;700&display=swap"
         rel="stylesheet">
+
     <!-- Core Styles -->
-    <link rel="stylesheet" href="styles/main.min.css">
+    <link rel="stylesheet" href="styles/main.min.css" media="print" onload="this.media='all'">
+    <noscript>
+        <link rel="stylesheet" href="styles/main.min.css">
+    </noscript>
 
     <style>
+        :root {
+            --maroon: #6B1C23;
+            --deep-maroon: #4D0E13;
+            --golden: #C9A961;
+            --golden-light: #E6D5B8;
+            --cream: #FAF7F2;
+            --warm-white: #FFFCF7;
+            --charcoal: #1A1A1A;
+            --font-display: 'Playfair Display', serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --maroon: #8B0000;
-            --deep-maroon: #4A0000;
-            --golden: #D4AF37;
-            --golden-light: #F4E4C1;
-            --cream: #FFF9F0;
-            --charcoal: #2A1810;
-            --font-display: 'Playfair Display', serif;
-            --font-body: 'Inter', sans-serif;
         }
 
         html {
@@ -83,22 +95,15 @@
         body {
             font-family: var(--font-body);
             color: var(--charcoal);
-            background: var(--cream);
+            background: var(--warm-white);
             overflow-x: hidden;
-            /* padding for sticky footer CTA */
             padding-bottom: 120px;
         }
 
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
         }
 
         .hero {
@@ -109,6 +114,51 @@
             justify-content: center;
             position: relative;
             padding: 4rem 0;
+            color: white;
+            text-align: center;
+        }
+
+        .hero-image-wrapper {
+            position: relative;
+            margin: 2rem auto;
+            max-width: 600px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: #4A0000;
+        }
+
+        .hero-image-wrapper img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .cta-button {
+            background: var(--golden);
+            color: var(--deep-maroon);
+            border: none;
+            padding: 1.5rem 3rem;
+            font-size: 1.25rem;
+            font-weight: 800;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                padding: 2rem 1rem;
+            }
+
+            .hero-headline h1 {
+                font-size: 1.75rem;
+            }
+
+            .container {
+                padding: 0 1rem;
+            }
         }
     </style>
 
@@ -158,8 +208,12 @@
                 </div>
 
                 <div class="hero-image-wrapper">
-                    <img src="assets/images/5-logos-opt.jpg" alt="Amrutbaa featured in top outlets"
-                        fetchpriority="high">
+                    <picture>
+                        <source media="(max-width: 600px)" srcset="assets/images/5-logos-mobile.webp" type="image/webp">
+                        <source srcset="assets/images/5-logos.webp" type="image/webp">
+                        <img src="assets/images/5-logos-opt.jpg" alt="Amrutbaa featured in top outlets" width="600"
+                            height="400" fetchpriority="high">
+                    </picture>
                     <!-- Veg logo overlay on top-left of hero image -->
                     <div
                         style="position:absolute; top:16px; left:16px; width:56px; height:56px; border-radius:8px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 6px 16px rgba(0,0,0,0.15); z-index:5;">
@@ -190,13 +244,22 @@
                 <!-- Trust badges row -->
                 <div class="hero-trust-badges"
                     style="display:flex; justify-content:center; align-items:center; gap:2.5rem; margin:1.5rem auto 1rem; padding:1.5rem 2.5rem; max-width:620px; flex-wrap:wrap; background:rgba(255,255,255,0.02); border-radius:14px;">
-                    <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" loading="lazy"
-                        style="width:117px; height:117px; object-fit:contain; filter:drop-shadow(0 3px 10px rgba(0,0,0,0.1)); transition:transform 0.2s ease;"
-                        onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
-                    <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png"
-                        alt="FSSAI Certified" loading="lazy"
-                        style="width:120px; height:120px; object-fit:contain; filter:drop-shadow(0 3px 10px rgba(0,0,0,0.1)); transition:transform 0.2s ease;"
-                        onmouseover="this.style.transform='scale(1.08)'" onmouseout="this.style.transform='scale(1)'" />
+                    <picture>
+                        <source srcset="assets/images/money-back-seal.webp" type="image/webp">
+                        <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" loading="lazy"
+                            width="117" height="117"
+                            style="width:117px; height:117px; object-fit:contain; filter:drop-shadow(0 3px 10px rgba(0,0,0,0.1)); transition:transform 0.2s ease;"
+                            onmouseover="this.style.transform='scale(1.08)'"
+                            onmouseout="this.style.transform='scale(1)'" />
+                    </picture>
+                    <picture>
+                        <source srcset="assets/images/fssai-logo.webp" type="image/webp">
+                        <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png"
+                            alt="FSSAI Certified" loading="lazy" width="120" height="120"
+                            style="width:120px; height:120px; object-fit:contain; filter:drop-shadow(0 3px 10px rgba(0,0,0,0.1)); transition:transform 0.2s ease;"
+                            onmouseover="this.style.transform='scale(1.08)'"
+                            onmouseout="this.style.transform='scale(1)'" />
+                    </picture>
 
                     <span
                         style="width:54px; height:54px; border-radius:7px; border:3px solid #2E7D32; background:#fff; display:flex; align-items:center; justify-content:center; box-shadow:0 3px 10px rgba(0,0,0,0.1); transition:transform 0.2s ease;"
@@ -296,8 +359,11 @@
                     <!-- Story Card 1: SIDE -->
                     <div class="story-card" data-story="side">
                         <div class="story-image-wrapper">
-                            <img src="assets/images/roti-chutney-opt.jpg" alt="As a SIDE - Spread on Paratha"
-                                class="story-image" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/roti-chutney.webp" type="image/webp">
+                                <img src="assets/images/roti-chutney-opt.jpg" alt="As a SIDE - Spread on Paratha"
+                                    width="400" height="300" class="story-image" loading="lazy">
+                            </picture>
                             <div class="story-badge">The Zero-Prep Spread</div>
                             <div class="story-overlay"></div>
                         </div>
@@ -319,8 +385,11 @@
                     <!-- Story Card 2: TOP -->
                     <div class="story-card" data-story="top">
                         <div class="story-image-wrapper">
-                            <img src="assets/images/dal-chawal-opt.jpg" alt="As a TOP - Tadka in Dal"
-                                class="story-image" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/dal-chawal.webp" type="image/webp">
+                                <img src="assets/images/dal-chawal-opt.jpg" alt="As a TOP - Tadka in Dal" width="400"
+                                    height="300" class="story-image" loading="lazy">
+                            </picture>
                             <div class="story-badge">The Instant Tadka</div>
                             <div class="story-overlay"></div>
                         </div>
@@ -342,8 +411,11 @@
                     <!-- Story Card 3: BASE -->
                     <div class="story-card" data-story="base">
                         <div class="story-image-wrapper">
-                            <img src="assets/images/hummus-sourdough-opt.jpg" alt="As a BASE - Start your cooking"
-                                class="story-image" loading="lazy">
+                            <picture>
+                                <source srcset="assets/images/hummus-sourdough.webp" type="image/webp">
+                                <img src="assets/images/hummus-sourdough-opt.jpg" alt="As a BASE - Start your cooking"
+                                    width="400" height="300" class="story-image" loading="lazy">
+                            </picture>
                             <div class="story-badge">The Cheat-Code Masala</div>
                             <div class="story-overlay"></div>
                         </div>
@@ -415,8 +487,14 @@
 
                 <article class="journey-beat is-active" id="beat-heritage" data-beat="heritage">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-on-table.jpg" alt="Amrutbaa Ni Chutney served with family meal"
-                            loading="lazy">
+                        <picture>
+                            <source media="(max-width: 600px)" srcset="assets/images/chutney-on-table-mobile.webp"
+                                type="image/webp">
+                            <source srcset="assets/images/chutney-on-table.webp" type="image/webp">
+                            <img src="assets/images/chutney-on-table.jpg"
+                                alt="Amrutbaa Ni Chutney served with family meal" width="800" height="600"
+                                loading="lazy">
+                        </picture>
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
@@ -440,8 +518,12 @@
 
                 <article class="journey-beat" id="beat-ingredients" data-beat="ingredients">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-ingredients-opt.jpg"
-                            alt="Fresh garlic, chillies, and spices for chutney" loading="lazy">
+                        <picture>
+                            <source srcset="assets/images/chutney-ingredients.webp" type="image/webp">
+                            <img src="assets/images/chutney-ingredients-opt.jpg"
+                                alt="Fresh garlic, chillies, and spices for chutney" width="800" height="600"
+                                loading="lazy">
+                        </picture>
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
@@ -458,9 +540,13 @@
                             <div class="flavor-chip">Rock salt<span>Mineral depth, no fillers</span></div>
                         </div>
                         <div style="display:flex; justify-content:center; margin-bottom:1rem;">
-                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png"
-                                alt="FSSAI Certified - Prepared in government-approved facility"
-                                style="width:126px; height:126px; object-fit:contain; opacity:0.9; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            <picture>
+                                <source srcset="assets/images/fssai-logo.webp" type="image/webp">
+                                <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png"
+                                    alt="FSSAI Certified - Prepared in government-approved facility" width="126"
+                                    height="126"
+                                    style="width:126px; height:126px; object-fit:contain; opacity:0.9; filter:drop-shadow(0 2px 6px rgba(0,0,0,0.1));" />
+                            </picture>
                         </div>
                         <div class="journey-cta-row">
                             <button class="journey-cta" id="journeyCtaIngredients">Secure My Jar</button>
@@ -471,8 +557,11 @@
 
                 <article class="journey-beat" id="beat-batch" data-beat="batch">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-with-dal-opt.jpg" alt="Chutney served with comforting dal"
-                            loading="lazy">
+                        <picture>
+                            <source srcset="assets/images/chutney-with-dal.webp" type="image/webp">
+                            <img src="assets/images/chutney-with-dal-opt.jpg" alt="Chutney served with comforting dal"
+                                width="800" height="600" loading="lazy">
+                        </picture>
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
@@ -509,8 +598,11 @@
 
                 <article class="journey-beat" id="beat-register" data-beat="register">
                     <div class="beat-media">
-                        <img src="assets/images/chutney-batch-opt.jpg" alt="Chutney batch preparation"
-                            class="beat-image" loading="lazy">
+                        <picture>
+                            <source srcset="assets/images/chutney-batch.webp" type="image/webp">
+                            <img src="assets/images/chutney-batch-opt.jpg" alt="Chutney batch preparation" width="800"
+                                height="600" class="beat-image" loading="lazy">
+                        </picture>
                         <div class="media-overlay"></div>
                         <div class="grain"></div>
                     </div>
@@ -540,8 +632,11 @@
         <div class="container">
             <div class="promise-content">
                 <div class="promise-seal">
-                    <img src="assets/images/guarantee-seal-opt.jpg" alt="Amrutbaa Guarantee Seal" class="seal-image"
-                        loading="lazy">
+                    <picture>
+                        <source srcset="assets/images/guarantee-seal.webp" type="image/webp">
+                        <img src="assets/images/guarantee-seal-opt.jpg" alt="Amrutbaa Guarantee Seal" class="seal-image"
+                            width="200" height="200" loading="lazy">
+                    </picture>
                 </div>
 
                 <div class="promise-text">
