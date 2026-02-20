@@ -1824,7 +1824,6 @@ function initOrderModal() {
                                 });
                                 window.location.href = `/thank-you.html?${params.toString()}`;
                             }, 2000);
-                            }, 5000);
                         } else {
                             alert('Payment verification failed. Please contact support.');
                             submitBtn.textContent = originalText;
