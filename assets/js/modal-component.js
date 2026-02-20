@@ -8,6 +8,14 @@
  */
 
 function initOrderModal() {
+    // 🔒 CRITICAL: Track processed orders to prevent duplicates (persists across page reloads)
+    const processedOrders = new Set(JSON.parse(sessionStorage.getItem('processedOrders') || '[]'));
+    
+    // Helper to save processed orders
+    const saveProcessedOrders = () => {
+        sessionStorage.setItem('processedOrders', JSON.stringify([...processedOrders]));
+    };
+    
     // Check if modal already exists - if so, reuse it
     const existingModal = document.getElementById('registrationModal');
     if (existingModal) {
@@ -1582,6 +1590,14 @@ function initOrderModal() {
                 registrationForm.style.display = 'none !important';
                 registrationForm.hidden = true;
 
+                // 🔒 Prevent duplicate tracking for same order
+                if (processedOrders.has(codOrderId)) {
+                    console.warn('⚠️ Order already processed:', codOrderId);
+                    return;
+                }
+                processedOrders.add(codOrderId);
+                saveProcessedOrders();
+
                 // Submit order to n8n in background
                 submitOrderDetails({
                     ...formData,
@@ -1756,6 +1772,15 @@ function initOrderModal() {
                             // 1. Track Purchase to Meta (Conversions API)
                             // 2. Create Shiprocket shipment (no duplicate)
                             // 3. Send order confirmation email
+                            
+                            // 🔒 Prevent duplicate tracking for same order
+                            if (processedOrders.has(response.razorpay_payment_id)) {
+                                console.warn('⚠️ Order already processed:', response.razorpay_payment_id);
+                                return;
+                            }
+                            processedOrders.add(response.razorpay_payment_id);
+                            saveProcessedOrders();
+                            
                             submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
