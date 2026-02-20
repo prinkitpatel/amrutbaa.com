@@ -2,15 +2,29 @@
 // AMRUT BAA - Enhanced JavaScript
 // ===============================================
 
+console.log('main.js loaded');
+
 // Initialize everything when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
-    initScrollAnimations();
-    initNavbarEffects();
-    initSmoothScrolling();
-    initParallaxEffects();
-    initCountdownTimer();
-    initModalTriggers();
-});
+function initializeApp() {
+    console.log('initializeApp called');
+    try { initScrollAnimations(); } catch (e) { console.error('initScrollAnimations error:', e); }
+    try { initNavbarEffects(); } catch (e) { console.error('initNavbarEffects error:', e); }
+    try { initSmoothScrolling(); } catch (e) { console.error('initSmoothScrolling error:', e); }
+    try { initCountdownTimer(); } catch (e) { console.error('initCountdownTimer error:', e); }
+    try { initModalTriggers(); } catch (e) { console.error('initModalTriggers error:', e); }
+    try { initTestimonialsCarousel(); } catch (e) { console.error('initTestimonialsCarousel error:', e); }
+    console.log('initializeApp completed');
+}
+
+// If DOM is already loaded (script loaded at end of document)
+if (document.readyState === 'loading') {
+    console.log('DOM still loading, waiting for DOMContentLoaded');
+    document.addEventListener('DOMContentLoaded', initializeApp);
+} else {
+    // DOM is already loaded, initialize immediately
+    console.log('DOM already loaded, initializing immediately');
+    initializeApp();
+}
 
 // ===============================================
 // MODAL TRIGGERS - All CTA buttons open modal
@@ -245,26 +259,8 @@ function initSmoothScrolling() {
 }
 
 // ===============================================
-// PARALLAX EFFECTS
+// UTILITY FUNCTIONS
 // ===============================================
-
-function initParallaxEffects() {
-    window.addEventListener('scroll', () => {
-        const scrolled = window.pageYOffset;
-        
-        // Hero parallax
-        const hero = document.querySelector('.hero');
-        if (hero) {
-            hero.style.transform = `translateY(${scrolled * 0.5}px)`;
-        }
-        
-        // Product image float
-        const productImage = document.querySelector('.product-main');
-        if (productImage && isInViewport(productImage)) {
-            productImage.style.transform = `translateY(${Math.sin(Date.now() / 1000) * 10}px)`;
-        }
-    });
-}
 
 function isInViewport(element) {
     const rect = element.getBoundingClientRect();
@@ -282,3 +278,148 @@ function isInViewport(element) {
 
 // Remove old slot-based system - no limits on weekly batches!
 // Orders are time-based (Sunday deadline), not quantity-based
+
+// ===============================================
+// TESTIMONIALS CAROUSEL
+// ===============================================
+
+function initTestimonialsCarousel() {
+    try {
+        console.log('initTestimonialsCarousel called');
+        
+        // Testimonials data
+        const testimonials = [
+        {
+            stars: 5,
+            quote: "I was ordering Zomato 4 times a week even though I had a functioning kitchen. It felt wasteful. I tried Amrutbaa's chutney once, and suddenly my home cooking tastes restaurant-quality. Now I cook because I want to, not because I have to. That's priceless.",
+            avatar: "AS",
+            author: "Anjali Singh",
+            role: "Tech Manager, Mumbai",
+            category: "Swiggy Guilt"
+        },
+        {
+            stars: 5,
+            quote: "I dreaded the 6 PM cooking rush. Chopping garlic, grinding spices, the endless prep. One spoon of Amrutbaa changes everything—my dal goes from basic to 'what did you add?' in 30 seconds. My family thinks I'm a better cook now. I'm just smarter about my time.",
+            avatar: "RK",
+            author: "Rashmi Krishnan",
+            role: "Mother of Two, Bangalore",
+            category: "Time Saver"
+        },
+        {
+            stars: 5,
+            quote: "I've been checking labels obsessively for 2 years. Most chutneys are packed with sugar and preservatives I can't pronounce. Amrutbaa tastes MORE vibrant than anything I've tried, yet it's 100% clean. My conscience is clear, and my taste buds are dancing.",
+            avatar: "NM",
+            author: "Neha Mehta",
+            role: "Wellness Coach, Delhi",
+            category: "Health First"
+        },
+        {
+            stars: 5,
+            quote: "I was nervous about hosting my in-laws for dinner. Ordered Amrutbaa on a whim. Set it on the table next to my dal, and they literally asked for the name and how much I paid for it. Three days later, they called asking where to order. Best ₹150 I've spent on 'being a host.'",
+            avatar: "VJ",
+            author: "Vikram Joshi",
+            role: "Entrepreneur, Ahmedabad",
+            category: "Party Winner"
+        },
+        {
+            stars: 5,
+            quote: "My mom has been making chutney for 30 years, and even she asked me where I got this. The punch of garlic and the balance of spices is exactly what home-cooked should taste like. I order weekly now.",
+            avatar: "SP",
+            author: "Sunita Patel",
+            role: "Retired Chef, Ahmedabad",
+            category: "Expert Approved"
+        },
+        {
+            stars: 5,
+            quote: "As a busy dad managing a startup, this chutney is my secret weapon. My kids actually finish their lunch now. Their school lunch box was getting back untouched. Now they ask for more.",
+            avatar: "RD",
+            author: "Rohan Desai",
+            role: "Startup Founder, Pune",
+            category: "Parent Approved"
+        },
+        {
+            stars: 5,
+            quote: "I gifted this to my foodie friend who has everything. She loved it so much she ordered 5 jars for her book club dinner. The freshness and authenticity are unmatched.",
+            avatar: "PS",
+            author: "Priya Saxena",
+            role: "Lifestyle Influencer, Delhi",
+            category: "Gift Worthy"
+        },
+        {
+            stars: 5,
+            quote: "I run a small restaurant, and my customers keep asking what chutney I'm using with my dal dishes. Amrutbaa's is the only one I trust now. It has that authentic, grandmother-made quality.",
+            avatar: "MK",
+            author: "Meera Kothari",
+            role: "Restaurant Owner, Mumbai",
+            category: "Pro Kitchen"
+        }
+    ];
+
+    const carousel = document.getElementById('testimonialsCarousel');
+    const featured = document.getElementById('featuredTestimonial');
+    const carouselPrev = document.getElementById('carouselPrev');
+    const carouselNext = document.getElementById('carouselNext');
+    const indicatorsDots = document.getElementById('indicatorsDots');
+    const indicatorsText = document.getElementById('indicatorsText');
+    const featuredNavPrev = document.querySelector('.featured-nav-prev');
+    const featuredNavNext = document.querySelector('.featured-nav-next');
+
+    console.log('Elements found:', { featured: !!featured, featuredNavPrev: !!featuredNavPrev, featuredNavNext: !!featuredNavNext });
+
+    if (!featured) {
+        console.error('Missing featured testimonial element');
+        return;
+    }
+
+    let currentIndex = 0;
+
+    // Render featured testimonial
+    function renderFeatured() {
+        console.log('renderFeatured called, currentIndex:', currentIndex);
+        const t = testimonials[currentIndex];
+        console.log('Testimonial data:', t);
+        
+        // Test with simple HTML first
+        const html = `<div style="color: black; font-size: 16px;">
+            <div class="featured-stars">${'★'.repeat(t.stars)}</div>
+            <div class="featured-category" style="background: rgba(212, 175, 55, 0.15); color: #6B1C23; padding: 0.4rem 0.9rem; border-radius: 12px; display: inline-block; font-size: 0.75rem; font-weight: 700; margin-bottom: 1.2rem;">${t.category}</div>
+            <p class="featured-quote" style="color: #1a1a1a; font-size: 1.2rem; margin-bottom: 1.5rem;">"${t.quote}"</p>
+            <div class="featured-footer" style="display: flex; gap: 1.2rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 2px solid rgba(212, 175, 55, 0.15);">
+                <div class="featured-avatar" style="width: 64px; height: 64px; border-radius: 50%; background: linear-gradient(135deg, #6B1C23, #C9A961); display: flex; align-items: center; justify-content: center; color: white; font-weight: 900; font-size: 1.8rem;">${t.avatar}</div>
+                <div>
+                    <div class="featured-author" style="font-weight: 700; color: #6B1C23; font-size: 1rem; margin-bottom: 0.2rem;">${t.author}</div>
+                    <div class="featured-role" style="font-size: 0.85rem; color: #666; font-weight: 500; margin-bottom: 0.3rem;">${t.role}</div>
+                    <div class="featured-verified" style="font-size: 0.75rem; color: #2E7D32; font-weight: 700;">✓ Verified Customer</div>
+                </div>
+            </div>
+        </div>`;
+        
+        featured.innerHTML = html;
+        console.log('featured.innerHTML set to:', html);
+    }
+
+    function update() {
+        renderFeatured();
+    }
+
+    if (featuredNavPrev) {
+        featuredNavPrev.addEventListener('click', () => {
+            currentIndex = (currentIndex - 1 + testimonials.length) % testimonials.length;
+            update();
+        });
+    }
+
+    if (featuredNavNext) {
+        featuredNavNext.addEventListener('click', () => {
+            currentIndex = (currentIndex + 1) % testimonials.length;
+            update();
+        });
+    }
+
+    // Initial render
+    renderFeatured();
+
+    } catch (error) {
+        console.error('Error in initTestimonialsCarousel:', error);
+    }
+}

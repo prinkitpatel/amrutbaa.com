@@ -370,7 +370,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
-            overflow: hidden;
+            overflow: visible;
             padding: 4rem 0;
         }
 
@@ -798,6 +798,7 @@
             position: relative;
             overflow: hidden;
             margin: 2rem auto;
+            z-index: 20;
             display: flex;
             flex-direction: column;
             gap: 0.4rem;
@@ -848,179 +849,692 @@
             font-weight: 500;
         }
 
-        /* Testimonials Section */
+        /* ===== TESTIMONIALS CAROUSEL SECTION ===== */
         .testimonials-section {
-            background: linear-gradient(180deg, #FFF9F0 0%, #FFFEF9 100%);
-            padding: 4rem 0 4.5rem;
+            background: linear-gradient(180deg, #FFF9F0 0%, #FAF6ED 100%);
+            padding: 4rem 0 0;
             position: relative;
+            overflow: hidden;
         }
 
         .testimonials-section::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(107, 28, 35, 0.1), transparent);
+            top: -25%;
+            right: -20%;
+            width: 700px;
+            height: 700px;
+            background: radial-gradient(circle, rgba(212, 175, 55, 0.06) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 1;
         }
 
-        .testimonials-wrap {
-            max-width: 800px;
+        .testimonials-container {
+            max-width: 1280px;
             margin: 0 auto;
             padding: 0 2rem;
-        }
-
-        .testimonials-title {
-            font-family: var(--font-display);
-            font-size: 1.5rem;
-            color: var(--maroon);
-            text-align: center;
-            margin-bottom: 2.5rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-        }
-
-        .testimonial-card {
-            background: #FFFFFF;
-            border: 1px solid rgba(201, 169, 97, 0.2);
-            border-radius: 20px;
-            padding: 2.5rem 3rem;
-            box-shadow: 
-                0 10px 40px rgba(0, 0, 0, 0.06),
-                0 2px 8px rgba(0, 0, 0, 0.04);
-            position: relative;
-        }
-
-        .testimonial-card::before {
-            content: '\201C';
-            position: absolute;
-            top: -10px;
-            left: 30px;
-            font-family: Georgia, serif;
-            font-size: 6rem;
-            color: rgba(201, 169, 97, 0.15);
-            line-height: 1;
-        }
-
-        .testimonial-stars {
-            display: flex;
-            justify-content: center;
-            gap: 0.3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .testimonial-stars .star {
-            color: #FFB800;
-            font-size: 1.1rem;
-        }
-
-        .testimonial-quote {
-            font-size: 1.15rem;
-            line-height: 1.8;
-            color: #2A1810;
-            margin-bottom: 2rem;
-            font-style: italic;
             position: relative;
             z-index: 1;
         }
 
-        .testimonial-footer {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid rgba(107, 28, 35, 0.08);
+        /* Header Section */
+        .testimonials-header {
+            text-align: center;
+            margin-bottom: 4rem;
         }
 
-        .testimonial-avatar {
-            width: 56px;
-            height: 56px;
+        .testimonials-title {
+            font-family: var(--font-display);
+            font-size: 3rem;
+            color: var(--maroon);
+            margin-bottom: 1.5rem;
+            font-weight: 800;
+            letter-spacing: -1px;
+            line-height: 1.1;
+        }
+
+        .testimonials-meta {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .meta-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stat-number {
+            font-family: var(--font-display);
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: var(--maroon);
+        }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: #666;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .meta-divider {
+            width: 2px;
+            height: 40px;
+            background: rgba(212, 175, 55, 0.3);
+            border-radius: 1px;
+        }
+
+        /* Featured Testimonial */
+        .featured-testimonial-wrapper {
+            position: relative;
+            margin-bottom: 3rem;
+            perspective: 1000px;
+        }
+
+        .featured-testimonial {
+            background: linear-gradient(135deg, #FFFFFF 0%, #FFFBF7 100%);
+            border: 2px solid transparent;
+            border-radius: 24px;
+            padding: 2.5rem;
+            box-shadow: 
+                0 25px 60px rgba(0, 0, 0, 0.1),
+                0 4px 12px rgba(0, 0, 0, 0.04),
+                inset 0 1px 0 rgba(255, 255, 255, 0.8);
+            position: relative;
+            min-height: auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .featured-testimonial:hover {
+            border-color: var(--golden);
+            box-shadow: 
+                0 35px 80px rgba(107, 28, 35, 0.15),
+                0 8px 20px rgba(212, 175, 55, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 1);
+            transform: translateY(-4px);
+        }
+
+        .featured-stars {
+            display: flex;
+            gap: 0.4rem;
+            margin-bottom: 1rem;
+            font-size: 1.4rem;
+            color: #FFD700;
+        }
+
+        .featured-category {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.15);
+            color: var(--maroon);
+            padding: 0.4rem 0.9rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+            margin-bottom: 1.2rem;
+            width: fit-content;
+        }
+
+        .featured-quote {
+            font-size: 1.2rem;
+            line-height: 1.7;
+            color: #1a1a1a;
+            margin-bottom: 1.5rem;
+            font-style: italic;
+            font-weight: 500;
+            position: relative;
+            z-index: 2;
+        }
+
+        .featured-footer {
+            display: flex;
+            align-items: center;
+            gap: 1.2rem;
+            padding-top: 1.5rem;
+            border-top: 2px solid rgba(212, 175, 55, 0.15);
+        }
+
+        .featured-avatar {
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--maroon), var(--golden));
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #FFFFFF;
+            color: #fff;
             font-family: var(--font-display);
-            font-size: 1.5rem;
-            font-weight: 700;
-            box-shadow: 0 4px 12px rgba(107, 28, 35, 0.2);
+            font-size: 1.8rem;
+            font-weight: 900;
+            box-shadow: 0 8px 20px rgba(107, 28, 35, 0.25);
+            border: 3px solid rgba(255, 255, 255, 0.6);
+            flex-shrink: 0;
         }
 
-        .testimonial-author-info {
-            text-align: left;
-        }
-
-        .testimonial-author {
+        .featured-author {
             font-weight: 700;
             color: var(--maroon);
             font-size: 1rem;
-            letter-spacing: 0.3px;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.2rem;
+            display: block;
         }
 
-        .testimonial-role {
+        .featured-role {
             font-size: 0.85rem;
             color: #666;
             font-weight: 500;
+            margin-bottom: 0.3rem;
+            display: block;
         }
 
-        .testimonial-verified {
-            display: inline-flex;
-            align-items: center;
-            gap: 0.3rem;
+        .featured-verified {
             font-size: 0.75rem;
             color: #2E7D32;
-            font-weight: 600;
-            margin-top: 0.3rem;
+            font-weight: 700;
+            display: block;
         }
 
-        .testimonial-verified::before {
-            content: '\2713';
-            display: inline-flex;
+        .featured-verified::before {
+            content: '✓ ';
+            font-weight: 900;
+        }
+
+        /* Navigation Buttons */
+        .featured-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.9);
+            border: 2px solid rgba(212, 175, 55, 0.3);
+            color: var(--maroon);
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
             align-items: center;
             justify-content: center;
-            width: 16px;
-            height: 16px;
-            background: #2E7D32;
-            color: white;
-            border-radius: 50%;
-            font-size: 0.65rem;
+            z-index: 10;
         }
 
+        .featured-nav:hover {
+            background: var(--golden);
+            border-color: var(--golden);
+            color: white;
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .featured-nav-prev {
+            left: -35px;
+        }
+
+        .featured-nav-next {
+            right: -35px;
+        }
+
+        /* Carousel Section */
+        .testimonials-carousel-wrapper {
+            position: relative;
+            margin-bottom: 3rem;
+        }
+
+        .testimonials-carousel {
+            display: flex;
+            gap: 2rem;
+            overflow-x: auto;
+            scroll-behavior: smooth;
+            padding: 2rem 0;
+            scroll-snap-type: x mandatory;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .testimonials-carousel::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .testimonials-carousel::-webkit-scrollbar-track {
+            background: rgba(0, 0, 0, 0.05);
+            border-radius: 10px;
+        }
+
+        .testimonials-carousel::-webkit-scrollbar-thumb {
+            background: var(--golden);
+            border-radius: 10px;
+        }
+
+        .testimonials-carousel::-webkit-scrollbar-thumb:hover {
+            background: #B8860B;
+        }
+
+        .carousel-testimonial-card {
+            flex: 0 0 320px;
+            background: #FFFFFF;
+            border: 1px solid rgba(212, 175, 55, 0.2);
+            border-radius: 16px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+            position: relative;
+            scroll-snap-align: start;
+            transition: all 0.3s ease;
+        }
+
+        .carousel-testimonial-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--golden);
+            box-shadow: 0 15px 40px rgba(107, 28, 35, 0.12);
+        }
+
+        .carousel-stars {
+            display: flex;
+            gap: 0.25rem;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            color: #FFD700;
+        }
+
+        .carousel-quote {
+            font-size: 0.9rem;
+            line-height: 1.6;
+            color: #1a1a1a;
+            margin-bottom: 1.2rem;
+            font-style: italic;
+        }
+
+        .carousel-category {
+            display: inline-block;
+            background: rgba(212, 175, 55, 0.1);
+            color: var(--maroon);
+            padding: 0.25rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+        }
+
+        .carousel-footer {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            padding-top: 1rem;
+            border-top: 1px solid rgba(212, 175, 55, 0.1);
+        }
+
+        .carousel-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--maroon), var(--golden));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-family: var(--font-display);
+            font-size: 1rem;
+            font-weight: 900;
+            flex-shrink: 0;
+        }
+
+        .carousel-author {
+            font-weight: 700;
+            color: var(--maroon);
+            font-size: 0.85rem;
+            margin-bottom: 0.1rem;
+        }
+
+        .carousel-role {
+            font-size: 0.7rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        /* Carousel Navigation */
+        .carousel-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            background: rgba(107, 28, 35, 0.08);
+            border: 2px solid rgba(107, 28, 35, 0.15);
+            color: var(--maroon);
+            font-size: 1.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+        }
+
+        .carousel-nav:hover {
+            background: var(--maroon);
+            border-color: var(--maroon);
+            color: white;
+            transform: translateY(-50%) scale(1.15);
+        }
+
+        .carousel-nav-prev {
+            left: -70px;
+        }
+
+        .carousel-nav-next {
+            right: -70px;
+        }
+
+        /* Indicators */
+        .testimonials-indicators {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .indicators-dots {
+            display: flex;
+            gap: 0.8rem;
+        }
+
+        .indicator-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(212, 175, 55, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .indicator-dot.active {
+            background: var(--golden);
+            transform: scale(1.3);
+            border-color: var(--maroon);
+        }
+
+        .indicator-dot:hover {
+            background: rgba(212, 175, 55, 0.6);
+        }
+
+        .indicators-text {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            min-width: 60px;
+            text-align: right;
+        }
+
+        /* Trust Stats Bar */
+        .trust-stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            padding: 2.5rem;
+            background: linear-gradient(135deg, rgba(212, 175, 55, 0.06), rgba(107, 28, 35, 0.03));
+            border-radius: 20px;
+            border: 1px solid rgba(212, 175, 55, 0.15);
+            margin-top: 2rem;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .stat-icon {
+            font-size: 2rem;
+            line-height: 1;
+        }
+
+        .stat-content {
+            flex: 1;
+        }
+
+        .stat-title {
+            font-weight: 700;
+            color: var(--maroon);
+            font-size: 0.95rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .stat-desc {
+            font-size: 0.85rem;
+            color: #999;
+            font-weight: 500;
+        }
+
+        /* Mobile Responsive */
         @media (max-width: 768px) {
             .testimonials-section {
-                padding: 3rem 0 3.5rem;
-            }
-
-            .testimonials-wrap {
-                padding: 0 1.5rem;
+                padding: 2.5rem 0;
             }
 
             .testimonials-title {
-                font-size: 1.3rem;
-                margin-bottom: 2rem;
+                font-size: 2rem;
+                margin-bottom: 1.5rem;
             }
 
-            .testimonial-card {
-                padding: 2rem 1.5rem;
+            .meta-divider {
+                display: none;
             }
 
-            .testimonial-card::before {
-                font-size: 4rem;
-                top: -5px;
-                left: 15px;
+            .featured-testimonial {
+                padding: 2rem;
+                min-height: auto;
             }
 
-            .testimonial-stars {
-                margin-bottom: 1.25rem;
-            }
-
-            .testimonial-stars .star {
+            .featured-quote {
                 font-size: 1rem;
+                line-height: 1.6;
+                margin-bottom: 1.5rem;
             }
+
+            .featured-avatar {
+                width: 56px;
+                height: 56px;
+                font-size: 1.4rem;
+            }
+
+            .featured-author {
+                font-size: 0.9rem;
+            }
+
+            .featured-role {
+                font-size: 0.8rem;
+            }
+
+            .featured-nav-prev,
+            .featured-nav-next {
+                width: 40px;
+                height: 40px;
+                bottom: -55px;
+                top: auto;
+                left: auto;
+                right: auto;
+            }
+
+            .featured-nav-prev {
+                right: 50px;
+            }
+
+            .featured-nav-next {
+                right: 5px;
+            }
+
+            .carousel-testimonial-card {
+                flex: 0 0 calc(100vw - 3rem);
+                max-width: 300px;
+            }
+
+            .carousel-nav-prev,
+            .carousel-nav-next {
+                width: 36px;
+                height: 36px;
+                bottom: -50px;
+                top: auto;
+                left: auto;
+                right: auto;
+            }
+
+            .carousel-nav-prev {
+                right: 50px;
+            }
+
+            .carousel-nav-next {
+                right: 5px;
+            }
+
+            .trust-stats-bar {
+                grid-template-columns: repeat(2, 1fr);
+                padding: 1.5rem;
+                gap: 1rem;
+            }
+
+            .stat-icon {
+                font-size: 1.5rem;
+            }
+
+            .stat-title {
+                font-size: 0.8rem;
+            }
+
+            .stat-desc {
+                font-size: 0.7rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .testimonials-container {
+                padding: 0 1rem;
+            }
+
+            .testimonials-title {
+                font-size: 1.6rem;
+                margin-bottom: 1.2rem;
+            }
+
+            .stat-number {
+                font-size: 1.2rem;
+            }
+
+            .stat-label {
+                font-size: 0.75rem;
+            }
+
+            .featured-testimonial {
+                padding: 1.5rem;
+            }
+
+            .featured-stars {
+                font-size: 1.1rem;
+                margin-bottom: 0.6rem;
+            }
+
+            .featured-category {
+                font-size: 0.65rem;
+                padding: 0.3rem 0.6rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .featured-quote {
+                font-size: 0.9rem;
+                line-height: 1.5;
+                margin-bottom: 1.2rem;
+            }
+
+            .featured-footer {
+                gap: 0.8rem;
+                padding-top: 1rem;
+            }
+
+            .featured-avatar {
+                width: 48px;
+                height: 48px;
+                font-size: 1.1rem;
+            }
+
+            .featured-author {
+                font-size: 0.8rem;
+            }
+
+            .featured-role {
+                font-size: 0.7rem;
+            }
+
+            .carousel-testimonial-card {
+                flex: 0 0 calc(100vw - 2rem);
+                padding: 1.5rem;
+                border-radius: 12px;
+            }
+
+            .carousel-stars {
+                margin-bottom: 0.6rem;
+                font-size: 0.9rem;
+            }
+
+            .carousel-quote {
+                font-size: 0.85rem;
+                line-height: 1.5;
+                margin-bottom: 1rem;
+            }
+
+            .carousel-category {
+                font-size: 0.6rem;
+                padding: 0.2rem 0.5rem;
+                margin-bottom: 0.8rem;
+            }
+
+            .carousel-footer {
+                gap: 0.6rem;
+                padding-top: 0.8rem;
+            }
+
+            .carousel-avatar {
+                width: 40px;
+                height: 40px;
+                font-size: 0.9rem;
+            }
+
+            .carousel-author {
+                font-size: 0.75rem;
+            }
+
+            .carousel-role {
+                font-size: 0.65rem;
+            }
+
+            .trust-stats-bar {
+                grid-template-columns: 1fr;
+                padding: 1.2rem;
+                gap: 0.8rem;
+            }
+
+            .indicators-text {
+                font-size: 0.75rem;
+            }
+
+            .indicator-dot {
+                width: 8px;
+                height: 8px;
+            }
+        }
 
             .testimonial-quote {
                 font-size: 1rem;
@@ -1073,7 +1587,7 @@
         .loved-by-all {
             position: relative;
             background: linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FAF6ED 100%);
-            padding: 5rem 0 6rem;
+            padding: 5rem 0 0;
             overflow: hidden;
         }
 
@@ -1265,6 +1779,7 @@
         .section-cta {
             text-align: center;
             margin-top: 3.5rem;
+            padding-bottom: 4rem;
             position: relative;
             z-index: 2;
         }
@@ -1441,7 +1956,7 @@
 
         /* OUR PROMISE: KATHIYAWADI GUARANTEE Section */
         .our-promise {
-            background: var(--cream);
+            background: linear-gradient(180deg, #FAF6ED 0%, #FAF7F2 100%);
             padding: 5rem 1.5rem;
             position: relative;
         }
@@ -2322,56 +2837,9 @@
                 font-size: 0.72rem;
             }
         }
+    </style>
 
-            /* Testimonials Responsive */
-            .testimonials-section {
-                padding: 3rem 0 3.5rem;
-            }
-
-            .testimonials-wrap {
-                padding: 0 1.5rem;
-            }
-
-            .testimonials-title {
-                font-size: 1.3rem;
-                margin-bottom: 2rem;
-            }
-
-            .testimonial-card {
-                padding: 2rem 1.5rem;
-            }
-
-            .testimonial-card::before {
-                font-size: 4rem;
-                top: -5px;
-                left: 15px;
-            }
-
-            .testimonial-stars {
-                margin-bottom: 1.25rem;
-            }
-
-            .testimonial-stars .star {
-                font-size: 1rem;
-            }
-
-            .testimonial-quote {
-                font-size: 1rem;
-                margin-bottom: 1.5rem;
-            }
-
-            .testimonial-footer {
-                flex-direction: column;
-                text-align: center;
-                padding-top: 1.25rem;
-            }
-
-            .testimonial-avatar {
-                width: 48px;
-                height: 48px;
-                font-size: 1.3rem;
-            }
-
+    <style>
             .testimonial-author-info {
                 text-align: center;
             }
@@ -2589,27 +3057,229 @@
         </div>
     </section>
 
-    <!-- Testimonials Section -->
-    <section class="testimonials-section" aria-label="Customer testimonial">
-        <div class="testimonials-wrap">
-            <h2 class="testimonials-title">What our customers say</h2>
-            <div class="testimonial-card">
-                <div class="testimonial-stars">
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
-                    <span class="star">★</span>
+    <!-- Testimonials Section - Carousel Style -->
+    <section class="testimonials-section" aria-label="Customer testimonials">
+        <div class="testimonials-container">
+            <!-- Section Header -->
+            <div class="testimonials-header">
+                <h2 class="testimonials-title">Join thousands who've ditched bland food</h2>
+                <div class="testimonials-meta">
+                    <span class="meta-stat">
+                        <span class="stat-number">4.9★</span>
+                        <span class="stat-label">Average Rating</span>
+                    </span>
+                    <span class="meta-divider"></span>
+                    <span class="meta-stat">
+                        <span class="stat-number">126+</span>
+                        <span class="stat-label">Verified Reviews</span>
+                    </span>
                 </div>
-                <p class="testimonial-quote">I felt guilty ordering from Swiggy & Zomato five times a week, despite having a fully functional kitchen. Once I ordered Amrutbaa's Jadooi Chutney, I never ordered online again. My go-to food is tastier, faster, and guilt-free.</p>
-                <div class="testimonial-footer">
-                    <div class="testimonial-avatar">PP</div>
-                    <div class="testimonial-author-info">
-                        <div class="testimonial-author">Prinkit Patel</div>
-                        <div class="testimonial-role">Time Pressed Working Professional</div>
-                        <div class="testimonial-verified">Verified Customer</div>
+            </div>
+
+            <!-- Featured Testimonial (Rotates) -->
+            <div class="featured-testimonial-wrapper">
+                <div class="featured-testimonial" id="featuredTestimonial">
+                    <!-- Content will be populated by JavaScript -->
+                </div>
+                <button class="featured-nav featured-nav-prev" aria-label="Previous testimonial">←</button>
+                <button class="featured-nav featured-nav-next" aria-label="Next testimonial">→</button>
+            </div>
+
+            <!-- Trust Stats Bar -->
+            <div class="trust-stats-bar">
+                <div class="stat-item">
+                    <div class="stat-icon">✨</div>
+                    <div class="stat-content">
+                        <div class="stat-title">Premium Quality</div>
+                        <div class="stat-desc">450-year tradition</div>
                     </div>
                 </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🚚</div>
+                    <div class="stat-content">
+                        <div class="stat-title">Free Delivery</div>
+                        <div class="stat-desc">All across India</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">💯</div>
+                    <div class="stat-content">
+                        <div class="stat-title">Money Back</div>
+                        <div class="stat-desc">100% Guarantee</div>
+                    </div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-icon">🔒</div>
+                    <div class="stat-content">
+                        <div class="stat-title">Fresh Weekly</div>
+                        <div class="stat-desc">Zero preservatives</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CTA After Testimonials -->
+        <div style="background: linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FAF6ED 100%); padding: 3rem 1.5rem; text-align: center;">
+            <div class="container">
+                <button class="cta-button" id="testimonialsCta" onclick="document.getElementById('openModalBtn')?.click()" style="padding: 2rem 4rem; font-size: 1.8rem; max-width: 500px;">
+                    <span class="cta-text">SECURE MY JAR</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- One Chutney, 3 Ways to Use Section -->
+        <section class="loved-by-all">
+            <div class="container">
+                <div class="section-header">
+                    <span class="section-tag">One Jadooi Chutney</span>
+                    <h2 class="section-title">100,000+ Ways to Use It</h2>
+                    <p class="section-subtitle">Amrutbaa adapts to your kitchen rhythm—quietly becoming the obvious first reach in most of your meals for life.</p>
+                </div>
+
+                <div class="food-stories-grid">
+                    <!-- Story Card 1: SIDE -->
+                    <div class="story-card" data-story="side">
+                        <div class="story-image-wrapper">
+                            <img src="assets/images/roti chutney.jpg" alt="As a SIDE - Spread on Paratha" class="story-image" loading="lazy">
+                            <div class="story-badge">The Zero-Prep Spread</div>
+                            <div class="story-overlay"></div>
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">① As a SIDE</h3>
+                            <p class="story-quote">Smear it directly onto hot Parathas, Theplas, or toast. Use it as a fiery, ready-to-eat dip for snacks.</p>
+                            <div class="story-meta">
+                                <span class="story-icon">🫓</span>
+                                <span class="story-label">Perfect with: Paratha, Thepla, Toast, Snacks</span>
+                            </div>
+                            <div class="story-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-text">Zero prep time</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Story Card 2: TOP -->
+                    <div class="story-card" data-story="top">
+                        <div class="story-image-wrapper">
+                            <img src="assets/images/dal chawal.jpg" alt="As a TOP - Tadka in Dal" class="story-image" loading="lazy">
+                            <div class="story-badge">The Instant Tadka</div>
+                            <div class="story-overlay"></div>
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">② As a TOP</h3>
+                            <p class="story-quote">Swirl a spoonful directly into a bowl of plain yellow Dal, Khichdi, or Sabji right before eating to instantly upgrade the color and flavor.</p>
+                            <div class="story-meta">
+                                <span class="story-icon">🍛</span>
+                                <span class="story-label">Perfect with: Dal, Khichdi, Sabji, Rice</span>
+                            </div>
+                            <div class="story-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-text">Instant flavor boost</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Story Card 3: BASE -->
+                    <div class="story-card" data-story="base">
+                        <div class="story-image-wrapper">
+                            <img src="assets/images/hummus and sourdough.jpg" alt="As a BASE - Start your cooking" class="story-image" loading="lazy">
+                            <div class="story-badge">The Cheat-Code Masala</div>
+                            <div class="story-overlay"></div>
+                        </div>
+                        <div class="story-content">
+                            <h3 class="story-title">③ As a BASE</h3>
+                            <p class="story-quote">Sizzle one spoon in hot oil to start your cooking. It replaces your chopped garlic, onions, and dry spices so you can cook any Sabji or curry in half the time.</p>
+                            <div class="story-meta">
+                                <span class="story-icon">🔥</span>
+                                <span class="story-label">Perfect with: Any Sabji, Curry, Stir-fry</span>
+                            </div>
+                            <div class="story-rating">
+                                <span class="stars">★★★★★</span>
+                                <span class="rating-text">Half the cooking time</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Scroll indicator dots for mobile -->
+                <div class="scroll-dots" id="storyScrollDots">
+                    <span class="scroll-dot active" data-card="0"></span>
+                    <span class="scroll-dot" data-card="1"></span>
+                    <span class="scroll-dot" data-card="2"></span>
+                </div>
+
+                <div class="section-cta">
+                    <p class="cta-intro">Find your go-to pairing. Secure my jar today.</p>
+                    <button class="cta-button-secondary" id="lovedByAllCta">Reserve Your First Jar</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Hidden testimonial data -->
+        <div id="testimonialsData" style="display: none; background: linear-gradient(180deg, #FAF6ED 0%, #FFF9F0 100%);">
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I was ordering Zomato 4 times a week even though I had a functioning kitchen. It felt wasteful. I tried Amrutbaa's chutney once, and suddenly my home cooking tastes restaurant-quality. Now I cook because I want to, not because I have to. That's priceless."</div>
+                <div class="avatar">AS</div>
+                <div class="author">Anjali Singh</div>
+                <div class="role">Tech Manager, Mumbai</div>
+                <div class="category">Swiggy Guilt</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I dreaded the 6 PM cooking rush. Chopping garlic, grinding spices, the endless prep. One spoon of Amrutbaa changes everything—my dal goes from basic to 'what did you add?' in 30 seconds. My family thinks I'm a better cook now. I'm just smarter about my time."</div>
+                <div class="avatar">RK</div>
+                <div class="author">Rashmi Krishnan</div>
+                <div class="role">Mother of Two, Bangalore</div>
+                <div class="category">Time Saver</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I've been checking labels obsessively for 2 years. Most chutneys are packed with sugar and preservatives I can't pronounce. Amrutbaa tastes MORE vibrant than anything I've tried, yet it's 100% clean. My conscience is clear, and my taste buds are dancing."</div>
+                <div class="avatar">NM</div>
+                <div class="author">Neha Mehta</div>
+                <div class="role">Wellness Coach, Delhi</div>
+                <div class="category">Health First</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I was nervous about hosting my in-laws for dinner. Ordered Amrutbaa on a whim. Set it on the table next to my dal, and they literally asked for the name and how much I paid for it. Three days later, they called asking where to order. Best ₹150 I've spent on 'being a host.'"</div>
+                <div class="avatar">VJ</div>
+                <div class="author">Vikram Joshi</div>
+                <div class="role">Entrepreneur, Ahmedabad</div>
+                <div class="category">Party Winner</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"My mom has been making chutney for 30 years, and even she asked me where I got this. The punch of garlic and the balance of spices is exactly what home-cooked should taste like. I order weekly now."</div>
+                <div class="avatar">SP</div>
+                <div class="author">Sunita Patel</div>
+                <div class="role">Retired Chef, Ahmedabad</div>
+                <div class="category">Expert Approved</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"As a busy dad managing a startup, this chutney is my secret weapon. My kids actually finish their lunch now. Their school lunch box was getting back untouched. Now they ask for more."</div>
+                <div class="avatar">RD</div>
+                <div class="author">Rohan Desai</div>
+                <div class="role">Startup Founder, Pune</div>
+                <div class="category">Parent Approved</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I gifted this to my foodie friend who has everything. She loved it so much she ordered 5 jars for her book club dinner. The freshness and authenticity are unmatched."</div>
+                <div class="avatar">PS</div>
+                <div class="author">Priya Saxena</div>
+                <div class="role">Lifestyle Influencer, Delhi</div>
+                <div class="category">Gift Worthy</div>
+            </div>
+            <div class="testimonial-data">
+                <div class="stars">5</div>
+                <div class="quote">"I run a small restaurant, and my customers keep asking what chutney I'm using with my dal dishes. Amrutbaa's is the only one I trust now. It has that authentic, grandmother-made quality."</div>
+                <div class="avatar">MK</div>
+                <div class="author">Meera Kothari</div>
+                <div class="role">Restaurant Owner, Mumbai</div>
+                <div class="category">Pro Kitchen</div>
             </div>
         </div>
     </section>
@@ -2765,107 +3435,6 @@
         </div>
     </section>
 
-    <!-- One Chutney, Endless Stories Section -->
-    <section class="loved-by-all">
-        <div class="container">
-            <div class="section-header">
-                <span class="section-tag">Loved Across Tables</span>
-                <h2 class="section-title">One Chutney. Infinite Ways to Enjoy.</h2>
-                <p class="section-subtitle">From traditional thalis to modern brunches—Amrutbaa's chutney finds its home
-                    everywhere. Here's how our customers make it their own.</p>
-            </div>
-
-            <div class="food-stories-grid">
-                <!-- Story Card 1: Traditional -->
-                <div class="story-card" data-story="traditional">
-                    <div class="story-image-wrapper">
-                        <img src="assets/images/dal chawal.jpg" alt="Dal chawal with Amrutbaa chutney"
-                            class="story-image" loading="lazy">
-                        <div class="story-badge">Most Popular</div>
-                        <div class="story-overlay"></div>
-                    </div>
-                    <div class="story-content">
-                        <h3 class="story-title">The Comfort Classic</h3>
-                        <p class="story-quote">"My dal-chawal feels incomplete without this. It's the flavor my
-                            grandmother's cooking had—warm, bold, alive."</p>
-                        <div class="story-meta">
-                            <span class="story-icon">🍛</span>
-                            <span class="story-label">Perfect with: Dal, Rice, Khichdi, Kadhi</span>
-                        </div>
-                        <div class="story-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating-text">Loved by 380+ families</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story Card 2: Traditional Indian -->
-                <div class="story-card" data-story="homestyle">
-                    <div class="story-image-wrapper">
-                        <img src="assets/images/roti chutney.jpg" alt="Roti with Amrutbaa chutney" class="story-image"
-                            loading="lazy">
-                        <div class="story-badge">Customer Favorite</div>
-                        <div class="story-overlay"></div>
-                    </div>
-                    <div class="story-content">
-                        <h3 class="story-title">The Quick Meal Hero</h3>
-                        <p class="story-quote">"Literally just roti and chutney for lunch—and I'm happy. The garlic
-                            punch is everything."</p>
-                        <div class="story-meta">
-                            <span class="story-icon">🫓</span>
-                            <span class="story-label">Perfect with: Roti, Paratha, Thepla, Dosa</span>
-                        </div>
-                        <div class="story-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating-text">Loved by 290+ families</span>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Story Card 3: Modern Fusion -->
-                <div class="story-card" data-story="fusion">
-                    <div class="story-image-wrapper">
-                        <img src="assets/images/hummus and sourdough.jpg"
-                            alt="Hummus and sourdough with Amrutbaa chutney" class="story-image" loading="lazy">
-                        <div class="story-badge">Trending</div>
-                        <div class="story-overlay"></div>
-                    </div>
-                    <div class="story-content">
-                        <h3 class="story-title">The Brunch Surprise</h3>
-                        <p class="story-quote">"Started adding it to my hummus toast—total game changer. Friends keep
-                            asking what my secret is!"</p>
-                        <div class="story-meta">
-                            <span class="story-icon">🥖</span>
-                            <span class="story-label">Perfect with: Hummus, Bread, Cheese, Avocado</span>
-                        </div>
-                        <div class="story-rating">
-                            <span class="stars">★★★★★</span>
-                            <span class="rating-text">Loved by 150+ families</span>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Scroll indicator dots for mobile -->
-            <div class="scroll-dots" id="storyScrollDots">
-                <span class="scroll-dot active" data-card="0"></span>
-                <span class="scroll-dot" data-card="1"></span>
-                <span class="scroll-dot" data-card="2"></span>
-            </div>
-
-            <!-- Swipe hint overlay -->
-            <div class="swipe-hint" id="swipeHint">
-                <span>Swipe</span>
-                <span class="swipe-hint-icon">👉</span>
-            </div>
-
-            <div class="section-cta">
-                <p class="cta-intro">Find your go-to pairing. Secure my jar today.</p>
-                <button class="cta-button-secondary" id="lovedByAllCta">Reserve Your First Jar</button>
-            </div>
-        </div>
-    </section>
-
     <!-- Our Promise: Kathiyawadi Guarantee Section -->
     <section class="our-promise">
         <div class="container">
@@ -2949,6 +3518,7 @@
 
     <!-- Load Modal Component -->
     <script src="assets/js/modal-component.js?v=2"></script>
+    <script src="scripts/main.js"></script>
     <script>
         // Initialize modal component
         if (window.OrderModal) {
