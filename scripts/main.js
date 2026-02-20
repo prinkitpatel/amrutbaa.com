@@ -315,7 +315,7 @@ function initTestimonialsCarousel() {
         },
         {
             stars: 5,
-            quote: "I was nervous about hosting my in-laws for dinner. Ordered Amrutbaa on a whim. Set it on the table next to my dal, and they literally asked for the name and how much I paid for it. Three days later, they called asking where to order. Best ₹150 I've spent on 'being a host.'",
+            quote: "I was nervous about hosting my in-laws for dinner. Ordered Amrutbaa on a whim. Set it on the table next to my dal, and they literally asked for the name and how much I paid for it. Three days later, they called asking where to order. Best ₹800 I've spent on 'being a host.'",
             avatar: "VJ",
             author: "Vikram Joshi",
             role: "Entrepreneur, Ahmedabad",
