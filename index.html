@@ -3121,7 +3121,7 @@
         <!-- CTA After Testimonials -->
         <div style="background: linear-gradient(180deg, #FFF9F0 0%, #FFFBF7 50%, #FAF6ED 100%); padding: 3rem 1.5rem; text-align: center;">
             <div class="container">
-                <button class="cta-button" id="testimonialsCta" onclick="document.getElementById('openModalBtn')?.click()" style="padding: 2rem 4rem; font-size: 1.8rem; max-width: 500px;">
+                <button class="cta-button" id="testimonialsCta" onclick="window.OrderModal && window.OrderModal.open()" style="padding: 2rem 4rem; font-size: 1.8rem; max-width: 500px;">
                     <span class="cta-text">SECURE MY JAR</span>
                 </button>
             </div>
@@ -3524,6 +3524,7 @@
         if (window.OrderModal) {
             document.getElementById('openModalBtn')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('openModalBtnSticky')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('testimonialsCta')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('journeyCtaHeritage')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('journeyCtaIngredients')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('journeyCtaBatch')?.addEventListener('click', window.OrderModal.open);
