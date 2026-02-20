@@ -1,0 +1,25 @@
+.git/
+.github/
+.vscode/
+.wrangler/
+node_modules/
+lighthouse-report.json
+lighthouse-report-optimized.json
+*.md
+wrangler.toml
+.gitignore
+.assetsignore
+config.example.js
+index-backup.html
+worker-backup.js
+ANALYTICS_*.md
+CLEANUP_*.md
+META_*.md
+SHIPROCKET_*.md
+GA4_*.md
+GTM_*.md
+*.pdf
+# Exclude original unoptimized images if they are specifically large and not used
+assets/images/chutney on table with food.png
+assets/images/chutney-with-dal.jpg
+assets/images/hero image.jpeg
