@@ -10,12 +10,12 @@
 function initOrderModal() {
     // 🔒 CRITICAL: Track processed orders to prevent duplicates (persists across page reloads)
     const processedOrders = new Set(JSON.parse(sessionStorage.getItem('processedOrders') || '[]'));
-    
+
     // Helper to save processed orders
     const saveProcessedOrders = () => {
         sessionStorage.setItem('processedOrders', JSON.stringify([...processedOrders]));
     };
-    
+
     // Check if modal already exists - if so, reuse it
     const existingModal = document.getElementById('registrationModal');
     if (existingModal) {
@@ -31,660 +31,7 @@ function initOrderModal() {
         return { open: openModal, close: closeModal };
     }
 
-    // Inject CSS
-    const styleSheet = document.createElement('style');
-    styleSheet.textContent = `
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1000;
-        }
 
-        .modal.active {
-            display: flex;
-        }
-
-        .modal.active .modal-overlay {
-            animation: fadeIn 0.3s ease;
-        }
-
-        .modal.active .modal-content {
-            animation: slideUp 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(40px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        @keyframes fadeInUp {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .modal-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            cursor: pointer;
-        }
-
-        .modal-content {
-            position: relative;
-            background: linear-gradient(135deg, #FAF7F2 0%, #F5EFE4 100%);
-            border-radius: 16px;
-            width: 90%;
-            max-width: 550px;
-            max-height: 90vh;
-            overflow-y: auto;
-            margin: auto;
-            padding: 2.5rem 2rem;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.15);
-        }
-
-        .modal-close {
-            position: absolute;
-            top: 1.5rem;
-            right: 1.5rem;
-            background: transparent;
-            border: none;
-            font-size: 2rem;
-            cursor: pointer;
-            color: #6B2C2C;
-            transition: transform 0.2s;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            transform: rotate(90deg);
-        }
-
-        .modal-header h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2rem;
-            color: #6B2C2C;
-            margin-bottom: 0.5rem;
-        }
-
-        .modal-tagline {
-            color: #4A4A4A;
-            font-size: 0.95rem;
-            margin-bottom: 2rem;
-        }
-
-        .modal-trust {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.6rem;
-            margin-bottom: 1.25rem;
-        }
-
-        .trust-item {
-            background: rgba(212, 175, 55, 0.12);
-            border: 1px solid rgba(212, 175, 55, 0.25);
-            color: #6B2C2C;
-            padding: 0.35rem 0.75rem;
-            border-radius: 999px;
-            font-size: 0.78rem;
-            font-weight: 600;
-            letter-spacing: 0.2px;
-        }
-
-        .modal-price {
-            display: flex;
-            align-items: baseline;
-            gap: 0.5rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .price-mrp {
-            font-size: 0.95rem;
-            color: #8A6B6B;
-            text-decoration: line-through;
-            font-weight: 600;
-        }
-
-        .price-amount {
-            font-size: 1.6rem;
-            font-weight: 800;
-            color: #6B2C2C;
-        }
-
-        .price-caption {
-            display: block;
-            font-size: 0.8rem;
-            color: #4A4A4A;
-            opacity: 0.9;
-            font-weight: 600;
-        }
-
-        .modal-urgency {
-            font-size: 0.85rem;
-            color: #6B2C2C;
-            background: rgba(212, 175, 55, 0.1);
-            border: 1px solid rgba(212, 175, 55, 0.22);
-            border-radius: 8px;
-            padding: 0.6rem 0.8rem;
-            margin-bottom: 1.25rem;
-            line-height: 1.4;
-        }
-
-        .modal-total {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: #4A4A4A;
-            margin-bottom: 1rem;
-        }
-
-        .modal-savings {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #2E7D32;
-            margin-top: -0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .quantity-row {
-            display: grid;
-            grid-template-columns: 44px 1fr 44px;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .qty-btn {
-            border: 1px solid rgba(107, 44, 44, 0.25);
-            background: #fff;
-            color: #6B2C2C;
-            font-size: 1.1rem;
-            font-weight: 700;
-            border-radius: 10px;
-            height: 42px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .qty-btn:hover {
-            background: rgba(212, 175, 55, 0.15);
-        }
-
-        .qty-input {
-            width: 100%;
-            text-align: center;
-            height: 42px;
-            border-radius: 10px;
-            border: 1px solid rgba(107, 44, 44, 0.25);
-            font-weight: 700;
-            color: #4A4A4A;
-        }
-
-        .form-group.error input,
-        .form-group.error textarea {
-            border-color: #C0392B;
-            box-shadow: 0 0 0 3px rgba(192, 57, 43, 0.12);
-        }
-
-        .input-error {
-            color: #C0392B;
-            font-size: 0.85rem;
-            margin-top: 0.35rem;
-            line-height: 1.3;
-        }
-
-        .pincode-status {
-            font-size: 0.8rem;
-            margin-top: 0.35rem;
-            line-height: 1.3;
-            display: none;
-        }
-
-        .pincode-status.pending {
-            color: #6B2C2C;
-        }
-
-        .pincode-status.success {
-            color: #2E7D32;
-        }
-
-        .pincode-status.error {
-            color: #C0392B;
-        }
-
-        .stepper {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 0.75rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 0.6rem;
-            padding: 0.85rem 1rem;
-            border: 2px solid #D4AF37;
-            border-radius: 10px;
-            background: rgba(212, 175, 55, 0.15);
-            font-weight: 700;
-            color: #6B2C2C;
-            transition: all 0.3s ease;
-        }
-
-        .step-number {
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            background: #D4AF37;
-            color: #4A4A4A;
-            display: grid;
-            place-items: center;
-            font-weight: 800;
-        }
-
-        .step-title {
-            font-size: 0.95rem;
-        }
-
-        .step.active {
-            background: linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%);
-            color: #4A4A4A;
-            box-shadow: 0 10px 24px rgba(212, 175, 55, 0.28);
-        }
-
-        .step.completed {
-            border-color: #4CAF50;
-            background: rgba(76, 175, 80, 0.08);
-            color: #2E7D32;
-        }
-
-        .step-pane {
-            display: none;
-            animation: fadeInUp 0.3s ease;
-        }
-
-        .step-pane.active {
-            display: block;
-        }
-
-        .step-actions {
-            display: flex;
-            justify-content: space-between;
-            gap: 1rem;
-            margin-top: 1rem;
-        }
-
-        .btn-secondary-outline {
-            flex: 1;
-            background: transparent;
-            border: 2px solid #6B2C2C;
-            color: #6B2C2C;
-            padding: 0.95rem 1rem;
-            border-radius: 6px;
-            font-weight: 700;
-            cursor: pointer;
-            transition: all 0.25s ease;
-        }
-
-        .btn-secondary-outline:hover {
-            background: #6B2C2C;
-            color: #fff;
-        }
-
-        .btn-primary-solid {
-            flex: 1;
-            background: linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%);
-            color: #4A4A4A;
-            border: 2px solid #D4AF37;
-            padding: 0.95rem 1rem;
-            border-radius: 6px;
-            font-weight: 800;
-            cursor: pointer;
-            transition: all 0.25s ease;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .btn-primary-solid:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 28px rgba(212, 175, 55, 0.4);
-        }
-
-        .btn-primary-solid:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-            box-shadow: none;
-        }
-
-        .btn-primary-solid.is-loading {
-            position: relative;
-            color: #4A4A4A;
-        }
-
-        .btn-primary-solid.is-loading::after {
-            content: '';
-            position: absolute;
-            right: 1rem;
-            top: 50%;
-            width: 16px;
-            height: 16px;
-            margin-top: -8px;
-            border: 2px solid rgba(74, 74, 74, 0.35);
-            border-top-color: #4A4A4A;
-            border-radius: 50%;
-            animation: spin 0.7s linear infinite;
-        }
-
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .order-recap {
-            background: rgba(212, 175, 55, 0.12);
-            border: 1px solid rgba(212, 175, 55, 0.3);
-            border-radius: 10px;
-            padding: 1rem 1.1rem;
-            margin-top: 0.5rem;
-            color: #4A4A4A;
-        }
-
-        .order-recap strong {
-            color: #6B2C2C;
-        }
-
-        .confidence-section {
-            display: grid;
-            grid-template-columns: 1fr 1fr 1fr;
-            gap: 1rem;
-            margin: 1.5rem 0 2rem 0;
-        }
-
-        .confidence-item {
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.08) 0%, rgba(212, 175, 55, 0.04) 100%);
-            border: 1px solid rgba(212, 175, 55, 0.2);
-            border-radius: 10px;
-            padding: 1rem 0.9rem;
-            text-align: center;
-            transition: all 0.3s ease;
-        }
-
-        .confidence-item:hover {
-            border-color: rgba(212, 175, 55, 0.4);
-            background: linear-gradient(135deg, rgba(212, 175, 55, 0.12) 0%, rgba(212, 175, 55, 0.08) 100%);
-            transform: translateY(-2px);
-        }
-
-        .confidence-icon {
-            font-size: 1.8rem;
-            margin-bottom: 0.5rem;
-            display: block;
-        }
-
-        .confidence-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            color: #6B2C2C;
-            margin-bottom: 0.4rem;
-            line-height: 1.3;
-        }
-
-        .confidence-description {
-            font-size: 0.75rem;
-            color: #4A4A4A;
-            opacity: 0.8;
-            line-height: 1.4;
-        }
-
-        @media (max-width: 768px) {
-            .confidence-section {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-                margin: 1.2rem 0 1.5rem 0;
-            }
-
-            .confidence-item {
-                padding: 0.85rem 0.75rem;
-            }
-
-            .confidence-icon {
-                font-size: 1.6rem;
-                margin-bottom: 0.35rem;
-            }
-
-            .confidence-title {
-                font-size: 0.8rem;
-            }
-
-            .confidence-description {
-                font-size: 0.7rem;
-            }
-        }
-
-        .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .form-group label {
-            display: block;
-            font-weight: 600;
-            color: #6B2C2C;
-            margin-bottom: 0.5rem;
-            font-size: 0.95rem;
-        }
-
-        .field-note {
-            font-size: 0.85rem;
-            color: #4A4A4A;
-            opacity: 0.85;
-            margin-top: 0.35rem;
-            line-height: 1.4;
-        }
-
-        .form-group input,
-        .form-group textarea {
-            width: 100%;
-            padding: 0.9rem 1rem;
-            border: 2px solid #D4AF37;
-            border-radius: 6px;
-            font-family: 'Inter', sans-serif;
-            font-size: 1rem;
-            transition: all 0.3s;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #6B2C2C;
-            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.2);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1rem;
-        }
-
-        .form-row .form-group {
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-submit {
-            width: 100%;
-            background: linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%);
-            color: #4A4A4A;
-            border: none;
-            padding: 1rem;
-            font-size: 1.05rem;
-            font-weight: 800;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 8px 20px rgba(212, 175, 55, 0.3);
-        }
-
-        .modal-submit:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(212, 175, 55, 0.4);
-        }
-
-        .secure-note {
-            margin-top: 0.75rem;
-            font-size: 0.8rem;
-            color: #4A4A4A;
-            text-align: center;
-            opacity: 0.85;
-        }
-
-        .refund-note {
-            margin-top: 0.35rem;
-            font-size: 0.75rem;
-            color: #4A4A4A;
-            text-align: center;
-            opacity: 0.75;
-        }
-
-        .success-message {
-            display: none !important;
-            text-align: center;
-            color: #2B2B2B;
-            font-weight: 600;
-            margin-top: 1rem;
-            padding: 2rem;
-            background: linear-gradient(135deg, #f0f7f0 0%, #ffffff 50%, #e8f5e9 100%);
-            border-radius: 12px;
-            border: 2px solid #4CAF50;
-            box-shadow: 0 8px 16px rgba(46, 125, 50, 0.15);
-        }
-
-        .success-message.show {
-            display: block !important;
-            animation: fadeInUp 0.4s ease-out;
-        }
-
-        .success-checkmark {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 1.5rem;
-        }
-
-        .checkmark-circle {
-            width: 60px;
-            height: 60px;
-            background: #4CAF50;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2.5rem;
-            font-weight: 700;
-            animation: checkmarkBounce 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes checkmarkBounce {
-            0% {
-                transform: scale(0);
-            }
-            50% {
-                transform: scale(1.1);
-            }
-            100% {
-                transform: scale(1);
-            }
-        }
-
-        #tracking-info {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%);
-            border-left: 4px solid #1976D2;
-            border-radius: 4px;
-            font-size: 0.9rem;
-            line-height: 1.8;
-            color: #0d47a1;
-        }
-
-        #tracking-info a {
-            color: #1976D2;
-            font-weight: 600;
-            text-decoration: none;
-            transition: opacity 0.3s;
-        }
-
-        #tracking-info a:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-
-        @media (max-width: 768px) {
-            .modal-content {
-                padding: 2rem 1.5rem;
-                max-height: 88vh;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-            }
-
-            .step-pane {
-                padding-bottom: 0.5rem;
-            }
-
-            .modal-trust {
-                gap: 0.5rem;
-            }
-
-            .trust-item {
-                font-size: 0.72rem;
-            }
-
-            .price-amount {
-                font-size: 1.4rem;
-            }
-
-            .modal-close {
-                top: 0.8rem;
-                right: 0.8rem;
-                font-size: 1.5rem;
-                width: 30px;
-                height: 30px;
-            }
-        }
-    `;
-    document.head.appendChild(styleSheet);
 
     // Create modal HTML
     const modalHTML = `
@@ -933,7 +280,7 @@ function initOrderModal() {
     function calculatePricing(qty) {
         const safeQty = Number.isFinite(qty) ? qty : 1;
         const baseTotal = safeQty * pricingConfig.unitPrice;
-        
+
         // No discounts for COD
         if (isCodSelected) {
             return {
@@ -945,7 +292,7 @@ function initOrderModal() {
                 offer: null
             };
         }
-        
+
         // Apply discounts for online payments
         const offer = getOfferForQty(safeQty);
         const discount = offer ? Math.round((baseTotal * offer.discountPercent) / 100) : 0;
@@ -1077,13 +424,13 @@ function initOrderModal() {
 
             const result = await response.json();
             pincodeServiceable = !!result.serviceable;
-            
+
             // Auto-fill city and state if available
             if (result.city && result.state) {
                 document.getElementById('city').value = result.city;
                 document.getElementById('state').value = result.state;
             }
-            
+
             if (pincodeServiceable) {
                 const courierCount = result.courier_count || 0;
                 setPincodeStatus('success', `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
@@ -1207,7 +554,7 @@ function initOrderModal() {
         isModalOpen = true;
         lastFocusedElement = document.activeElement;
         document.addEventListener('keydown', handleModalKeydown);
-        
+
         // Track ViewContent event (CTA click / modal open) - non-blocking
         const savedPhone = localStorage.getItem('amrutbaa_phone');
         if (trackMetaViewContent) {
@@ -1240,7 +587,7 @@ function initOrderModal() {
         });
 
         const pricing = currentQty ? calculatePricing(currentQty) : { total: 0, unitPrice: pricingConfig.unitPrice, qty: 0 };
-        
+
         // Track modal open (Begin Checkout)
         window.dataLayer = window.dataLayer || [];
         dataLayer.push({
@@ -1269,7 +616,7 @@ function initOrderModal() {
             lastFocusedElement.focus();
         }
         lastFocusedElement = null;
-        
+
         // Track modal close / abandonment
         const currentStep = modal.querySelector('.step-pane.active')?.dataset?.step || '1';
         window.dataLayer = window.dataLayer || [];
@@ -1318,7 +665,7 @@ function initOrderModal() {
             e.preventDefault();
             const qty = parseInt(btn.getAttribute('data-qty'));
             quantityInput.value = qty;
-            
+
             // Visual feedback
             qtyButtons.forEach(b => {
                 b.style.background = '#fff';
@@ -1328,7 +675,7 @@ function initOrderModal() {
             btn.style.background = 'linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%)';
             btn.style.borderColor = '#D4AF37';
             btn.style.color = '#4A4A4A';
-            
+
             updatePricingUI();
             pincodeServiceable = null;
             updateStep1CTA();
@@ -1340,7 +687,7 @@ function initOrderModal() {
     phoneInput?.addEventListener('input', (e) => {
         const phoneValue = e.target.value.replace(/\D/g, '');
         e.target.value = phoneValue;
-        
+
         // Auto-advance when exactly 10 digits entered
         if (phoneValue.length === 10) {
             clearErrors();
@@ -1354,19 +701,19 @@ function initOrderModal() {
                         'step': 'phone_submit',
                         'phone_verified': true
                     });
-                    
+
                     // Save phone to localStorage for future visits
                     localStorage.setItem('amrutbaa_phone', phoneValue);
-                    
+
                     setStep(2);
-                    
+
                     // Track Step 2 start
                     dataLayer.push({
                         'event': 'form_step_2_start',
                         'form_name': 'registration_form',
                         'step': 'details_form'
                     });
-                    
+
                     // Focus on first field of Step 2
                     document.getElementById('name')?.focus();
                 }, 300);
@@ -1386,19 +733,19 @@ function initOrderModal() {
                 'step': 'phone_submit',
                 'phone_verified': phoneValue.length === 10
             });
-            
+
             // Save phone to localStorage
             localStorage.setItem('amrutbaa_phone', phoneValue.replace(/\D/g, ''));
-            
+
             // Get quantity and calculate value for tracking
             const quantity = getSelectedQuantity();
             const pricing = calculatePricing(quantity);
-            
+
             // Track AddToCart event (Jar reserved / quantity selected)
             trackMetaAddToCart(null, quantity, pricing.total).catch(err => console.warn('Meta AddToCart tracking failed:', err));
-            
+
             setStep(2);
-            
+
             dataLayer.push({
                 'event': 'form_step_2_start',
                 'form_name': 'registration_form',
@@ -1488,7 +835,7 @@ function initOrderModal() {
             const pricing = calculatePricing(formData.quantity);
             const pricePerJar = pricing.unitPrice;
             const totalAmount = pricing.total;
-            
+
             // For COD, skip Razorpay and create order directly
             if (formData.payment_method === 'cod') {
                 // Track COD Purchase (no payment gateway)
@@ -1579,12 +926,12 @@ function initOrderModal() {
 
                 // Track Purchase event to Meta for COD with payment_method
                 const codOrderId = codResult.order_id || `COD-${Date.now()}`;
-                trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => {});
+                trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => { });
 
                 // Update success message
                 document.getElementById('order-number').textContent = codOrderId.substring(0, 15) + '...';
                 document.getElementById('order-amount').textContent = `₹${totalAmount}`;
-                
+
                 // Show success message immediately
                 successMessage.classList.add('show');
                 registrationForm.style.display = 'none !important';
@@ -1607,7 +954,7 @@ function initOrderModal() {
                     tracking_number: null,
                     shipment_id: null,
                     courier_name: null
-                }).catch(() => {});
+                }).catch(() => { });
 
                 // Redirect to thank-you page after 2 seconds
                 setTimeout(() => {
@@ -1627,7 +974,7 @@ function initOrderModal() {
             }
 
             // RAZORPAY FLOW (existing code)
-            
+
             // Track Add to Cart / Package Selection
             window.dataLayer = window.dataLayer || [];
             dataLayer.push({
@@ -1647,7 +994,7 @@ function initOrderModal() {
                     }]
                 }
             });
-            
+
             // Track Shipping Info Added
             dataLayer.push({
                 'event': 'add_shipping_info',
@@ -1688,7 +1035,7 @@ function initOrderModal() {
             }
 
             const order = await orderResponse.json();
-            
+
             // Track Payment Info Added (Razorpay modal about to open)
             dataLayer.push({
                 'event': 'add_payment_info',
@@ -1766,7 +1113,7 @@ function initOrderModal() {
                             // Update success message with ALL order details
                             document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
                             document.getElementById('order-amount').textContent = `₹${totalAmount}`;
-                            
+
                             // Show success message IMMEDIATELY
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none !important';
@@ -1777,7 +1124,7 @@ function initOrderModal() {
                             // 1. Track Purchase to Meta (Conversions API)
                             // 2. Create Shiprocket shipment (no duplicate)
                             // 3. Send order confirmation email
-                            
+
                             // 🔒 Prevent duplicate tracking for same order
                             if (processedOrders.has(response.razorpay_payment_id)) {
                                 console.warn('⚠️ Order already processed:', response.razorpay_payment_id);
@@ -1785,7 +1132,7 @@ function initOrderModal() {
                             }
                             processedOrders.add(response.razorpay_payment_id);
                             saveProcessedOrders();
-                            
+
                             submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
@@ -1794,8 +1141,8 @@ function initOrderModal() {
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null
-                            }, response.razorpay_payment_id, totalAmount).catch(() => {});
-                            
+                            }, response.razorpay_payment_id, totalAmount).catch(() => { });
+
                             // Let n8n handle tracking display after shipment creation
                             setTimeout(() => {
                                 // Attempt to fetch tracking info from n8n response
@@ -1830,7 +1177,7 @@ function initOrderModal() {
                             submitBtn.disabled = false;
                             submitBtn.classList.remove('is-loading');
                             submitBtn.setAttribute('aria-busy', 'false');
-                            
+
                             // Track payment failure
                             window.dataLayer = window.dataLayer || [];
                             dataLayer.push({
@@ -1846,7 +1193,7 @@ function initOrderModal() {
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('is-loading');
                         submitBtn.setAttribute('aria-busy', 'false');
-                        
+
                         // Track payment error
                         window.dataLayer = window.dataLayer || [];
                         dataLayer.push({
@@ -1874,7 +1221,7 @@ function initOrderModal() {
                         submitBtn.disabled = false;
                         submitBtn.classList.remove('is-loading');
                         submitBtn.setAttribute('aria-busy', 'false');
-                        
+
                         // Track payment cancellation
                         window.dataLayer = window.dataLayer || [];
                         dataLayer.push({
@@ -1924,7 +1271,7 @@ function initOrderModal() {
     async function trackMetaViewContent(phone) {
         try {
             const eventId = generateEventId();
-            
+
             // Fire Meta Pixel event
             if (typeof fbq === 'function') {
                 fbq('track', 'ViewContent', {
@@ -1935,7 +1282,7 @@ function initOrderModal() {
                     value: 299
                 }, { eventID: eventId });
             }
-            
+
             const response = await fetch('/api/track-view', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1947,7 +1294,7 @@ function initOrderModal() {
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
-            
+
             const result = await response.json();
             console.log('✅ ViewContent tracked to Meta', result);
             return result;
@@ -1961,7 +1308,7 @@ function initOrderModal() {
     async function trackMetaAddToCart(formData, quantity, value) {
         try {
             const eventId = generateEventId();
-            
+
             // Fire Meta Pixel event
             if (typeof fbq === 'function') {
                 fbq('track', 'AddToCart', {
@@ -1973,7 +1320,7 @@ function initOrderModal() {
                     num_items: quantity || 1
                 }, { eventID: eventId });
             }
-            
+
             const response = await fetch('/api/track-addtocart', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -1990,7 +1337,7 @@ function initOrderModal() {
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
-            
+
             const result = await response.json();
             console.log('✅ AddToCart tracked to Meta', result);
             return result;
@@ -2004,7 +1351,7 @@ function initOrderModal() {
     async function trackMetaInitiateCheckout(formData, quantity, value) {
         try {
             const eventId = generateEventId();
-            
+
             // Fire Meta Pixel event
             if (typeof fbq === 'function') {
                 fbq('track', 'InitiateCheckout', {
@@ -2016,7 +1363,7 @@ function initOrderModal() {
                     num_items: quantity || 1
                 }, { eventID: eventId });
             }
-            
+
             const response = await fetch('/api/track-initiate-checkout', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2033,7 +1380,7 @@ function initOrderModal() {
                     test_event_code: window.META_TEST_EVENT_CODE
                 })
             });
-            
+
             const result = await response.json();
             console.log('✅ InitiateCheckout tracked to Meta', result);
             return result;
@@ -2048,10 +1395,10 @@ function initOrderModal() {
     async function trackMetaAddPaymentInfo(formData, amount) {
         try {
             const eventId = generateEventId();
-            
+
             // Note: AddPaymentInfo is standard Meta event, but not tracked by default Pixel
             // Only sending via Conversions API for server-side tracking
-            
+
             const response = await fetch('/api/track-addpaymentinfo', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -2084,11 +1431,11 @@ function initOrderModal() {
     async function trackMetaPurchase(formData, amount, paymentId) {
         try {
             const eventId = generateEventId();
-            
+
             // Determine payment method from current form state
             const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
             const paymentMethod = paymentMethodRadio ? paymentMethodRadio.value : 'unknown';
-            
+
             // ✅ ONLY using Conversions API (server-side) to avoid duplicate tracking
             // Meta will handle deduplication via event_id
             const response = await fetch('/api/track-purchase', {
@@ -2132,7 +1479,7 @@ function initOrderModal() {
             // 2. Create Shiprocket shipment
             // 3. Send order confirmation email
             const eventId = generateEventId();
-            
+
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
