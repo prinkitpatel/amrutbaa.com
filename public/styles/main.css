@@ -2459,90 +2459,101 @@ html {
    =============================================== */
 
 .sticky-cta-bar {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1.5rem;
     position: fixed;
-    bottom: 0;
     left: 0;
     right: 0;
-    background: linear-gradient(135deg, #2E0C3A 0%, #3B1148 50%, #240829 100%);
-    border-top: 4px solid var(--golden);
-    padding: 1rem 1.75rem;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 1.5rem;
-    z-index: 150;
+    bottom: 0;
+    background: var(--cream);
+    box-shadow: 0 -2px 16px rgba(107,28,35,0.12);
+    z-index: 9999;
+    padding: 1.2rem 2rem;
 }
 
 .sticky-cta-bar .timer-info {
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 1rem;
     flex: 1;
-    min-width: 0;
 }
 
 .sticky-cta-bar .timer-label {
-    font-size: 0.72rem;
-    color: var(--golden);
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-weight: 900;
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 600;
     white-space: nowrap;
 }
 
 .sticky-cta-bar .timer-display {
-    font-family: 'Courier New', monospace;
-    font-size: 2rem;
-    font-weight: 900;
-    color: #FFD700;
-    letter-spacing: 3px;
-    min-width: 140px;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--maroon);
+    font-family: var(--font-display);
 }
 
 .sticky-cta-bar .price-anchor {
     display: flex;
     flex-direction: column;
-    align-items: center;
-    gap: 0.25rem;
-    padding: 0 1.5rem;
-    border-left: 2px solid rgba(201, 169, 97, 0.3);
-    border-right: 2px solid rgba(201, 169, 97, 0.3);
+    align-items: flex-start;
+    gap: 0.2rem;
+    flex: 0.8;
 }
 
 .sticky-cta-bar .price-value {
-    font-size: 1.8rem;
-    font-weight: 900;
-    color: var(--golden);
-    line-height: 1;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--maroon);
+    font-family: var(--font-display);
 }
 
 .sticky-cta-bar .price-label {
-    font-size: 0.65rem;
-    color: var(--golden-light);
-    text-transform: uppercase;
-    letter-spacing: 1.5px;
-    font-weight: 600;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.sticky-cta-bar .price-full {
+    font-size: 0.9rem;
+    color: var(--gray);
+    font-weight: 500;
+    text-decoration: line-through;
+    opacity: 0.7;
 }
 
 .sticky-cta-bar .price-compact {
-    display: none;
+    font-size: 1rem;
+    color: var(--golden);
+    font-weight: 600;
 }
 
 .sticky-cta-bar .cta-button-sticky {
-    background: linear-gradient(135deg, var(--golden) 0%, #E0BD4D 100%);
-    color: var(--charcoal);
-    border: 3px solid var(--golden);
-    padding: 0.85rem 1.8rem;
-    font-size: 0.95rem;
-    font-weight: 800;
-    border-radius: 10px;
+    background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-purple) 100%);
+    color: white;
+    padding: 1rem 1.5rem;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    font-weight: 700;
     cursor: pointer;
+    transition: all 0.3s;
+    box-shadow: 0 2px 8px rgba(107,28,35,0.15);
     white-space: nowrap;
-    flex-shrink: 0;
-    display: inline-flex;
+    display: flex;
     align-items: center;
-    justify-content: center;
     gap: 0.5rem;
+    min-height: 48px;
+}
+
+.sticky-cta-bar .cta-button-sticky:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(107,28,35,0.25);
 }
 
 .sticky-cta-bar .cta-arrow {
@@ -2565,20 +2576,34 @@ body {
         padding-bottom: 120px;
     }
     .sticky-cta-bar {
-        padding: 1rem 1.25rem;
+        flex-direction: row;
+        gap: 0.75rem;
+        padding: 1rem;
+    }
+    .sticky-cta-bar .timer-info {
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    .sticky-cta-bar .timer-label {
+        font-size: 0.8rem;
     }
     .sticky-cta-bar .timer-display {
-        font-size: 1.4rem;
+        font-size: 1.3rem;
     }
-    .sticky-cta-bar .price-label,
-    .sticky-cta-bar .timer-label {
-        display: none;
+    .sticky-cta-bar .price-anchor {
+        flex-direction: column;
+        gap: 0.1rem;
     }
-    .sticky-cta-bar .price-compact {
-        display: block;
-        font-size: 1.1rem;
-        font-weight: 900;
-        color: var(--golden);
+    .sticky-cta-bar .price-value {
+        font-size: 1.8rem;
+    }
+    .sticky-cta-bar .price-label {
+        font-size: 0.9rem;
+    }
+    .sticky-cta-bar .cta-button-sticky {
+        padding: 0.9rem 1.2rem;
+        font-size: 0.95rem;
+        min-height: 44px;
     }
     
     /* Mobile menu toggle */
@@ -2868,7 +2893,88 @@ body {
         align-items: flex-start;
         gap: 0.5rem;
     }
-
+    .sticky-cta-bar .price-value {
+        font-size: 2rem;
+        flex-shrink: 0;
+    }
+    .sticky-cta-bar .price-label {
+        flex-direction: column;
+        gap: 0.1rem;
+        align-items: flex-start;
+    }
+    .sticky-cta-bar .price-full {
+        font-size: 0.85rem;
+        opacity: 0.8;
+    }
+    .sticky-cta-bar .price-compact {
+        font-size: 0.95rem;
+    }
+    .sticky-cta-bar .cta-button-sticky {
+        width: 100%;
+        min-height: 48px;
+        padding: 0.8rem;
+        font-size: 1.05rem;
+        margin-top: 0.5rem;
+    }
+    }
+    /* Sticky CTA Bar - iPhone fix */
+    .sticky-cta-bar {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.5rem;
+        padding: 1.2rem 0.8rem;
+    }
+    .sticky-cta-bar .timer-info,
+    .sticky-cta-bar .price-anchor {
+        flex-direction: column;
+        align-items: flex-start;
+        width: 100%;
+        margin-bottom: 0.3rem;
+    }
+    .sticky-cta-bar .price-value {
+        font-size: 2.2rem;
+        font-weight: 700;
+        color: var(--maroon);
+        margin-bottom: 0.2rem;
+    }
+    .sticky-cta-bar .price-label {
+        font-size: 1rem;
+        color: var(--gray);
+        display: flex;
+        flex-direction: row;
+        gap: 0.5rem;
+    }
+    .sticky-cta-bar .price-full {
+        font-size: 1rem;
+        color: var(--gray);
+        font-weight: 600;
+        opacity: 1;
+        text-decoration: none;
+    }
+    .sticky-cta-bar .price-compact {
+        font-size: 1.1rem;
+        color: var(--golden);
+        font-weight: 600;
+        text-decoration: none;
+    }
+    .sticky-cta-bar .cta-button-sticky {
+        width: 100%;
+        font-size: 1.2rem;
+        padding: 1rem;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--maroon) 0%, var(--dark-purple) 100%);
+        color: white;
+        font-weight: 700;
+        border: none;
+        box-shadow: 0 2px 8px rgba(107,28,35,0.15);
+        margin-top: 0.5rem;
+    }
+    .sticky-cta-bar .cta-arrow {
+        margin-left: 0.5rem;
+        font-size: 1.2rem;
+    }
+    }
+    
     .guarantee-badge {
         flex-direction: column;
         text-align: center;
