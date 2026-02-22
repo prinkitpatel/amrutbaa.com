@@ -2789,6 +2789,46 @@ body {
     body {
         font-size: 16px;
     }
+    
+    /* Ultra-small phones - override sticky CTA for 480px and below */
+    @media (max-width: 480px) {
+        .sticky-cta-bar {
+            flex-direction: column;
+            gap: 0.5rem;
+            padding: 0.75rem;
+        }
+        
+        .sticky-cta-bar .timer-info {
+            flex: 1 1 100%;
+            justify-content: center;
+            order: 1;
+        }
+        
+        .sticky-cta-bar .price-anchor {
+            width: 100%;
+            flex-direction: row;
+            align-items: center;
+            justify-content: space-between;
+            order: 2;
+        }
+        
+        .sticky-cta-bar .price-value {
+            font-size: 1.6rem;
+        }
+        
+        .sticky-cta-bar .cta-button-sticky {
+            width: 100%;
+            order: 3;
+            flex-direction: column;
+            gap: 0.25rem;
+            padding: 0.8rem 1rem;
+            font-size: 0.9rem;
+        }
+        
+        body {
+            padding-bottom: 120px;
+        }
+    }
 }
 
 @media (max-width: 480px) {
@@ -2857,27 +2897,14 @@ body {
     .countdown-number {
         font-size: 1.8rem;
     }
-    .countdown-segment {
-        padding: 0.75rem 0.25rem;
     }
-    .comparison-grid {
-        grid-template-columns: 1fr;
-        gap: 1.5rem;
-    }
-    .comparison-column.good {
-        transform: scale(1);
-        order: -1;
-    }
-    .comparison-section h2 {
-        font-size: 2rem;
-    }
-    .comparison-column {
-        padding: 2rem 1.5rem;
-    }
-    .column-header h3 {
-        font-size: 1.5rem;
-    }
-    .testimonials-grid {
+}
+
+/* ===============================================
+   FOOTER STYLES
+   =============================================== */
+
+.testimonials-grid {
         grid-template-columns: 1fr;
         gap: 2rem;
     }
