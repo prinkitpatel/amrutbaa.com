@@ -2720,75 +2720,74 @@
             /* Ultra-small phones (480px and below) - compact 2-row layout */
             @media (max-width: 480px) {
                 body {
-                    padding-bottom: 115px;
+                    padding-bottom: 110px;
                 }
 
                 .sticky-cta-bar {
-                    flex-direction: column;
-                    gap: 0.5rem;
-                    padding: 0.6rem 0.8rem;
-                    justify-content: flex-start;
-                    align-items: stretch;
-                    flex-wrap: nowrap;
+                    flex-direction: row;
+                    gap: 0.6rem;
+                    padding: 0.55rem 0.8rem;
+                    justify-content: space-between;
+                    align-items: center;
+                    flex-wrap: wrap;
                 }
 
                 /* Row 1: Timer (full width, centered) */
                 .timer-info {
-                    flex: 0 0 auto;
+                    flex: 0 0 100%;
                     flex-direction: row;
                     justify-content: center;
                     align-items: center;
-                    gap: 0.4rem;
-                    padding: 0.3rem 0;
+                    gap: 0.3rem;
+                    padding: 0.2rem 0;
                     order: 1;
                 }
 
                 .timer-label {
-                    display: inline;
-                    font-size: 0.8rem;
-                    letter-spacing: 0.5px;
-                    white-space: nowrap;
+                    display: none;
                 }
 
                 .timer-display {
-                    font-size: 1.15rem;
+                    font-size: 1.2rem;
                     font-weight: 700;
-                    letter-spacing: 0.4px;
+                    letter-spacing: 0.5px;
                     color: var(--golden);
                     white-space: nowrap;
                 }
 
-                /* Row 2: Price (left) + Button (right) */
+                /* Row 2: Price (left) + Button (right) - flex-wrap handles layout */
                 .price-anchor {
                     flex: 0 0 auto;
                     flex-direction: column;
                     align-items: flex-start;
                     justify-content: center;
-                    gap: 0.05rem;
+                    gap: 0.02rem;
                     padding: 0;
                     border: none;
                     order: 2;
                 }
 
                 .price-value {
-                    font-size: 1.35rem;
-                    font-weight: 700;
-                    line-height: 1;
+                    font-size: 1.4rem;
+                    font-weight: 800;
+                    line-height: 0.95;
                     color: var(--golden);
+                    letter-spacing: -0.5px;
                 }
 
                 .price-label {
                     flex-direction: row;
-                    gap: 0.15rem;
+                    gap: 0.08rem;
                     align-items: center;
-                    font-size: 0.68rem;
+                    font-size: 0.65rem;
                 }
 
                 .price-full {
                     display: inline;
                     text-decoration: line-through;
-                    opacity: 0.7;
+                    opacity: 0.6;
                     color: var(--golden-light);
+                    font-weight: 500;
                 }
 
                 .price-compact {
@@ -2800,18 +2799,20 @@
                     flex-direction: row;
                     align-items: center;
                     justify-content: center;
-                    gap: 0.35rem;
-                    padding: 0.6rem 0.9rem;
-                    font-size: 0.8rem;
-                    min-height: 40px;
+                    gap: 0.4rem;
+                    padding: 0.55rem 0.85rem;
+                    font-size: 0.75rem;
+                    min-height: 38px;
                     white-space: nowrap;
                     order: 3;
-                    margin-left: auto;
-                    align-self: center;
+                    font-weight: 700;
+                    text-transform: uppercase;
+                    letter-spacing: 0.5px;
                 }
 
                 .cta-arrow {
-                    font-size: 0.95rem;
+                    font-size: 0.9rem;
+                    font-weight: 700;
                 }
             }
         }
