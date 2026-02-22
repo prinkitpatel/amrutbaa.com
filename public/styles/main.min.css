@@ -2780,6 +2780,54 @@
                 padding: 0.65rem 0.9rem;
                 font-size: 0.72rem;
             }
+
+            /* Ultra-small phones (480px and below) - vertical stack */
+            @media (max-width: 480px) {
+                .sticky-cta-bar {
+                    flex-direction: column;
+                    gap: 0.5rem;
+                    padding: 0.75rem;
+                    justify-content: center;
+                    align-items: stretch;
+                }
+
+                .timer-info {
+                    flex: 1 1 100%;
+                    justify-content: center;
+                    align-items: center;
+                    order: 1;
+                }
+
+                .timer-label {
+                    display: block;
+                    font-size: 0.8rem;
+                }
+
+                .timer-display {
+                    font-size: 1.3rem;
+                }
+
+                .price-anchor {
+                    width: 100%;
+                    flex-direction: row;
+                    align-items: center;
+                    justify-content: space-between;
+                    order: 2;
+                }
+
+                .price-value {
+                    font-size: 1.6rem;
+                }
+
+                .cta-button-sticky {
+                    width: 100%;
+                    order: 3;
+                    flex-direction: column;
+                    gap: 0.25rem;
+                    padding: 0.8rem 1rem;
+                    font-size: 0.9rem;
+                }
+            }
         }
             .testimonial-author-info {
                 text-align: center;
