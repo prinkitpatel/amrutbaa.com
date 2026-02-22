@@ -2724,95 +2724,99 @@
                 }
 
                 .sticky-cta-bar {
-                    flex-direction: row;
-                    gap: 0.6rem;
-                    padding: 0.55rem 0.8rem;
-                    justify-content: space-between;
-                    align-items: center;
-                    flex-wrap: wrap;
+                    flex-direction: row !important;
+                    gap: 0.6rem !important;
+                    padding: 0.55rem 0.8rem !important;
+                    justify-content: space-between !important;
+                    align-items: center !important;
+                    flex-wrap: wrap !important;
                 }
 
                 /* Row 1: Timer (full width, centered) */
                 .timer-info {
-                    flex: 0 0 100%;
-                    flex-direction: row;
-                    justify-content: center;
-                    align-items: center;
-                    gap: 0.3rem;
-                    padding: 0.2rem 0;
-                    order: 1;
+                    flex: 0 0 100% !important;
+                    flex-direction: row !important;
+                    justify-content: center !important;
+                    align-items: center !important;
+                    gap: 0.3rem !important;
+                    padding: 0.2rem 0 !important;
+                    order: 1 !important;
+                    display: flex !important;
                 }
 
                 .timer-label {
-                    display: none;
+                    display: none !important;
                 }
 
                 .timer-display {
-                    font-size: 1.2rem;
-                    font-weight: 700;
-                    letter-spacing: 0.5px;
-                    color: var(--golden);
-                    white-space: nowrap;
+                    font-size: 1.2rem !important;
+                    font-weight: 700 !important;
+                    letter-spacing: 0.5px !important;
+                    color: var(--golden) !important;
+                    white-space: nowrap !important;
                 }
 
                 /* Row 2: Price (left) + Button (right) - flex-wrap handles layout */
                 .price-anchor {
-                    flex: 0 0 auto;
-                    flex-direction: column;
-                    align-items: flex-start;
-                    justify-content: center;
-                    gap: 0.02rem;
-                    padding: 0;
-                    border: none;
-                    order: 2;
+                    flex: 0 0 auto !important;
+                    flex-direction: column !important;
+                    align-items: flex-start !important;
+                    justify-content: center !important;
+                    gap: 0.02rem !important;
+                    padding: 0 !important;
+                    border: none !important;
+                    order: 2 !important;
+                    display: flex !important;
                 }
 
                 .price-value {
-                    font-size: 1.4rem;
-                    font-weight: 800;
-                    line-height: 0.95;
-                    color: var(--golden);
-                    letter-spacing: -0.5px;
+                    font-size: 1.4rem !important;
+                    font-weight: 800 !important;
+                    line-height: 0.95 !important;
+                    color: var(--golden) !important;
+                    letter-spacing: -0.5px !important;
                 }
 
                 .price-label {
-                    flex-direction: row;
-                    gap: 0.08rem;
-                    align-items: center;
-                    font-size: 0.65rem;
+                    flex-direction: row !important;
+                    gap: 0.08rem !important;
+                    align-items: center !important;
+                    font-size: 0.65rem !important;
+                    display: flex !important;
                 }
 
                 .price-full {
-                    display: inline;
-                    text-decoration: line-through;
-                    opacity: 0.6;
-                    color: var(--golden-light);
-                    font-weight: 500;
+                    display: inline !important;
+                    text-decoration: line-through !important;
+                    opacity: 0.6 !important;
+                    color: var(--golden-light) !important;
+                    font-weight: 500 !important;
                 }
 
                 .price-compact {
-                    display: none;
+                    display: none !important;
                 }
 
                 .cta-button-sticky {
-                    flex: 0 0 auto;
-                    flex-direction: row;
-                    align-items: center;
-                    justify-content: center;
-                    gap: 0.4rem;
-                    padding: 0.55rem 0.85rem;
-                    font-size: 0.75rem;
-                    min-height: 38px;
-                    white-space: nowrap;
-                    order: 3;
-                    font-weight: 700;
-                    text-transform: uppercase;
-                    letter-spacing: 0.5px;
+                    flex: 0 0 auto !important;
+                    flex-direction: row !important;
+                    align-items: center !important;
+                    justify-content: center !important;
+                    gap: 0.4rem !important;
+                    padding: 0.55rem 0.85rem !important;
+                    font-size: 0.75rem !important;
+                    min-height: 38px !important;
+                    white-space: nowrap !important;
+                    order: 3 !important;
+                    font-weight: 700 !important;
+                    text-transform: uppercase !important;
+                    letter-spacing: 0.5px !important;
+                    display: flex !important;
                 }
 
                 .cta-arrow {
-                    font-size: 0.9rem;
-                    font-weight: 700;
+                    font-size: 0.9rem !important;
+                    font-weight: 700 !important;
                 }
             }
         }
