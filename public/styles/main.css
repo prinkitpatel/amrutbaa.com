@@ -2793,8 +2793,43 @@ body {
 
 @media (max-width: 480px) {
     body {
-        padding-bottom: 140px;
+        padding-bottom: 120px;
     }
+    
+    /* Ultra-mobile friendly sticky CTA */
+    .sticky-cta-bar {
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 0.75rem;
+    }
+    
+    .sticky-cta-bar .timer-info {
+        flex: 1 1 100%;
+        justify-content: center;
+        order: 1;
+    }
+    
+    .sticky-cta-bar .price-anchor {
+        width: 100%;
+        flex-direction: row;
+        align-items: center;
+        justify-content: space-between;
+        order: 2;
+    }
+    
+    .sticky-cta-bar .price-value {
+        font-size: 1.6rem;
+    }
+    
+    .sticky-cta-bar .cta-button-sticky {
+        width: 100%;
+        order: 3;
+        flex-direction: column;
+        gap: 0.25rem;
+        padding: 0.8rem 1rem;
+        font-size: 0.9rem;
+    }
+    
     .title-english {
         font-size: 2rem;
     }
