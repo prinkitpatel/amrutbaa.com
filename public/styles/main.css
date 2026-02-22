@@ -2464,6 +2464,7 @@ html {
     justify-content: space-between;
     align-items: center;
     gap: 1.5rem;
+    flex-wrap: wrap;
     position: fixed;
     left: 0;
     right: 0;
@@ -2479,7 +2480,8 @@ html {
     flex-direction: row;
     align-items: center;
     gap: 1rem;
-    flex: 1;
+    flex: 1 1 220px;
+    min-width: 0;
 }
 
 .sticky-cta-bar .timer-label {
@@ -2494,6 +2496,7 @@ html {
     font-weight: 700;
     color: var(--maroon);
     font-family: var(--font-display);
+    white-space: nowrap;
 }
 
 .sticky-cta-bar .price-anchor {
@@ -2501,7 +2504,7 @@ html {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.2rem;
-    flex: 0.8;
+    flex: 0 0 auto;
 }
 
 .sticky-cta-bar .price-value {
@@ -2579,10 +2582,12 @@ body {
         flex-direction: row;
         gap: 0.75rem;
         padding: 1rem;
+        flex-wrap: wrap;
     }
     .sticky-cta-bar .timer-info {
         flex-direction: row;
         gap: 0.5rem;
+        flex: 1 1 100%;
     }
     .sticky-cta-bar .timer-label {
         font-size: 0.8rem;
