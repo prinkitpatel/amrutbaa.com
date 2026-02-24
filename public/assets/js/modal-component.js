@@ -258,6 +258,7 @@ function initOrderModal() {
     const submitBtn = document.getElementById('submitBtn');
     let currentStep = 1;
     let pincodeServiceable = null;
+    let codPincodeServiceable = null;
     let pincodeCheckTimer = null;
     let isCodSelected = false;
     let lastFocusedElement = null;
@@ -394,13 +395,18 @@ function initOrderModal() {
         }
     }
 
-    async function checkPincodeServiceability() {
+    async function checkPincodeServiceability(options = {}) {
         const raw = pincodeInput?.value || '';
         const pincode = raw.replace(/\D/g, '').trim();
+        const cod = options.cod === true;
         if (pincode.length !== 6) {
-            pincodeServiceable = null;
+            if (cod) {
+                codPincodeServiceable = null;
+            } else {
+                pincodeServiceable = null;
+            }
             setPincodeStatus(null, '');
-            return;
+            return null;
         }
 
         const qty = getSelectedQuantity() || 1;
@@ -414,7 +420,7 @@ function initOrderModal() {
                 body: JSON.stringify({
                     pincode,
                     weight,
-                    cod: false
+                    cod
                 })
             });
 
@@ -423,7 +429,11 @@ function initOrderModal() {
             }
 
             const result = await response.json();
-            pincodeServiceable = !!result.serviceable;
+            if (cod) {
+                codPincodeServiceable = !!result.serviceable;
+            } else {
+                pincodeServiceable = !!result.serviceable;
+            }
 
             // Auto-fill city and state if available
             if (result.city && result.state) {
@@ -431,15 +441,24 @@ function initOrderModal() {
                 document.getElementById('state').value = result.state;
             }
 
-            if (pincodeServiceable) {
+            const activeServiceability = cod ? codPincodeServiceable : pincodeServiceable;
+            if (activeServiceability) {
                 const courierCount = result.courier_count || 0;
-                setPincodeStatus('success', `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
+                setPincodeStatus('success', cod
+                    ? `COD available${courierCount ? ` (${courierCount} couriers)` : ''}.`
+                    : `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
             } else {
-                setPincodeStatus('error', 'Delivery not available yet.');
+                setPincodeStatus('error', cod ? 'COD not available for this pincode.' : 'Delivery not available yet.');
             }
+            return activeServiceability;
         } catch (error) {
-            pincodeServiceable = null;
+            if (cod) {
+                codPincodeServiceable = null;
+            } else {
+                pincodeServiceable = null;
+            }
             setPincodeStatus('error', 'Could not verify pincode.');
+            return null;
         }
     }
 
@@ -766,6 +785,7 @@ function initOrderModal() {
     });
     pincodeInput?.addEventListener('input', () => {
         pincodeServiceable = null;
+        codPincodeServiceable = null;
         if (pincodeCheckTimer) {
             clearTimeout(pincodeCheckTimer);
         }
@@ -780,18 +800,24 @@ function initOrderModal() {
     });
 
     pincodeInput?.addEventListener('blur', () => {
-        checkPincodeServiceability();
+        checkPincodeServiceability({ cod: isCodSelected });
     });
 
     paymentMethodOnline?.addEventListener('change', () => {
         isCodSelected = false;
         updatePricingUI();
+        if ((pincodeInput?.value || '').replace(/\D/g, '').trim().length === 6) {
+            checkPincodeServiceability({ cod: false });
+        }
         if (submitBtn) submitBtn.textContent = 'Reserve & Pay Securely';
     });
 
     paymentMethodCod?.addEventListener('change', () => {
         isCodSelected = true;
         updatePricingUI();
+        if ((pincodeInput?.value || '').replace(/\D/g, '').trim().length === 6) {
+            checkPincodeServiceability({ cod: true });
+        }
         if (submitBtn) submitBtn.textContent = 'Reserve & Pay on Delivery';
     });
 
@@ -838,6 +864,16 @@ function initOrderModal() {
 
             // For COD, skip Razorpay and create order directly
             if (formData.payment_method === 'cod') {
+                const codServiceable = await checkPincodeServiceability({ cod: true });
+                if (codServiceable !== true) {
+                    setError('pincode', 'COD is not serviceable on this pincode. Please choose Pay Now.');
+                    submitBtn.textContent = originalText;
+                    submitBtn.disabled = false;
+                    submitBtn.classList.remove('is-loading');
+                    submitBtn.setAttribute('aria-busy', 'false');
+                    return;
+                }
+
                 // Track COD Purchase (no payment gateway)
                 window.dataLayer = window.dataLayer || [];
                 dataLayer.push({
@@ -889,7 +925,14 @@ function initOrderModal() {
                 });
 
                 if (!codOrderResponse.ok) {
-                    throw new Error('Failed to create COD order');
+                    let codErrorMessage = 'Failed to create COD order';
+                    try {
+                        const codErrorResult = await codOrderResponse.json();
+                        codErrorMessage = codErrorResult?.error || codErrorResult?.message || codErrorMessage;
+                    } catch (_) {
+                        // Keep fallback message when response body is not JSON.
+                    }
+                    throw new Error(codErrorMessage);
                 }
 
                 const codResult = await codOrderResponse.json();
@@ -951,9 +994,9 @@ function initOrderModal() {
                     payment_type: 'cod',
                     order_id: codOrderId,
                     amount: totalAmount,
-                    tracking_number: null,
-                    shipment_id: null,
-                    courier_name: null
+                    tracking_number: codResult.awb_code || null,
+                    shipment_id: codResult.shipment_id || null,
+                    courier_name: codResult.courier_name || null
                 }).catch(() => { });
 
                 // Redirect to thank-you page after 2 seconds
@@ -964,7 +1007,7 @@ function initOrderModal() {
                         method: 'cod',
                         email: formData.email || '',
                         city: formData.city || '',
-                        address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                        address: `${formData.address1}${formData.address2 ? `, ${formData.address2}` : ''}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
                         event_id: generateEventId()
                     });
                     window.location.href = `/thank-you.html?${params.toString()}`;
@@ -1119,12 +1162,6 @@ function initOrderModal() {
                             registrationForm.style.display = 'none !important';
                             registrationForm.hidden = true;
 
-                            // ✅ Track Purchase + Create Shipment + Submit to n8n (all in ONE call)
-                            // This single n8n webhook call will handle:
-                            // 1. Track Purchase to Meta (Conversions API)
-                            // 2. Create Shiprocket shipment (no duplicate)
-                            // 3. Send order confirmation email
-
                             // 🔒 Prevent duplicate tracking for same order
                             if (processedOrders.has(response.razorpay_payment_id)) {
                                 console.warn('⚠️ Order already processed:', response.razorpay_payment_id);
@@ -1132,6 +1169,30 @@ function initOrderModal() {
                             }
                             processedOrders.add(response.razorpay_payment_id);
                             saveProcessedOrders();
+
+                            // Create shipment directly from worker to avoid losing orders if n8n is down.
+                            const trackingInfo = await createShiprocketShipment({
+                                order_id: response.razorpay_order_id,
+                                payment_id: response.razorpay_payment_id,
+                                customer_name: formData.name,
+                                customer_email: formData.email,
+                                customer_phone: formData.phone,
+                                address1: formData.address1,
+                                address2: formData.address2,
+                                city: formData.city,
+                                state: formData.state,
+                                pincode: formData.pincode,
+                                quantity: formData.quantity,
+                                amount: totalAmount,
+                                unit_price: pricePerJar,
+                                base_total: pricing.baseTotal,
+                                discount: pricing.discount || 0
+                            }, {
+                                order_id: response.razorpay_order_id,
+                                payment_id: response.razorpay_payment_id,
+                                customer_email: formData.email,
+                                customer_phone: formData.phone
+                            });
 
                             submitOrderDetails({
                                 ...formData,
@@ -1166,7 +1227,7 @@ function initOrderModal() {
                                     method: 'online',
                                     email: formData.email || '',
                                     city: formData.city || '',
-                                    address: `${formData.address}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
+                                    address: `${formData.address1}${formData.address2 ? `, ${formData.address2}` : ''}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
                                     event_id: generateEventId()
                                 });
                                 window.location.href = `/thank-you.html?${params.toString()}`;
@@ -1245,7 +1306,12 @@ function initOrderModal() {
             submitBtn.setAttribute('aria-busy', 'false');
 
         } catch (error) {
-            alert('Failed to initialize payment. Please try again.');
+            const paymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value || 'online';
+            if (paymentMethod === 'cod') {
+                alert(error?.message || 'Could not place COD order. Please try again or choose Pay Now.');
+            } else {
+                alert('Failed to initialize payment. Please try again.');
+            }
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
             submitBtn.classList.remove('is-loading');
@@ -1471,13 +1537,81 @@ function initOrderModal() {
         }
     }
 
+    async function createShiprocketShipmentWithRetry(payload) {
+        const maxAttempts = 3;
+        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
+            try {
+                const response = await fetch('/api/create-shipment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    return data.success ? data : null;
+                }
+
+                const errorText = await response.text();
+                if (attempt === maxAttempts) {
+                    console.warn('⚠️ Direct Shiprocket creation failed:', errorText);
+                }
+            } catch (error) {
+                if (attempt === maxAttempts) {
+                    console.warn('⚠️ Direct Shiprocket creation error:', error);
+                }
+            }
+
+            await new Promise((resolve) => setTimeout(resolve, attempt * 700));
+        }
+
+        return null;
+    }
+
+    async function createShiprocketShipment(payload, alertContext) {
+        try {
+            const result = await createShiprocketShipmentWithRetry(payload);
+            if (result) {
+                return result;
+            }
+            await notifyOpsShipmentFailure({
+                reason: 'shiprocket_creation_failed_after_retries',
+                ...alertContext
+            });
+            return null;
+        } catch (error) {
+            await notifyOpsShipmentFailure({
+                reason: 'shiprocket_creation_unhandled_error',
+                error: error?.message || 'unknown_error',
+                ...alertContext
+            });
+            return null;
+        }
+    }
+
+    async function notifyOpsShipmentFailure(payload) {
+        try {
+            await fetch('/api/ops-alert', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    alert_type: 'shipment_creation_failure',
+                    source: 'frontend_checkout',
+                    created_at: new Date().toISOString(),
+                    ...payload
+                })
+            });
+        } catch (error) {
+            console.warn('⚠️ Failed to notify ops alert endpoint:', error);
+        }
+    }
+
     async function submitOrderDetails(orderData, paymentId, totalAmount) {
         try {
             // Send as JSON POST - this runs in background, doesn't block UI
             // n8n will handle:
             // 1. Track Purchase to Meta (Conversions API) using event_id for deduplication
-            // 2. Create Shiprocket shipment
-            // 3. Send order confirmation email
+            // 2. Send order confirmation email
             const eventId = generateEventId();
 
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {

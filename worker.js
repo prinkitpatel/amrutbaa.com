@@ -166,7 +166,49 @@ export default {
       }
     }
 
-    // Create COD Order (no Razorpay, simplified without Shiprocket auth)
+    async function checkShiprocketServiceability(env, { pincode, weight = 0.15, cod = false }) {
+      if (!env.SHIPROCKET_PICKUP_PINCODE) {
+        return { success: false, error: 'Pickup pincode not configured' };
+      }
+
+      const token = await getShiprocketToken(env);
+      const queryParams = new URLSearchParams({
+        pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
+        delivery_postcode: String(pincode),
+        cod: cod ? 1 : 0,
+        weight: Number(weight) || 0.15
+      });
+
+      const response = await fetch(`https://apiv2.shiprocket.in/v1/external/courier/serviceability/?${queryParams.toString()}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        return {
+          success: false,
+          error: 'Failed to check pincode serviceability',
+          details: errorText
+        };
+      }
+
+      const serviceabilityData = await response.json();
+      const couriers = serviceabilityData?.data?.available_courier_companies || [];
+      const serviceable = Array.isArray(couriers) && couriers.length > 0;
+
+      return {
+        success: true,
+        serviceable,
+        courier_count: couriers.length,
+        data: serviceabilityData?.data || null
+      };
+    }
+
+    // Create COD Order in Shiprocket
     if (url.pathname === '/api/create-order-cod' && request.method === 'POST') {
       try {
         const orderData = await request.json();
@@ -197,16 +239,114 @@ export default {
           });
         }
 
-        // Generate simple COD order ID (no Shiprocket required)
-        const orderId = `COD-${Date.now()}-${Math.random().toString(36).substr(2, 9).toUpperCase()}`;
+        const safeQuantity = Number.isFinite(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
+        const safeUnitPrice = Number.isFinite(Number(unit_price)) && Number(unit_price) > 0
+          ? Number(unit_price)
+          : (Number.isFinite(Number(base_total)) && Number(base_total) > 0 ? Number(base_total) / safeQuantity : Number(amount) / safeQuantity);
+        const safeDiscount = Number.isFinite(Number(discount)) && Number(discount) > 0 ? Number(discount) : 0;
+        const safeAmount = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : safeUnitPrice * safeQuantity;
+        const safeWeight = Number((0.15 * safeQuantity).toFixed(2));
+
+        const codServiceability = await checkShiprocketServiceability(env, {
+          pincode,
+          weight: safeWeight,
+          cod: true
+        });
+
+        if (!codServiceability.success) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: codServiceability.error,
+            details: codServiceability.details
+          }), {
+            status: 500,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        if (!codServiceability.serviceable) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'COD is not serviceable for this pincode'
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const token = await getShiprocketToken(env);
+
+        const shipmentData = {
+          order_id: `COD-${Date.now()}-${Math.random().toString(36).slice(2, 11).toUpperCase()}`,
+          order_date: new Date().toISOString().split('T')[0],
+          pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
+          channel_id: "",
+          comment: "Weekly batch order - Amrutbaa Traditional Chutney (COD)",
+          billing_customer_name: customer_name,
+          billing_last_name: "",
+          billing_address: address1,
+          billing_address_2: address2 || "",
+          billing_city: city,
+          billing_pincode: pincode,
+          billing_state: state,
+          billing_country: "India",
+          billing_email: customer_email,
+          billing_phone: customer_phone,
+          shipping_is_billing: true,
+          order_items: [
+            {
+              name: "Amrut Baa Chilly Garlic Chutney",
+              sku: "AMB-CGC-100G",
+              units: safeQuantity,
+              selling_price: safeUnitPrice,
+              discount: safeDiscount,
+              tax: 0,
+              hsn: 210390
+            }
+          ],
+          payment_method: "COD",
+          shipping_charges: 0,
+          giftwrap_charges: 0,
+          transaction_charges: 0,
+          total_discount: safeDiscount,
+          sub_total: safeAmount,
+          length: 10,
+          breadth: 10,
+          height: 8,
+          weight: 0.15 * safeQuantity
+        };
+
+        const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(shipmentData)
+        });
+
+        if (!shiprocketResponse.ok) {
+          const errorText = await shiprocketResponse.text();
+          console.error('Shiprocket COD API error:', errorText);
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Failed to create COD shipment',
+            details: errorText
+          }), {
+            status: shiprocketResponse.status,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        const shipmentResult = await shiprocketResponse.json();
 
         return new Response(JSON.stringify({
           success: true,
-          shipment_id: null,
-          order_id: orderId,
-          awb_code: null,
-          courier_name: null,
-          message: 'COD order created successfully - awaiting manual processing'
+          shipment_id: shipmentResult.shipment_id,
+          order_id: shipmentResult.order_id,
+          awb_code: shipmentResult.awb_code,
+          courier_name: shipmentResult.courier_name,
+          message: 'COD order created successfully'
         }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -238,52 +378,23 @@ export default {
           });
         }
 
-        if (!env.SHIPROCKET_PICKUP_PINCODE) {
+        const serviceability = await checkShiprocketServiceability(env, { pincode, weight, cod });
+        if (!serviceability.success) {
           return new Response(JSON.stringify({
             success: false,
-            error: 'Pickup pincode not configured'
+            error: serviceability.error,
+            details: serviceability.details
           }), {
             status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           });
         }
-
-        const token = await getShiprocketToken(env);
-        const queryParams = new URLSearchParams({
-          pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
-          delivery_postcode: String(pincode),
-          cod: cod ? 1 : 0,
-          weight: Number(weight) || 0.15
-        });
-        const serviceabilityResponse = await fetch(`https://apiv2.shiprocket.in/v1/external/courier/serviceability/?${queryParams.toString()}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
-
-        if (!serviceabilityResponse.ok) {
-          const errorText = await serviceabilityResponse.text();
-          return new Response(JSON.stringify({
-            success: false,
-            error: 'Failed to check pincode serviceability',
-            details: errorText
-          }), {
-            status: 500,
-            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-          });
-        }
-
-        const serviceabilityData = await serviceabilityResponse.json();
-        const couriers = serviceabilityData?.data?.available_courier_companies || [];
-        const serviceable = Array.isArray(couriers) && couriers.length > 0;
 
         return new Response(JSON.stringify({
           success: true,
-          serviceable,
-          courier_count: couriers.length,
-          data: serviceabilityData?.data || null
+          serviceable: serviceability.serviceable,
+          courier_count: serviceability.courier_count || 0,
+          data: serviceability.data || null
         }), {
           status: 200,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
@@ -513,6 +624,45 @@ export default {
       } catch (error) {
         console.error('Webhook error:', error);
         return new Response(JSON.stringify({ error: error.message }), {
+          status: 500,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      }
+    }
+
+    // Ops alert forwarding (communication only, no order creation)
+    if (url.pathname === '/api/ops-alert' && request.method === 'POST') {
+      try {
+        const alertData = await request.json();
+
+        if (!env.N8N_WEBHOOK_URL) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Ops webhook not configured'
+          }), {
+            status: 503,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
+        await fetch(env.N8N_WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            source: 'ops_alert',
+            ...alertData
+          })
+        });
+
+        return new Response(JSON.stringify({ success: true }), {
+          status: 200,
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        });
+      } catch (error) {
+        return new Response(JSON.stringify({
+          success: false,
+          error: error.message
+        }), {
           status: 500,
           headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
