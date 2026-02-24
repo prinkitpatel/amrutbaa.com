@@ -239,6 +239,11 @@ body {
   opacity: 0.9;
 }
 
+.price-full {
+  text-decoration: line-through;
+  opacity: 0.8;
+}
+
 .price-compact {
   display: none;
 }
