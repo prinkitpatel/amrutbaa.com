@@ -3897,11 +3897,15 @@ body {
 
 @media (max-width: 768px) {
   .origin-story {
-    padding: 4rem 0;
+    padding: 3rem 0;
   }
 
   .origin-content {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1rem;
+    background: transparent;
+    border: none;
+    backdrop-filter: none;
+    box-shadow: none;
   }
 
   .origin-title {
