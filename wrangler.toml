@@ -1,5 +1,5 @@
 name = "amrutbaa-com"
-main = "worker.js"
+main = "src/index.js"
 compatibility_date = "2026-01-17"
 
 [assets]

@@ -33,13 +33,13 @@ open http://localhost:8000
 
 ```
 Amrutbaa.com/
-├── index.html          # Main page with all sections
-├── styles/
-│   └── main.css       # All styles with animations
-├── scripts/
-│   └── main.js        # Enhanced interactivity
-├── assets/
-│   └── images/        # Product photos & assets
+├── docs/              # Project documentation and guides
+├── public/            # Static assets (HTML, CSS, JS, Images)
+├── src/               # Cloudflare Worker source code
+│   ├── api/          # API Handlers (Razorpay, Shiprocket)
+│   ├── utils/        # Shared utilities
+│   └── index.js      # Main worker entry point
+├── wrangler.toml      # Cloudflare worker config
 └── README.md          # This file
 ```
 

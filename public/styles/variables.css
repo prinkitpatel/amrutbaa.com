@@ -1,0 +1,41 @@
+/* === CSS Variables === */
+:root {
+    /* Grandmother's Saree Colors - Refined */
+    --maroon: #6B1C23;
+    --deep-maroon: #4D0E13;
+    --dark-purple: #3D1F47;
+    --light-purple: #5A2B66;
+    --golden: #C9A961;
+    --golden-light: #E6D5B8;
+    --golden-hover: #D4AF6F;
+    
+    /* Neutrals - Enhanced */
+    --cream: #FAF7F2;
+    --warm-white: #FFFCF7;
+    --charcoal: #1A1A1A;
+    --gray: #666666;
+    --light-gray: #E5E5E5;
+    --border-light: rgba(201, 169, 97, 0.15);
+    
+    /* Typography */
+    --font-display: 'Playfair Display', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-gujarati: 'Noto Sans Gujarati', sans-serif;
+    
+    /* Spacing Scale */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2.5rem;
+    --spacing-xl: 4rem;
+    
+    /* Shadows */
+    --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
+    --shadow-md: 0 4px 20px rgba(0, 0, 0, 0.12);
+    --shadow-lg: 0 8px 30px rgba(0, 0, 0, 0.15);
+    
+    /* Transitions */
+    --transition-fast: 0.2s ease;
+    --transition-normal: 0.3s ease;
+    --transition-slow: 0.5s ease;
+}
