@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" style="background-color: #7a0000;">
 
 <head>
     <!-- Google Tag Manager (Removed to external module) -->
@@ -46,7 +46,7 @@
 
 </head>
 
-<body>
+<body style="background-color: #7a0000; margin: 0; padding: 0;">
     <!-- Google Tag Manager (noscript) -->
     <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53CBVFF7" height="0" width="0"
             style="display:none;visibility:hidden"></iframe></noscript>
@@ -551,6 +551,66 @@
         </div>
     </section>
 
+    <!-- FAQ Section -->
+    <section class="faq-section" id="faq">
+        <div class="container" style="max-width: 800px; margin: 0 auto;">
+            <div style="text-align: center; margin-bottom: 2.5rem;">
+                <span class="section-tag"
+                    style="display: inline-block; padding: 0.4rem 1rem; background: rgba(212,175,55,0.1); color: #B8860B; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1rem;">Got
+                    Questions?</span>
+                <h2
+                    style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #2a1810; margin-bottom: 0.5rem;">
+                    Frequently Asked Questions</h2>
+            </div>
+
+            <div class="faq-container">
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>How spicy is it?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>It has a perfectly balanced bold kick that awakens your tastebuds without overpowering the
+                            main dish. The heat comes naturally from premium hand-picked red chillies.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>What is the shelf life?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Even with zero preservatives, our natural preparation method gives it a shelf life of up to 6
+                            months when unopened. Once opened, refrigerate and consume within 2 months.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Do I need to refrigerate it?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>We recommend refrigerating after opening to maintain the vibrant color and fresh garlic
+                            punch, as we use absolutely no chemical preservatives.</p>
+                    </div>
+                </div>
+
+                <div class="faq-item">
+                    <button class="faq-question">
+                        <span>Is it Vegan and Gluten-Free?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-answer">
+                        <p>Yes, 100%! Our chutney is purely plant-based, made with just garlic, chillies, spices, rock
+                            salt, and cold-pressed oil. No dairy, no gluten, no artificial colors.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Sticky CTA Footer Bar - high converting pattern -->
     <div class="sticky-cta-bar">
         <div class="timer-info">
@@ -856,6 +916,29 @@
         }
         // Initialize progress state
         updateProgress();
+
+        // FAQ Accordion Logic
+        const faqItems = document.querySelectorAll('.faq-item');
+        faqItems.forEach(item => {
+            const questionBtn = item.querySelector('.faq-question');
+            const answer = item.querySelector('.faq-answer');
+
+            questionBtn.addEventListener('click', () => {
+                const isActive = item.classList.contains('active');
+
+                // Close all other FAQs
+                faqItems.forEach(otherItem => {
+                    otherItem.classList.remove('active');
+                    otherItem.querySelector('.faq-answer').style.maxHeight = null;
+                });
+
+                // Toggle current FAQ
+                if (!isActive) {
+                    item.classList.add('active');
+                    answer.style.maxHeight = answer.scrollHeight + "px";
+                }
+            });
+        });
     </script>
 
     <!-- Razorpay Checkout Script (Moved for Performance) -->
