@@ -792,7 +792,7 @@ function initOrderModal() {
         const pincode = pincodeInput.value.replace(/\D/g, '').trim();
         if (pincode.length === 6) {
             pincodeCheckTimer = setTimeout(() => {
-                checkPincodeServiceability();
+                checkPincodeServiceability({ cod: isCodSelected });
             }, 400);
         } else {
             setPincodeStatus(null, '');
@@ -874,36 +874,8 @@ function initOrderModal() {
                     return;
                 }
 
-                // Track COD Purchase (no payment gateway)
-                window.dataLayer = window.dataLayer || [];
-                dataLayer.push({
-                    'event': 'purchase',
-                    'payment_type': 'cod',
-                    'ecommerce': {
-                        'transaction_id': `COD-${Date.now()}`,
-                        'value': totalAmount,
-                        'tax': 0,
-                        'shipping': 0,
-                        'currency': 'INR',
-                        'coupon': '',
-                        'items': [{
-                            'item_id': 'amrutbaa-chutney',
-                            'item_name': 'Amrutbaa Chilly Garlic Chutney',
-                            'item_category': 'Condiment',
-                            'item_brand': 'Amrut Baa',
-                            'price': pricePerJar,
-                            'quantity': formData.quantity
-                        }]
-                    },
-                    'order_id': `COD-${Date.now()}`,
-                    'payment_type': 'cod',
-                    'customer_email': formData.email,
-                    'customer_phone': formData.phone,
-                    'customer_city': formData.city,
-                    'customer_state': formData.state
-                });
-
                 // Create COD order via Worker
+                const codClientOrderRef = `COD-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
                 const codOrderResponse = await fetch('/api/create-order-cod', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -920,7 +892,8 @@ function initOrderModal() {
                         amount: totalAmount,
                         unit_price: pricePerJar,
                         base_total: pricing.baseTotal,
-                        discount: 0
+                        discount: 0,
+                        client_order_ref: codClientOrderRef
                     })
                 });
 
@@ -1005,9 +978,6 @@ function initOrderModal() {
                         order: codOrderId,
                         amount: totalAmount,
                         method: 'cod',
-                        email: formData.email || '',
-                        city: formData.city || '',
-                        address: `${formData.address1}${formData.address2 ? `, ${formData.address2}` : ''}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
                         event_id: generateEventId()
                     });
                     window.location.href = `/thank-you.html?${params.toString()}`;
@@ -1203,7 +1173,7 @@ function initOrderModal() {
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null
-                            }, response.razorpay_payment_id, totalAmount).catch(() => { });
+                            }).catch(() => { });
 
                             // Let n8n handle tracking display after shipment creation
                             setTimeout(() => {
@@ -1226,9 +1196,6 @@ function initOrderModal() {
                                     order: response.razorpay_order_id,
                                     amount: totalAmount,
                                     method: 'online',
-                                    email: formData.email || '',
-                                    city: formData.city || '',
-                                    address: `${formData.address1}${formData.address2 ? `, ${formData.address2}` : ''}, ${formData.city}, ${formData.state} - ${formData.pincode}`,
                                     event_id: generateEventId()
                                 });
                                 window.location.href = `/thank-you.html?${params.toString()}`;
@@ -1607,7 +1574,7 @@ function initOrderModal() {
         }
     }
 
-    async function submitOrderDetails(orderData, paymentId, totalAmount) {
+    async function submitOrderDetails(orderData) {
         try {
             // Send as JSON POST - this runs in background, doesn't block UI
             // n8n will handle:

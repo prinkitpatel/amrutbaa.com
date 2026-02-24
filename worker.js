@@ -3,9 +3,86 @@
  * Handles: Razorpay payments + Shiprocket shipping integration
  */
 
+let shiprocketTokenCache = {
+  token: null,
+  expiresAt: 0
+};
+
 export default {
   async fetch(request, env) {
     const url = new URL(request.url);
+
+    const defaultAllowedOrigins = [
+      'https://amrutbaa.com',
+      'https://www.amrutbaa.com',
+      'https://amrutbaa-com.prinkit-patel.workers.dev',
+      'http://localhost:8787',
+      'http://127.0.0.1:8787'
+    ];
+    const configuredOrigins = (env.ALLOWED_ORIGINS || '')
+      .split(',')
+      .map((origin) => origin.trim().toLowerCase())
+      .filter(Boolean);
+    const allowedOrigins = new Set([
+      ...defaultAllowedOrigins.map((origin) => origin.toLowerCase()),
+      ...configuredOrigins
+    ]);
+
+    function extractRequestOrigin(req) {
+      const origin = req.headers.get('origin');
+      if (origin) return origin.toLowerCase();
+      const referer = req.headers.get('referer');
+      if (!referer) return null;
+      try {
+        return new URL(referer).origin.toLowerCase();
+      } catch (_) {
+        return null;
+      }
+    }
+
+    function isTrustedOrigin(req) {
+      const requestOrigin = extractRequestOrigin(req);
+      return requestOrigin ? allowedOrigins.has(requestOrigin) : false;
+    }
+
+    function assertTrustedOrigin(req) {
+      return isTrustedOrigin(req)
+        ? null
+        : new Response(JSON.stringify({ error: 'Forbidden origin' }), {
+            status: 403,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+    }
+
+    function getPricing(quantity, paymentMethod) {
+      const safeQty = Math.min(10, Math.max(1, Number(quantity) || 1));
+      const unitPrice = 499;
+      const baseTotal = safeQty * unitPrice;
+      let discountPercent = 0;
+      if (paymentMethod === 'Prepaid') {
+        if (safeQty >= 3) discountPercent = 10;
+        else if (safeQty >= 2) discountPercent = 5;
+      }
+      const discount = Math.round((baseTotal * discountPercent) / 100);
+      const total = baseTotal - discount;
+      return { qty: safeQty, unitPrice, baseTotal, discount, total };
+    }
+
+    async function acquireIdempotencyLock(lockId, ttlSeconds = 86400) {
+      const cache = caches.default;
+      const lockKey = new Request(`https://idempotency.amrutbaa.internal/${encodeURIComponent(lockId)}`, { method: 'GET' });
+      const existing = await cache.match(lockKey);
+      if (existing) return false;
+      await cache.put(
+        lockKey,
+        new Response('locked', {
+          headers: {
+            'Cache-Control': `max-age=${ttlSeconds}`
+          }
+        })
+      );
+      return true;
+    }
     
     const corsHeaders = {
       'Access-Control-Allow-Origin': '*',
@@ -24,26 +101,31 @@ export default {
     // Create Razorpay Order
     if (url.pathname === '/api/create-order' && request.method === 'POST') {
       try {
-        const body = await request.json();
-        const { amount, name, email, phone, quantity } = body;
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
 
-        if (!amount || !name || !email || !phone || !quantity) {
+        const body = await request.json();
+        const { name, email, phone, quantity } = body;
+
+        if (!name || !email || !phone || !quantity) {
           return new Response(JSON.stringify({ error: 'Missing required fields' }), {
             status: 400,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
           });
         }
 
+        const pricing = getPricing(quantity, 'Prepaid');
+
         const auth = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`);
         const orderData = {
-          amount: Math.round(amount * 100),
+          amount: Math.round(pricing.total * 100),
           currency: 'INR',
           receipt: `order_${Date.now()}`,
           notes: {
             customer_name: name,
             customer_email: email,
             customer_phone: phone,
-            quantity: quantity,
+            quantity: pricing.qty,
             batch_date: new Date().toISOString()
           }
         };
@@ -85,6 +167,9 @@ export default {
     // Verify payment signature
     if (url.pathname === '/api/verify-payment' && request.method === 'POST') {
       try {
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
+
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json();
 
         const message = `${razorpay_order_id}|${razorpay_payment_id}`;
@@ -145,6 +230,11 @@ export default {
     // Get Shiprocket Auth Token (cached for 24 hours)
     async function getShiprocketToken(env) {
       try {
+        const now = Date.now();
+        if (shiprocketTokenCache.token && shiprocketTokenCache.expiresAt > now) {
+          return shiprocketTokenCache.token;
+        }
+
         const response = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
@@ -159,6 +249,10 @@ export default {
         }
 
         const data = await response.json();
+        shiprocketTokenCache = {
+          token: data.token,
+          expiresAt: now + (23 * 60 * 60 * 1000)
+        };
         return data.token;
       } catch (error) {
         console.error('Shiprocket auth error:', error);
@@ -211,6 +305,9 @@ export default {
     // Create COD Order in Shiprocket
     if (url.pathname === '/api/create-order-cod' && request.method === 'POST') {
       try {
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
+
         const orderData = await request.json();
         const {
           customer_name,
@@ -222,10 +319,7 @@ export default {
           state,
           pincode,
           quantity,
-          amount,
-          unit_price,
-          base_total,
-          discount
+          client_order_ref
         } = orderData;
 
         // Validate required fields
@@ -239,13 +333,27 @@ export default {
           });
         }
 
-        const safeQuantity = Number.isFinite(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
-        const safeUnitPrice = Number.isFinite(Number(unit_price)) && Number(unit_price) > 0
-          ? Number(unit_price)
-          : (Number.isFinite(Number(base_total)) && Number(base_total) > 0 ? Number(base_total) / safeQuantity : Number(amount) / safeQuantity);
-        const safeDiscount = Number.isFinite(Number(discount)) && Number(discount) > 0 ? Number(discount) : 0;
-        const safeAmount = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : safeUnitPrice * safeQuantity;
+        const pricing = getPricing(quantity, 'COD');
+        const safeQuantity = pricing.qty;
+        const safeUnitPrice = pricing.unitPrice;
+        const safeDiscount = pricing.discount;
+        const safeAmount = pricing.total;
         const safeWeight = Number((0.15 * safeQuantity).toFixed(2));
+
+        const lockSeed = client_order_ref || `${customer_phone}|${pincode}|${safeAmount}|${safeQuantity}`;
+        const lockId = `cod:${lockSeed}`;
+        const codLockAcquired = await acquireIdempotencyLock(lockId, 6 * 60 * 60);
+        if (!codLockAcquired) {
+          return new Response(JSON.stringify({
+            success: true,
+            duplicate: true,
+            order_id: client_order_ref || null,
+            message: 'Duplicate COD request ignored'
+          }), {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
 
         const codServiceability = await checkShiprocketServiceability(env, {
           pincode,
@@ -366,6 +474,9 @@ export default {
     // Check pincode serviceability
     if (url.pathname === '/api/check-pincode' && request.method === 'POST') {
       try {
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
+
         const { pincode, weight = 0.15, cod = false } = await request.json();
 
         if (!pincode || String(pincode).length !== 6) {
@@ -413,6 +524,9 @@ export default {
     // Create Shiprocket Order
     if (url.pathname === '/api/create-shipment' && request.method === 'POST') {
       try {
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
+
         const orderData = await request.json();
         const {
           order_id,          // Your internal order ID (e.g., Razorpay order ID)
@@ -425,11 +539,7 @@ export default {
           city,
           state,
           pincode,
-          quantity,
-          amount,
-          unit_price,
-          base_total,
-          discount
+          quantity
         } = orderData;
 
         // Validate required fields
@@ -443,16 +553,38 @@ export default {
           });
         }
 
+        const pricing = getPricing(quantity, 'Prepaid');
+        const idempotencyRef = payment_id || order_id;
+        if (!idempotencyRef) {
+          return new Response(JSON.stringify({
+            success: false,
+            error: 'Missing order_id or payment_id for idempotency'
+          }), {
+            status: 400,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+        const prepaidLockAcquired = await acquireIdempotencyLock(`prepaid:${idempotencyRef}`, 24 * 60 * 60);
+        if (!prepaidLockAcquired) {
+          return new Response(JSON.stringify({
+            success: true,
+            duplicate: true,
+            order_id: order_id || null,
+            message: 'Duplicate prepaid request ignored'
+          }), {
+            status: 200,
+            headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+          });
+        }
+
         // Get Shiprocket auth token
         const token = await getShiprocketToken(env);
 
         // Prepare shipment data
-        const safeQuantity = Number.isFinite(Number(quantity)) && Number(quantity) > 0 ? Number(quantity) : 1;
-        const safeUnitPrice = Number.isFinite(Number(unit_price)) && Number(unit_price) > 0
-          ? Number(unit_price)
-          : (Number.isFinite(Number(base_total)) && Number(base_total) > 0 ? Number(base_total) / safeQuantity : Number(amount) / safeQuantity);
-        const safeDiscount = Number.isFinite(Number(discount)) && Number(discount) > 0 ? Number(discount) : 0;
-        const safeAmount = Number.isFinite(Number(amount)) && Number(amount) > 0 ? Number(amount) : safeUnitPrice * safeQuantity;
+        const safeQuantity = pricing.qty;
+        const safeUnitPrice = pricing.unitPrice;
+        const safeDiscount = pricing.discount;
+        const safeAmount = pricing.total;
 
         const shipmentData = {
           order_id: order_id || `AMB${Date.now()}`,
@@ -546,6 +678,9 @@ export default {
     // Track Shipment by AWB/Order ID
     if (url.pathname === '/api/track-shipment' && request.method === 'POST') {
       try {
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
+
         const { shipment_id, awb_code } = await request.json();
 
         if (!shipment_id && !awb_code) {
@@ -633,9 +768,13 @@ export default {
     // Ops alert forwarding (communication only, no order creation)
     if (url.pathname === '/api/ops-alert' && request.method === 'POST') {
       try {
-        const alertData = await request.json();
+        const originError = assertTrustedOrigin(request);
+        if (originError) return originError;
 
-        if (!env.N8N_WEBHOOK_URL) {
+        const alertData = await request.json();
+        const opsWebhookUrl = env.OPS_ALERT_WEBHOOK_URL || env.N8N_WEBHOOK_URL;
+
+        if (!opsWebhookUrl) {
           return new Response(JSON.stringify({
             success: false,
             error: 'Ops webhook not configured'
@@ -645,7 +784,7 @@ export default {
           });
         }
 
-        await fetch(env.N8N_WEBHOOK_URL, {
+        await fetch(opsWebhookUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({
@@ -1234,7 +1373,8 @@ export default {
         services: {
           razorpay: !!env.RAZORPAY_KEY_ID,
           shiprocket: !!env.SHIPROCKET_EMAIL,
-          meta: !!env.META_DATASET_ID && !!env.META_ACCESS_TOKEN
+          meta: !!env.META_DATASET_ID && !!env.META_ACCESS_TOKEN,
+          ops_alert: !!(env.OPS_ALERT_WEBHOOK_URL || env.N8N_WEBHOOK_URL)
         }
       }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
