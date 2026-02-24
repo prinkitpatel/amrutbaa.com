@@ -3793,3 +3793,122 @@ body {
   color: #4a4a4a;
   line-height: 1.6;
 }
+
+/* ===== ORIGIN STORY SECTION ===== */
+.origin-story {
+  background: var(--maroon);
+  background-image: radial-gradient(circle at center, rgba(140, 20, 25, 0.4) 0%, var(--maroon) 100%);
+  color: var(--cream);
+  padding: 6rem 0;
+  position: relative;
+  overflow: hidden;
+  text-align: center;
+}
+
+.origin-story::before,
+.origin-story::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, transparent, var(--golden), transparent);
+}
+
+.origin-story::before {
+  top: 0;
+}
+
+.origin-story::after {
+  bottom: 0;
+}
+
+.story-content {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 3rem;
+  background: rgba(42, 24, 16, 0.4);
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  border-radius: 16px;
+  backdrop-filter: blur(10px);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.story-title {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--golden);
+  margin-bottom: 1.5rem;
+}
+
+.story-divider {
+  width: 60px;
+  height: 3px;
+  background: var(--golden);
+  margin: 0 auto 2rem;
+  border-radius: 2px;
+}
+
+.story-paragraph {
+  font-size: 1.15rem;
+  line-height: 1.8;
+  margin-bottom: 1.5rem;
+  color: #fff9f0;
+  opacity: 0.95;
+}
+
+.drop-cap {
+  float: left;
+  font-family: var(--font-display);
+  font-size: 4rem;
+  line-height: 0.8;
+  padding-top: 4px;
+  padding-right: 8px;
+  padding-left: 3px;
+  color: var(--golden);
+}
+
+.story-conclusion {
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+  border-top: 1px dashed rgba(212, 175, 55, 0.3);
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--golden-light);
+}
+
+.story-timer {
+  color: #fff;
+  background: rgba(212, 175, 55, 0.2);
+  padding: 0.2rem 0.6rem;
+  border-radius: 4px;
+  border: 1px solid rgba(212, 175, 55, 0.5);
+  display: inline-block;
+  font-variant-numeric: tabular-nums;
+  animation: pulse 2s infinite;
+}
+
+.story-cta-text {
+  font-size: 1rem;
+  margin-top: 0.8rem;
+  color: var(--cream);
+  opacity: 0.8;
+}
+
+@media (max-width: 768px) {
+  .origin-story {
+    padding: 4rem 0;
+  }
+
+  .story-content {
+    padding: 2rem 1.5rem;
+  }
+
+  .story-title {
+    font-size: 2rem;
+  }
+
+  .story-conclusion {
+    font-size: 1.1rem;
+  }
+}

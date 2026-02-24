@@ -31,7 +31,7 @@
         rel="stylesheet">
 
     <!-- Core Styles -->
-    <link rel="stylesheet" href="styles/main.css?v=3.4">
+    <link rel="stylesheet" href="styles/main.css?v=3.5">
 
 
     <!-- Critical CSS (Removed missing file) -->
@@ -308,6 +308,35 @@
 
         <!-- Hidden testimonial data -->
 
+    </section>
+
+    <!-- Origin Story Section -->
+    <section class="origin-story" aria-label="Our Origin Story">
+        <div class="container">
+            <div class="story-content">
+                <h2 class="story-title">The Discovery of "Red Gold"</h2>
+                <div class="story-divider"></div>
+                <p class="story-paragraph">
+                    <span class="drop-cap">450</span> Years ago Portuguese sailors brought the first red chilli to
+                    India. A kathiyavadi woman amused by its color and heat replaced pippali (long pepper) with red
+                    chilli for her garlic chutney. That is how "Red Gold" was accidentally discovered.
+                </p>
+                <p class="story-paragraph">
+                    Her cooking time became half, and villagers started craving for the powerful punch of taste, aroma,
+                    and color. This authentic recipe was worshipped & safeguarded across the generations.
+                </p>
+                <div class="story-conclusion">
+                    <p>
+                        Hansaben Patel, the daughter of Amrutbaa, is going to make a fresh batch of it in <strong
+                            class="story-timer" id="storyTimer">--:--:--</strong>.
+                    </p>
+                    <p class="story-cta-text">You can reserve a jar for you before registrations close.</p>
+                </div>
+                <button class="cta-button" id="openModalBtnStory" style="margin-top: 1.5rem;">
+                    <span class="cta-text">Reserve Your Jar</span>
+                </button>
+            </div>
+        </div>
     </section>
 
     <!-- Batch Journey Section -->
@@ -802,6 +831,15 @@
                     String(hours).padStart(2, '0') + ':' +
                     String(minutes).padStart(2, '0') + ':' +
                     String(seconds).padStart(2, '0');
+            }
+
+            const storyTimer = document.getElementById('storyTimer');
+            if (storyTimer) {
+                storyTimer.textContent =
+                    String(days) + 'd ' +
+                    String(hours).padStart(2, '0') + 'h ' +
+                    String(minutes).padStart(2, '0') + 'm ' +
+                    String(seconds).padStart(2, '0') + 's';
             }
 
             if (journeyCountdown) {
