@@ -123,19 +123,19 @@ function initOrderModal() {
                         <div class="form-row" style="margin-top: 1.25rem;">
                             <div class="form-group">
                                 <label for="name">Your Name *</label>
-                                <input type="text" id="name" name="name" placeholder="Full name" required autocomplete="name">
+                                <input type="text" id="name" name="name" placeholder="Full name" required autocomplete="shipping name">
                                 <p class="input-error" data-error-for="name" style="display:none;"></p>
                             </div>
                             <div class="form-group">
                                 <label for="email">Email *</label>
-                                <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="email">
+                                <input type="email" id="email" name="email" placeholder="your@email.com" required autocomplete="shipping email">
                                 <p class="input-error" data-error-for="email" style="display:none;"></p>
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="address1">Full Address *</label>
-                            <textarea id="address1" name="address1" placeholder="House/flat, street, area" required style="resize: none; min-height: 60px;" autocomplete="address-line1"></textarea>
+                            <textarea id="address1" name="address1" placeholder="House/flat, street, area" required style="resize: none; min-height: 60px;" autocomplete="shipping street-address"></textarea>
                             <p class="input-error" data-error-for="address1" style="display:none;"></p>
                             <p class="field-note">Include: House/flat number, street, area (landmarks help too)</p>
                         </div>
@@ -143,20 +143,20 @@ function initOrderModal() {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="pincode">Pincode *</label>
-                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required inputmode="numeric" autocomplete="postal-code">
+                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required inputmode="numeric" autocomplete="shipping postal-code">
                                 <p class="input-error" data-error-for="pincode" style="display:none;"></p>
                                 <p class="pincode-status" id="pincodeStatus"></p>
                             </div>
                             <div class="form-group">
                                 <label for="city">City *</label>
-                                <input type="text" id="city" name="city" placeholder="Auto-detected" required autocomplete="address-level2">
+                                <input type="text" id="city" name="city" placeholder="Auto-detected" required autocomplete="shipping address-level2">
                                 <p class="input-error" data-error-for="city" style="display:none;"></p>
                             </div>
                         </div>
                         
                         <div class="form-group">
                             <label for="state">State *</label>
-                            <input type="text" id="state" name="state" placeholder="Auto-detected" required autocomplete="address-level1">
+                            <input type="text" id="state" name="state" placeholder="Auto-detected" required autocomplete="shipping address-level1">
                             <p class="input-error" data-error-for="state" style="display:none;"></p>
                         </div>
                         
