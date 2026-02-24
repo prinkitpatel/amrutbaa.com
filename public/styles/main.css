@@ -299,16 +299,28 @@ body {
 .cta-button-sticky::before {
   content: "";
   position: absolute;
-  top: 0;
-  left: -100%;
-  width: 100%;
-  height: 100%;
+  inset: 0;
+  border-radius: inherit;
   background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.22),
-      transparent);
-  animation: shimmer 2.5s infinite;
+      transparent 0%,
+      transparent 40%,
+      rgba(255, 255, 255, 0.22) 50%,
+      transparent 60%,
+      transparent 100%);
+  background-size: 200% 100%;
+  animation: shimmer-bg 2.5s infinite linear;
   z-index: 1;
+  pointer-events: none;
+}
+
+@keyframes shimmer-bg {
+  0% {
+    background-position: 200% 0;
+  }
+
+  100% {
+    background-position: -200% 0;
+  }
 }
 
 /* Arrow icon styling */
