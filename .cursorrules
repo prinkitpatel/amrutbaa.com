@@ -1,0 +1,43 @@
+# Amrutbaa Codebase AI Guidelines
+You are an expert AI programming assistant. You are currently working on Amrutbaa, a vanilla HTML/CSS/JS e-commerce website backed by a Cloudflare Worker logic layer.
+
+## Project Structure & Architecture
+- `public/`: The frontend directory. Contains all static assets served to the user.
+  - `public/index.html`: The main landing page. **Rule: No inline `<style>` or `<script>` tags allowed. Keep it Semantic.**
+  - `public/styles/`: Contains stylesheets. **Crucial Rule:** `main.css` is the single source of truth for styles. **DO NOT** attempt to modularize it programmatically as it breaks the cascade. Minification is handled externally.
+  - `public/scripts/`: Contains frontend JavaScript. Broken down carefully into ES Modules (`main.js`, `api.js`, `analytics.js`, `ui.js`).
+- `src/`: The backend Cloudflare Worker directory.
+  - `src/index.js`: The main router.
+  - `src/api/`: Contains external integrations (`razorpay.js`, `shiprocket.js`, `analytics.js`, `ops.js`).
+  - `src/utils/`: Contains helpers like `cors.js`, `pricing.js`.
+- `docs/`: Supplemental human/AI documentation.
+- `archive/`: Old backup files. DO NOT touch code here.
+
+## Tech Stack
+- Frontend: Vanilla HTML5, Vanilla CSS3, Vanilla JavaScript (ES6+ Modules).
+- Backend: Cloudflare Workers (Edge Computing, Request/Response fetch handlers).
+- APIs: Razorpay (Payments), Shiprocket (Logistics), Meta Conversions API (FB Pixel), n8n (Webhooks).
+
+## Strict Coding Guidelines for AI Agents (Vibe Coding Rules)
+
+### 1. Zero Build Step Frontend
+We do not use React, Vue, Webpack, or Vite. Do not suggest or install `npm` frontend packages. Ensure all frontend JavaScript runs natively in the browser via `<script type="module">`.
+
+### 2. Do Not Break The Cascade (CSS)
+`public/styles/main.css` is heavily dependent on the cascade order. If the user asks for design changes, append them logically or search for the existing component block via comments (e.g., `/* HERO SECTION */`). Do not arbitrarily split the CSS into multiple files.
+
+### 3. Maintain Absolute Modularity (Backend Worker)
+When adding new backend endpoints:
+1. Create a logical ES module in `src/api/` or `src/utils/`.
+2. Keep it completely stateless (Cloudflare Workers execution model).
+3. Import and route it safely inside `src/index.js`.
+4. Run `npx wrangler dev` to verify the module imports.
+
+### 4. Vibe & Aesthetics
+Amrutbaa is a premium, nostalgic brand. Avoid flat, overly "startup-ish" modern UI. Use gradients (`--golden`, `--maroon`), glassmorphism, subtle micro-animations, and the `Playfair Display` font. Check `variables.css` (if applicable) or the root `:root` scope in `main.css` for the exact color palette.
+
+### 5. Idempotency & Safety
+Payment (Razorpay) and Logistic (Shiprocket) API calls MUST be wrapped in idempotency locks (using Cloudflare Caches) from `src/utils/idempotency.js` to ensure the customer is never double-charged if they double-click checkout.
+
+### Remember
+If instructed to update the site's code, always verify the line numbers to replace correctly using diffs. Double check that minified files aren't updated manually without their unminified counterparts.

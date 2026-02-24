@@ -40,8 +40,15 @@ Amrutbaa.com/
 │   ├── utils/        # Shared utilities
 │   └── index.js      # Main worker entry point
 ├── wrangler.toml      # Cloudflare worker config
-└── README.md          # This file
 ```
+
+## 🤖 AI & Vibe Coding Guidelines
+This project is configured for seamless AI-assisted development (vibe coding). 
+Please read the `.cursorrules` file in the root directory. It contains the ultimate source of truth for:
+- Avoiding build-step complexities (strictly Vanilla JS).
+- Respecting the CSS cascade without over-modularizing.
+- Working with the Cloudflare Worker architecture.
+- Maintaining the nostalgic, premium brand aesthetics.
 
 ## 🎨 Features
 
