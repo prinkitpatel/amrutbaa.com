@@ -421,11 +421,13 @@ body {
 }
 
 .text-gold-gradient {
-  background: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #FFF8DC 100%);
+  background: linear-gradient(to right, #bf953f, #fcf6ba, #b38728, #fbf5b7, #aa771c);
   -webkit-background-clip: text;
   background-clip: text;
+  color: #D4AF37;
+  /* Fallback */
   -webkit-text-fill-color: transparent;
-  text-shadow: 0px 4px 12px rgba(212, 175, 55, 0.35);
+  text-shadow: 0px 4px 15px rgba(212, 175, 55, 0.4);
   display: inline-block;
 }
 
