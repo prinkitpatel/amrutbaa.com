@@ -968,7 +968,7 @@ function initOrderModal() {
                 });
 
                 // Track Purchase event to Meta for COD with payment_method
-                const codOrderId = codResult.order_id || `COD-${Date.now()}`;
+                const codOrderId = String(codResult.order_id || `COD-${Date.now()}`);
                 trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => { });
 
                 // Update success message
@@ -1154,7 +1154,8 @@ function initOrderModal() {
                             });
 
                             // Update success message with ALL order details
-                            document.getElementById('order-number').textContent = response.razorpay_order_id.substring(0, 15) + '...';
+                            const onlineOrderId = String(response.razorpay_order_id || '');
+                            document.getElementById('order-number').textContent = onlineOrderId.substring(0, 15) + '...';
                             document.getElementById('order-amount').textContent = `₹${totalAmount}`;
 
                             // Show success message IMMEDIATELY
