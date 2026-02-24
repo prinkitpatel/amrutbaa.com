@@ -3823,7 +3823,7 @@ body {
   bottom: 0;
 }
 
-.story-content {
+.origin-content {
   max-width: 800px;
   margin: 0 auto;
   padding: 3rem;
@@ -3834,14 +3834,14 @@ body {
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
-.story-title {
+.origin-title {
   font-family: var(--font-display);
   font-size: 2.5rem;
   color: var(--golden);
   margin-bottom: 1.5rem;
 }
 
-.story-divider {
+.origin-divider {
   width: 60px;
   height: 3px;
   background: var(--golden);
@@ -3849,7 +3849,7 @@ body {
   border-radius: 2px;
 }
 
-.story-paragraph {
+.origin-paragraph {
   font-size: 1.15rem;
   line-height: 1.8;
   margin-bottom: 1.5rem;
@@ -3857,7 +3857,7 @@ body {
   opacity: 0.95;
 }
 
-.drop-cap {
+.origin-drop-cap {
   float: left;
   font-family: var(--font-display);
   font-size: 4rem;
@@ -3868,7 +3868,7 @@ body {
   color: var(--golden);
 }
 
-.story-conclusion {
+.origin-conclusion {
   margin-top: 2.5rem;
   padding-top: 2rem;
   border-top: 1px dashed rgba(212, 175, 55, 0.3);
@@ -3877,7 +3877,7 @@ body {
   color: var(--golden-light);
 }
 
-.story-timer {
+.origin-timer {
   color: #fff;
   background: rgba(212, 175, 55, 0.2);
   padding: 0.2rem 0.6rem;
@@ -3888,7 +3888,7 @@ body {
   animation: pulse 2s infinite;
 }
 
-.story-cta-text {
+.origin-cta-text {
   font-size: 1rem;
   margin-top: 0.8rem;
   color: var(--cream);
@@ -3900,15 +3900,15 @@ body {
     padding: 4rem 0;
   }
 
-  .story-content {
+  .origin-content {
     padding: 2rem 1.5rem;
   }
 
-  .story-title {
+  .origin-title {
     font-size: 2rem;
   }
 
-  .story-conclusion {
+  .origin-conclusion {
     font-size: 1.1rem;
   }
 }
