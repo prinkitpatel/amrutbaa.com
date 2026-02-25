@@ -1170,6 +1170,9 @@ function initOrderModal() {
 
                             const sharedEventId = generateEventId();
 
+                            // Track Purchase event to Meta for Online/Prepaid
+                            trackMetaPurchase(formData, totalAmount, response.razorpay_order_id, sharedEventId).catch(() => { });
+
                             submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
