@@ -942,7 +942,9 @@ function initOrderModal() {
 
                 // Track Purchase event to Meta for COD with payment_method
                 const codOrderId = String(codResult.order_id || `COD-${Date.now()}`);
-                trackMetaPurchase(formData, totalAmount, codOrderId).catch(() => { });
+                const sharedEventId = generateEventId();
+
+                trackMetaPurchase(formData, totalAmount, codOrderId, sharedEventId).catch(() => { });
 
                 // Update success message
                 document.getElementById('order-number').textContent = codOrderId.substring(0, 15) + '...';
@@ -967,6 +969,7 @@ function initOrderModal() {
                     payment_type: 'cod',
                     order_id: codOrderId,
                     amount: totalAmount,
+                    event_id: sharedEventId,
                     tracking_number: codResult.awb_code || null,
                     shipment_id: codResult.shipment_id || null,
                     courier_name: codResult.courier_name || null
@@ -978,7 +981,7 @@ function initOrderModal() {
                         order: codOrderId,
                         amount: totalAmount,
                         method: 'cod',
-                        event_id: generateEventId()
+                        event_id: sharedEventId
                     });
                     window.location.href = `/thank-you.html?${params.toString()}`;
                 }, 2000);
@@ -1165,11 +1168,14 @@ function initOrderModal() {
                                 customer_phone: formData.phone
                             });
 
+                            const sharedEventId = generateEventId();
+
                             submitOrderDetails({
                                 ...formData,
                                 payment_id: response.razorpay_payment_id,
                                 order_id: response.razorpay_order_id,
                                 amount: totalAmount,
+                                event_id: sharedEventId,
                                 tracking_number: trackingInfo?.awb_code || null,
                                 shipment_id: trackingInfo?.shipment_id || null,
                                 courier_name: trackingInfo?.courier_name || null
@@ -1196,7 +1202,7 @@ function initOrderModal() {
                                     order: response.razorpay_order_id,
                                     amount: totalAmount,
                                     method: 'online',
-                                    event_id: generateEventId()
+                                    event_id: sharedEventId
                                 });
                                 window.location.href = `/thank-you.html?${params.toString()}`;
                             }, 2000);
@@ -1313,7 +1319,7 @@ function initOrderModal() {
                     content_type: 'product',
                     content_ids: ['AMB-CGC-100G'],
                     currency: 'INR',
-                    value: 299
+                    value: 499
                 }, { eventID: eventId });
             }
 
@@ -1462,9 +1468,9 @@ function initOrderModal() {
     }
 
     // Track Purchase Event to Meta (successful payment)
-    async function trackMetaPurchase(formData, amount, paymentId) {
+    async function trackMetaPurchase(formData, amount, paymentId, eventIdOverride) {
         try {
-            const eventId = generateEventId();
+            const eventId = eventIdOverride || generateEventId();
 
             // Determine payment method from current form state
             const paymentMethodRadio = document.querySelector('input[name="payment_method"]:checked');
@@ -1580,7 +1586,7 @@ function initOrderModal() {
             // n8n will handle:
             // 1. Track Purchase to Meta (Conversions API) using event_id for deduplication
             // 2. Send order confirmation email
-            const eventId = generateEventId();
+            const eventId = orderData.event_id || generateEventId();
 
             const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
                 method: 'POST',
