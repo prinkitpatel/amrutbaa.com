@@ -179,54 +179,13 @@ function initOrderModal() {
                     </div>
                 </form>
 
-                <div class="success-message" id="successMessage">
-                    <div class="success-checkmark">
-                        <div class="checkmark-circle">✓</div>
-                    </div>
-                    <h2 style="font-size: 1.8rem; color: #2E7D32; margin: 1rem 0 0.5rem;">Order Confirmed! 🎉</h2>
-                    <p style="font-size: 0.95rem; color: #555; margin-bottom: 1.5rem;">Your fresh chutney is reserved for this week's batch</p>
-                    
-                    <div id="order-details-box" style="background: #f5f5f5; padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; text-align: left;">
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
-                            <div>
-                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">ORDER NUMBER</div>
-                                <div id="order-number" style="font-size: 1.1rem; font-weight: 700; color: #2B2B2B;">---</div>
-                            </div>
-                            <div>
-                                <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">AMOUNT PAID</div>
-                                <div id="order-amount" style="font-size: 1.1rem; font-weight: 700; color: #2E7D32;">---</div>
-                            </div>
-                        </div>
-                        <div id="tracking-section" style="display: none; border-top: 1px solid #ddd; padding-top: 1rem;">
-                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
-                                <div>
-                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">TRACKING NUMBER</div>
-                                    <div id="tracking-display" style="font-size: 1rem; font-weight: 700; color: #1976D2; font-family: monospace;">---</div>
-                                </div>
-                                <div>
-                                    <div style="font-size: 0.8rem; color: #999; font-weight: 500; margin-bottom: 0.3rem;">COURIER</div>
-                                    <div id="courier-display" style="font-size: 1rem; font-weight: 700; color: #2B2B2B;">---</div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div style="background: #fff3e0; border-left: 4px solid #ff9800; padding: 1rem; border-radius: 4px; margin-bottom: 1.5rem; text-align: left;">
-                        <div style="font-size: 0.9rem; font-weight: 600; color: #e65100; margin-bottom: 0.5rem;">📅 What Happens Next:</div>
-                        <div style="font-size: 0.85rem; color: #e65100; line-height: 1.6;">
-                            <strong>Monday:</strong> Fresh prep begins<br>
-                            <strong>Tuesday:</strong> Dispatched to you<br>
-                            <strong>Wed-Fri:</strong> Delivered fresh to your doorstep
-                        </div>
-                    </div>
-
-                    <button id="track-order-btn" style="width: 100%; padding: 0.875rem; background: #1976D2; color: white; border: none; border-radius: 6px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; display: none;">
-                        📦 Track Your Order
-                    </button>
-
-                    <div style="font-size: 0.8rem; color: #999; margin-top: 1rem;">
-                        You'll also receive tracking updates via WhatsApp/Email
-                    </div>
+                <div class="success-message" id="successMessage" style="padding: 2rem 1rem;">
+                    <style>
+                        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+                    </style>
+                    <div class="processing-spinner" style="margin: 0 auto 1.5rem; width: 60px; height: 60px; border: 4px solid #f9eccc; border-top: 4px solid #6B1C23; border-radius: 50%; animation: spin 1s linear infinite;"></div>
+                    <h2 style="font-size: 1.8rem; color: #6B1C23; margin: 1rem 0 0.5rem; line-height: 1.2;">Securing your jar...</h2>
+                    <p style="font-size: 1.1rem; color: #555; margin-bottom: 1.5rem;">Please don't close this window.</p>
                 </div>
             </div>
         </div>
@@ -946,10 +905,6 @@ function initOrderModal() {
 
                 trackMetaPurchase(formData, totalAmount, codOrderId, sharedEventId).catch(() => { });
 
-                // Update success message
-                document.getElementById('order-number').textContent = codOrderId.substring(0, 15) + '...';
-                document.getElementById('order-amount').textContent = `₹${totalAmount}`;
-
                 // Show success message immediately
                 successMessage.classList.add('show');
                 registrationForm.style.display = 'none !important';
@@ -1126,11 +1081,6 @@ function initOrderModal() {
                                 'shipping_pincode': formData.pincode
                             });
 
-                            // Update success message with ALL order details
-                            const onlineOrderId = String(response.razorpay_order_id || '');
-                            document.getElementById('order-number').textContent = onlineOrderId.substring(0, 15) + '...';
-                            document.getElementById('order-amount').textContent = `₹${totalAmount}`;
-
                             // Show success message IMMEDIATELY
                             successMessage.classList.add('show');
                             registrationForm.style.display = 'none !important';
@@ -1184,20 +1134,7 @@ function initOrderModal() {
                                 courier_name: trackingInfo?.courier_name || null
                             }).catch(() => { });
 
-                            // Let n8n handle tracking display after shipment creation
-                            setTimeout(() => {
-                                // Attempt to fetch tracking info from n8n response
-                                // For now, show message that tracking details coming soon
-                                const trackBtn = document.getElementById('track-order-btn');
-                                if (trackBtn) {
-                                    trackBtn.style.display = 'block';
-                                    trackBtn.textContent = '📧 Tracking Details Coming Soon';
-                                    trackBtn.style.background = '#FF9800';
-                                    trackBtn.disabled = true;
-                                    trackBtn.title = 'Courier will be assigned within 2-4 hours. Check email for tracking.';
-                                }
-                                document.getElementById('tracking-section').style.display = 'none';
-                            }, 500);
+
 
                             // Redirect to thank-you page after 2 seconds
                             setTimeout(() => {
