@@ -1376,8 +1376,16 @@ function initOrderModal() {
         try {
             const eventId = generateEventId();
 
-            // Note: AddPaymentInfo is standard Meta event, but not tracked by default Pixel
-            // Only sending via Conversions API for server-side tracking
+            // Fire Meta Pixel event (Browser API)
+            if (typeof fbq === 'function') {
+                fbq('track', 'AddPaymentInfo', {
+                    content_name: 'Amrut Baa Chilly Garlic Chutney',
+                    content_type: 'product',
+                    content_ids: ['AMB-CGC-100G'],
+                    currency: 'INR',
+                    value: amount || 0
+                }, { eventID: eventId });
+            }
 
             const response = await fetch('/api/track-addpaymentinfo', {
                 method: 'POST',
