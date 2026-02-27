@@ -40,7 +40,7 @@ async function getShiprocketToken(env) {
     }
 }
 
-async function checkShiprocketServiceability(env, { pincode, weight = 0.15, cod = false }) {
+async function checkShiprocketServiceability(env, { pincode, weight = 0.23, cod = false }) {
     if (!env.SHIPROCKET_PICKUP_PINCODE) {
         return { success: false, error: 'Pickup pincode not configured' };
     }
@@ -50,7 +50,7 @@ async function checkShiprocketServiceability(env, { pincode, weight = 0.15, cod 
         pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
         delivery_postcode: String(pincode),
         cod: cod ? 1 : 0,
-        weight: Number(weight) || 0.15
+        weight: Number(weight) || 0.23
     });
 
     const response = await fetch(`https://apiv2.shiprocket.in/v1/external/courier/serviceability/?${queryParams.toString()}`, {
@@ -116,7 +116,7 @@ export async function handleCreateCodOrder(request, env) {
         const safeUnitPrice = pricing.unitPrice;
         const safeDiscount = pricing.discount;
         const safeAmount = pricing.total;
-        const safeWeight = Number((0.15 * safeQuantity).toFixed(2));
+        const safeWeight = Number((0.23 * safeQuantity).toFixed(2));
 
         const lockSeed = client_order_ref || `${customer_phone}|${pincode}|${safeAmount}|${safeQuantity}`;
         const lockId = `cod:${lockSeed}`;
@@ -199,7 +199,7 @@ export async function handleCreateCodOrder(request, env) {
             length: 10,
             breadth: 10,
             height: 8,
-            weight: 0.15 * safeQuantity
+            weight: Number((0.23 * safeQuantity).toFixed(2))
         };
 
         const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
@@ -254,7 +254,7 @@ export async function handleCheckPincode(request, env) {
         const originError = assertTrustedOrigin(request, env);
         if (originError) return originError;
 
-        const { pincode, weight = 0.15, cod = false } = await request.json();
+        const { pincode, weight = 0.23, cod = false } = await request.json();
 
         if (!pincode || String(pincode).length !== 6) {
             return new Response(JSON.stringify({
@@ -396,7 +396,7 @@ export async function handleCreateShipment(request, env) {
             length: 10,
             breadth: 10,
             height: 8,
-            weight: 0.15 * safeQuantity
+            weight: Number((0.23 * safeQuantity).toFixed(2))
         };
 
         const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
