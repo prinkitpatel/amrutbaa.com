@@ -1000,7 +1000,12 @@ function initOrderModal() {
                     name: formData.name,
                     email: formData.email,
                     phone: formData.phone,
-                    quantity: formData.quantity
+                    quantity: formData.quantity,
+                    address1: formData.address1,
+                    address2: formData.address2,
+                    city: formData.city,
+                    state: formData.state,
+                    pincode: formData.pincode
                 })
             });
 
@@ -1097,45 +1102,14 @@ function initOrderModal() {
                             processedOrders.add(response.razorpay_payment_id);
                             saveProcessedOrders();
 
-                            // Create shipment directly from worker to avoid losing orders if n8n is down.
-                            const trackingInfo = await createShiprocketShipment({
-                                order_id: response.razorpay_order_id,
-                                payment_id: response.razorpay_payment_id,
-                                customer_name: formData.name,
-                                customer_email: formData.email,
-                                customer_phone: formData.phone,
-                                address1: formData.address1,
-                                address2: formData.address2,
-                                city: formData.city,
-                                state: formData.state,
-                                pincode: formData.pincode,
-                                quantity: formData.quantity,
-                                amount: totalAmount,
-                                unit_price: pricePerJar,
-                                base_total: pricing.baseTotal,
-                                discount: pricing.discount || 0
-                            }, {
-                                order_id: response.razorpay_order_id,
-                                payment_id: response.razorpay_payment_id,
-                                customer_email: formData.email,
-                                customer_phone: formData.phone
-                            });
-
                             const sharedEventId = generateEventId();
 
                             // Track Purchase event to Meta for Online/Prepaid
                             trackMetaPurchase(formData, totalAmount, response.razorpay_order_id, sharedEventId).catch(() => { });
 
-                            submitOrderDetails({
-                                ...formData,
-                                payment_id: response.razorpay_payment_id,
-                                order_id: response.razorpay_order_id,
-                                amount: totalAmount,
-                                event_id: sharedEventId,
-                                tracking_number: trackingInfo?.awb_code || null,
-                                shipment_id: trackingInfo?.shipment_id || null,
-                                courier_name: trackingInfo?.courier_name || null
-                            }).catch(() => { });
+                            // Note: Shiprocket shipment and n8n webhook triggers have been moved to the 
+                            // backend Cloudflare worker (/api/razorpay-webhook) to ensure 100% reliability,
+                            // even if the user closes the browser immediately after payment.
 
 
 

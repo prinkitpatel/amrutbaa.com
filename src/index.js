@@ -1,5 +1,5 @@
 import { corsHeaders } from './utils/cors.js';
-import { handleCreateOrder, handleVerifyPayment } from './api/razorpay.js';
+import { handleCreateOrder, handleVerifyPayment, handleRazorpayWebhook } from './api/razorpay.js';
 import {
     handleCreateCodOrder,
     handleCheckPincode,
@@ -30,6 +30,9 @@ export default {
         }
         if (url.pathname === '/api/verify-payment' && request.method === 'POST') {
             return handleVerifyPayment(request, env);
+        }
+        if (url.pathname === '/api/razorpay-webhook' && request.method === 'POST') {
+            return handleRazorpayWebhook(request, env);
         }
 
         // Shiprocket Routes

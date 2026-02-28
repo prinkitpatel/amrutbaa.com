@@ -7,7 +7,7 @@ export async function handleCreateOrder(request, env) {
         if (originError) return originError;
 
         const body = await request.json();
-        const { name, email, phone, quantity } = body;
+        const { name, email, phone, quantity, address1, address2, city, state, pincode } = body;
 
         if (!name || !email || !phone || !quantity) {
             return new Response(JSON.stringify({ error: 'Missing required fields' }), {
@@ -28,6 +28,11 @@ export async function handleCreateOrder(request, env) {
                 customer_email: email,
                 customer_phone: phone,
                 quantity: pricing.qty,
+                address1: address1 || '',
+                address2: address2 || '',
+                city: city || '',
+                state: state || '',
+                pincode: pincode || '',
                 batch_date: new Date().toISOString()
             }
         };
@@ -121,5 +126,124 @@ export async function handleVerifyPayment(request, env) {
             status: 500,
             headers: { ...corsHeaders, 'Content-Type': 'application/json' }
         });
+    }
+}
+
+export async function handleRazorpayWebhook(request, env) {
+    try {
+        const signature = request.headers.get('x-razorpay-signature');
+        if (!signature || !env.RAZORPAY_WEBHOOK_SECRET) {
+            return new Response('Missing signature or config', { status: 400 });
+        }
+
+        const rawBody = await request.text();
+        const encoder = new TextEncoder();
+        const keyData = encoder.encode(env.RAZORPAY_WEBHOOK_SECRET);
+        const key = await crypto.subtle.importKey(
+            'raw',
+            keyData,
+            { name: 'HMAC', hash: 'SHA-256' },
+            false,
+            ['sign']
+        );
+
+        const expectedSignatureBuffer = await crypto.subtle.sign(
+            'HMAC',
+            key,
+            encoder.encode(rawBody)
+        );
+        const hashArray = Array.from(new Uint8Array(expectedSignatureBuffer));
+        const expectedSignature = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+
+        if (expectedSignature !== signature) {
+            return new Response('Invalid signature', { status: 400 });
+        }
+
+        const payload = JSON.parse(rawBody);
+
+        if (payload.event === 'payment.captured') {
+            const paymentEntity = payload.payload.payment.entity;
+            const notes = paymentEntity.notes || {};
+
+            if (!notes.customer_phone) return new Response('OK', { status: 200 }); // Not our checkout order
+
+            const order_id = paymentEntity.order_id;
+            const payment_id = paymentEntity.id;
+            const amount = paymentEntity.amount / 100;
+            const quantityVal = parseInt(notes.quantity || "1", 10);
+
+            // 1. Create Shiprocket Shipment
+            const shipmentBody = {
+                order_id: order_id,
+                payment_id: payment_id,
+                customer_name: notes.customer_name,
+                customer_email: notes.customer_email,
+                customer_phone: notes.customer_phone,
+                address1: notes.address1,
+                address2: notes.address2,
+                city: notes.city,
+                state: notes.state,
+                pincode: notes.pincode,
+                quantity: quantityVal
+            };
+
+            const { handleCreateShipment } = await import('./shiprocket.js');
+            const mockReq = new Request('https://amrutbaa.com/api/create-shipment', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'origin': 'https://amrutbaa.com' },
+                body: JSON.stringify(shipmentBody)
+            });
+
+            const shipmentRes = await handleCreateShipment(mockReq, env);
+            let shipmentId = null;
+            let trackingNumber = null;
+            let courierName = null;
+
+            if (shipmentRes.ok) {
+                const sData = await shipmentRes.json();
+                if (sData.success) {
+                    shipmentId = sData.shipment_id;
+                    trackingNumber = sData.awb_code;
+                    courierName = sData.courier_name;
+                }
+            }
+
+            // 2. Trigger n8n Webhook
+            const n8nBody = {
+                status: 'complete',
+                source: 'backend_webhook',
+                name: notes.customer_name,
+                email: notes.customer_email,
+                phone: notes.customer_phone,
+                quantity: quantityVal,
+                address1: notes.address1,
+                address2: notes.address2,
+                city: notes.city,
+                state: notes.state,
+                pincode: notes.pincode,
+                payment_method: 'online',
+                payment_type: paymentEntity.method || 'online',
+                order_id: order_id,
+                payment_id: payment_id,
+                amount: amount,
+                tracking_number: trackingNumber,
+                shipment_id: shipmentId,
+                courier_name: courierName
+            };
+
+            const n8nWebhook = env.N8N_WEBHOOK_URL || 'https://n8n.prinkit.cloud/webhook/checkout_events';
+
+            // Wait for it so worker execution isn't prematurely killed
+            await fetch(n8nWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(n8nBody)
+            });
+        }
+
+        return new Response('OK', { status: 200 });
+    } catch (error) {
+        console.error('Razorpay Webhook Error:', error);
+        return new Response('Internal error', { status: 500 });
     }
 }
