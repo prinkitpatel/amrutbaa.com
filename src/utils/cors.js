@@ -34,14 +34,21 @@ export function isTrustedOrigin(req, env) {
   ]);
 
   const requestOrigin = extractRequestOrigin(req);
-  return requestOrigin ? allowedOrigins.has(requestOrigin) : false;
+  if (!requestOrigin) return false;
+
+  if (allowedOrigins.has(requestOrigin)) return true;
+
+  // Allow staging/preview environments dynamically
+  if (requestOrigin.endsWith('.pages.dev')) return true;
+
+  return false;
 }
 
 export function assertTrustedOrigin(req, env) {
   return isTrustedOrigin(req, env)
     ? null
     : new Response(JSON.stringify({ error: 'Forbidden origin' }), {
-        status: 403,
-        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-      });
+      status: 403,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+    });
 }
