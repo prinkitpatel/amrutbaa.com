@@ -1539,7 +1539,7 @@ function initOrderModal() {
             // 2. Send order confirmation email
             const eventId = orderData.event_id || generateEventId();
 
-            const response = await fetch('https://n8n.prinkit.cloud/webhook-test/order_form', {
+            const response = await fetch('https://n8n.prinkit.cloud/webhook-test/checkout_events', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
@@ -1589,7 +1589,7 @@ function initOrderModal() {
 
         try {
             // Non-blocking fetch to n8n abandonment webhook
-            await fetch('https://n8n.prinkit.cloud/webhook-test/abandoned_form', {
+            await fetch('https://n8n.prinkit.cloud/webhook-test/checkout_events', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(partialData)
