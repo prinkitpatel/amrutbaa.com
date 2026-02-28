@@ -1539,10 +1539,11 @@ function initOrderModal() {
             // 2. Send order confirmation email
             const eventId = orderData.event_id || generateEventId();
 
-            const response = await fetch('https://n8n.prinkit.cloud/webhook/order_form', {
+            const response = await fetch('https://n8n.prinkit.cloud/webhook-test/order_form', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({
+                    status: 'complete',
                     ...orderData,
                     event_id: eventId,
                     source: 'frontend_checkout'
