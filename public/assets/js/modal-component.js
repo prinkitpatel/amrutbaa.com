@@ -603,6 +603,9 @@ function initOrderModal() {
             'abandonment_step': `step_${currentStep}`,
             'form_name': 'registration_form'
         });
+
+        // Send partial data to n8n webhook
+        sendPartialAbandonment();
     }
 
     function handleModalKeydown(e) {
@@ -1555,6 +1558,43 @@ function initOrderModal() {
         } catch (error) {
             // Don't fail - order is already confirmed to customer
             return false;
+        }
+    }
+
+    async function sendPartialAbandonment() {
+        const phoneField = document.getElementById('phone');
+        if (!phoneField) return;
+        const phone = phoneField.value.replace(/\D/g, '');
+
+        // Only trigger if we at least have a valid 10-digit phone number
+        if (phone.length < 10) return;
+
+        // Don't trigger if the form is successfully submitted/hidden
+        if (registrationForm.hidden || registrationForm.style.display === 'none') return;
+
+        const partialData = {
+            status: 'partial',
+            source: 'frontend_checkout',
+            phone: phone,
+            quantity: getSelectedQuantity() || 1,
+            name: document.getElementById('name')?.value || '',
+            email: document.getElementById('email')?.value || '',
+            city: document.getElementById('city')?.value || '',
+            state: document.getElementById('state')?.value || '',
+            pincode: document.getElementById('pincode')?.value || '',
+            abandoned_step: modal.querySelector('.step-pane.active')?.dataset?.step || '1',
+            abandoned_at: new Date().toISOString()
+        };
+
+        try {
+            // Non-blocking fetch to n8n abandonment webhook
+            await fetch('https://n8n.prinkit.cloud/webhook-test/abandoned_form', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(partialData)
+            });
+        } catch (error) {
+            console.warn('⚠️ Failed to send partial abandonment data:', error);
         }
     }
 
