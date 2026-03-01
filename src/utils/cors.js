@@ -40,6 +40,7 @@ export function isTrustedOrigin(req, env) {
 
   // Allow staging/preview environments dynamically
   if (requestOrigin.endsWith('.pages.dev')) return true;
+  if (requestOrigin.endsWith('.workers.dev')) return true;
 
   return false;
 }
