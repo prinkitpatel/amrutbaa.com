@@ -208,6 +208,7 @@ function initOrderModal() {
     const modalTotal = document.getElementById('modalTotal');
     const priceCaption = document.getElementById('priceCaption');
     const modalSavings = document.getElementById('modalSavings');
+    const mrpDisplay = document.getElementById('mrpDisplay');
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
     const orderQuantityText = document.getElementById('orderQuantityText');
     const pincodeInput = document.getElementById('pincode');
@@ -286,6 +287,9 @@ function initOrderModal() {
             if (unitPriceDisplay) {
                 unitPriceDisplay.textContent = `₹${pricingConfig.unitPrice}`;
             }
+            if (mrpDisplay) {
+                mrpDisplay.textContent = 'MRP ₹800';
+            }
             if (priceCaption) {
                 priceCaption.textContent = 'Per 250g jar • Limited weekly batch';
             }
@@ -301,6 +305,9 @@ function initOrderModal() {
         const pricing = calculatePricing(qty);
         if (unitPriceDisplay) {
             unitPriceDisplay.textContent = `₹${pricing.total}`;
+        }
+        if (mrpDisplay) {
+            mrpDisplay.textContent = `MRP ₹${qty * 800}`;
         }
         if (priceCaption) {
             priceCaption.textContent = `Total for ${pricing.qty} jar${pricing.qty > 1 ? 's' : ''} • Limited weekly batch`;
