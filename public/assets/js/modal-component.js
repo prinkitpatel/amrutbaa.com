@@ -52,7 +52,7 @@ function initOrderModal() {
                 </div>
 
                 <div class="modal-price">
-                    <span class="price-mrp">MRP ₹800</span>
+                    <span id="mrpDisplay" class="price-mrp">MRP ₹800</span>
                     <span class="price-amount" id="unitPriceDisplay">₹499</span>
                 </div>
 

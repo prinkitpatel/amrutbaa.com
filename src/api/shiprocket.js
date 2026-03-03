@@ -268,20 +268,27 @@ export async function handleCheckPincode(request, env) {
 
         const serviceability = await checkShiprocketServiceability(env, { pincode, weight, cod });
         if (!serviceability.success) {
+            // Fix for Feedback 3: Return a safe API response format rather than crashing
             return new Response(JSON.stringify({
-                success: false,
+                success: true,
+                serviceable: false,
                 error: serviceability.error,
                 details: serviceability.details
             }), {
-                status: 500,
+                status: 200,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         }
+
+        // Fix for Feedback 2: Extract nested city/state and apply to wrapper payload
+        const firstCourier = serviceability.data?.available_courier_companies?.[0];
 
         return new Response(JSON.stringify({
             success: true,
             serviceable: serviceability.serviceable,
             courier_count: serviceability.courier_count || 0,
+            city: firstCourier?.city || '',
+            state: firstCourier?.state || '',
             data: serviceability.data || null
         }), {
             status: 200,
