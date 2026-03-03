@@ -164,8 +164,14 @@ function initOrderModal() {
                         <div style="display: none;"></div>
 
                         <div style="display:flex; justify-content:space-evenly; align-items:center; gap:1.5rem; margin:1.5rem auto 1rem; padding:1rem; max-width:520px; background:#f9f9f9; border-radius:12px; flex-wrap:wrap; border:1px solid #e0e0e0;">
-                            <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" style="width:80px; height:80px; object-fit:contain;" />
-                            <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" style="width:90px; height:90px; object-fit:contain;" />
+                            <picture>
+                                <source srcset="assets/images/money-back-seal.webp" type="image/webp">
+                                <img src="assets/images/money-back-seal.png" alt="100% Money Back Guarantee" width="80" height="80" style="width:80px; height:80px; object-fit:contain;" loading="lazy" />
+                            </picture>
+                            <picture>
+                                <source srcset="assets/images/fssai-logo.webp" type="image/webp">
+                                <img src="assets/images/fssai-logo-fssai-icon-free-free-vector-removebg-preview Background Removed.png" alt="FSSAI Certified" width="90" height="90" style="width:90px; height:90px; object-fit:contain;" loading="lazy" />
+                            </picture>
                         </div>
 
                         <div class="step-actions">
