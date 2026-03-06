@@ -851,23 +851,47 @@
     <script type="module" src="scripts/main.js"></script>
     <script>
         // Video Mute Toggle Handler
+        // Video Mute Toggle Handler
         window.toggleMute = function (container) {
             const video = container.querySelector('video');
+            video.muted = !video.muted;
+        };
+
+        // Sync Custom Mute UI to Actual Video State
+        document.querySelectorAll('.video-container video').forEach(video => {
+            const container = video.closest('.video-container');
             const iconMuted = container.querySelector('.icon-muted');
             const iconUnmuted = container.querySelector('.icon-unmuted');
 
-            if (video.muted) {
-                video.muted = false;
-                iconMuted.style.display = 'none';
-                iconUnmuted.style.display = 'block';
-                // optionally restart video from start when unmuted to catch user up with audio
-                video.currentTime = 0;
-            } else {
-                video.muted = true;
-                iconMuted.style.display = 'block';
-                iconUnmuted.style.display = 'none';
-            }
-        };
+            video.addEventListener('volumechange', () => {
+                if (video.muted) {
+                    iconMuted.style.display = 'block';
+                    iconUnmuted.style.display = 'none';
+                } else {
+                    iconMuted.style.display = 'none';
+                    iconUnmuted.style.display = 'block';
+                }
+            });
+        });
+
+        // Smart Autoplay based on Scroll Visibility
+        if ('IntersectionObserver' in window) {
+            const videoObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    const video = entry.target;
+                    // Play when in view, but catch DOMExceptions in case browser blocks it
+                    if (entry.isIntersecting) {
+                        video.play().catch(e => console.log('Autoplay prevented:', e));
+                    } else {
+                        video.pause();
+                    }
+                });
+            }, { threshold: 0.5 }); // Trigger when 50% of the video is in or out of view
+
+            document.querySelectorAll('.video-container video').forEach(video => {
+                videoObserver.observe(video);
+            });
+        }
 
         // Initialize modal component
         if (window.OrderModal) {
