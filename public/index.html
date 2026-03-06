@@ -367,6 +367,41 @@
 
     </section>
 
+    <!-- Recipe Video Section -->
+    <section class="recipe-video-section" aria-label="Pulao Recipe Video"
+        style="background: linear-gradient(180deg, #FAF6ED 0%, #FFF9F0 100%); padding: 4rem 1.5rem;">
+        <div class="container" style="max-width: 800px; margin: 0 auto; text-align: center;">
+            <div class="section-header" style="margin-bottom: 2.5rem;">
+                <span class="section-tag"
+                    style="display: inline-block; padding: 0.4rem 1rem; background: rgba(212,175,55,0.1); color: #B8860B; border-radius: 20px; font-weight: 600; font-size: 0.85rem; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 1rem;">Recipe
+                    Spotlight</span>
+                <h2 class="section-title"
+                    style="font-family: 'Playfair Display', serif; font-size: 2.5rem; color: #2a1810; margin-bottom: 0.5rem;">
+                    See The "Genie" in Action</h2>
+                <p class="section-subtitle"
+                    style="color: #5c4e45; font-size: 1.1rem; max-width: 600px; margin: 0 auto;">Watch how just one
+                    spoonful of Amrutbaa instantly transforms everyday rice into a flavorful royal Pulao.</p>
+            </div>
+
+            <div class="video-container"
+                style="position: relative; border-radius: 16px; overflow: hidden; box-shadow: 0 15px 40px rgba(0,0,0,0.12); border: 4px solid #fff; background: #000; margin-bottom: 2.5rem;">
+                <video width="100%" controls preload="metadata"
+                    style="display: block; width: 100%; max-height: 600px; object-fit: cover;">
+                    <source src="assets/videos/pulao-recipe.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            </div>
+
+            <div class="recipe-cta">
+                <p style="font-size: 1.1rem; color: #5c4e45; margin-bottom: 1rem;"><strong>Ready to cook like
+                        this?</strong></p>
+                <button class="cta-button" id="recipeVideoCtaBtn" style="padding: 1rem 3rem; font-size: 1.2rem;">
+                    <span class="cta-text">Try It Yourself</span>
+                </button>
+            </div>
+        </div>
+    </section>
+
     <!-- Origin Story Section -->
     <section class="origin-story" aria-label="Our Origin Story">
         <div class="container">
@@ -752,6 +787,7 @@
             document.getElementById('journeyCtaRegister')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('lovedByAllCta')?.addEventListener('click', window.OrderModal.open);
             document.getElementById('promiseCtaBtn')?.addEventListener('click', window.OrderModal.open);
+            document.getElementById('recipeVideoCtaBtn')?.addEventListener('click', window.OrderModal.open);
         }
 
         // Horizontal scroll snap carousel for mobile food stories
