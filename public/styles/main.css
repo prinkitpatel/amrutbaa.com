@@ -583,6 +583,68 @@ body {
     0 10px 30px rgba(212, 175, 55, 0.2);
 }
 
+/* VEG MARK - FSSAI style green badge */
+.veg-mark {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  width: 52px;
+  height: 52px;
+  border-radius: 8px;
+  border: 3px solid #2e7d32;
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 5;
+}
+
+.veg-mark-dot {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #2e7d32;
+  flex-shrink: 0;
+}
+
+.veg-mark-label {
+  font-size: 0.52rem;
+  font-weight: 900;
+  color: #2e7d32;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  font-family: var(--font-body);
+}
+
+/* Variant used inside the trust badges row - not absolutely positioned */
+.veg-mark-trust {
+  position: relative;
+  top: auto;
+  left: auto;
+  width: 54px;
+  height: 54px;
+  border-radius: 7px;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease;
+  cursor: default;
+}
+
+.veg-mark-trust:hover {
+  transform: scale(1.08);
+}
+
+.veg-mark-trust .veg-mark-dot {
+  width: 27px;
+  height: 27px;
+}
+
+.veg-mark-trust .veg-mark-label {
+  font-size: 0.55rem;
+}
+
 @media (max-width: 768px) {
   .hero {
     padding: 1rem 0;
@@ -621,6 +683,11 @@ body {
     max-height: none;
     border-radius: 0;
     width: 100%;
+  }
+
+  .veg-mark {
+    left: calc(1.25rem + 12px);
+    top: 12px;
   }
 
   .hero-badge {
@@ -752,6 +819,10 @@ body {
     max-height: none;
     border-radius: 0;
     width: 100%;
+  }
+
+  .veg-mark {
+    left: calc(1rem + 12px);
   }
 
   .cta-button {
