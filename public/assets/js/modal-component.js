@@ -536,6 +536,15 @@ function initOrderModal() {
     }
 
     function openModal() {
+        // Lazy load Razorpay script when modal opens
+        if (!window.Razorpay && !document.getElementById('razorpay-checkout-script')) {
+            const script = document.createElement('script');
+            script.id = 'razorpay-checkout-script';
+            script.src = 'https://checkout.razorpay.com/v1/checkout.js';
+            script.async = true;
+            document.head.appendChild(script);
+        }
+
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         if (quantityInput) {
