@@ -481,22 +481,7 @@
         if (emailEl) emailEl.textContent = orderData.email || 'your email';
 
         // 4. Track Purchase conversion to GTM
-        window.dataLayer = window.dataLayer || [];
-        window.dataLayer.push({
-            'event': 'purchase',
-            'payment_method': orderData.paymentMethod,
-            'ecommerce': {
-                'transaction_id': orderData.orderId,
-                'value': parseFloat(orderData.amount),
-                'currency': 'INR',
-                'items': [{
-                    'item_id': 'amrutbaa-chutney',
-                    'item_name': 'Amrutbaa Chilly Garlic Chutney',
-                    'price': parseFloat(orderData.amount),
-                    'quantity': 1
-                }]
-            }
-        });
+        // 4. (Removed explicit GA Purchase tracking here because it is already tracked in modal-component.js before redirection to prevent duplicates)
 
         // 5. Track specific Purchase conversion to Meta Pixel
         if (typeof window.fbq === 'function' && orderData.eventId) {
