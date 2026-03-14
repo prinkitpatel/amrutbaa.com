@@ -1,15 +1,5 @@
 export function initAnalytics() {
-    // 1. Google Tag Manager
-    (function (w, d, s, l, i) {
-        w[l] = w[l] || []; w[l].push({
-            'gtm.start':
-                new Date().getTime(), event: 'gtm.js'
-        }); var f = d.getElementsByTagName(s)[0],
-            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
-                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
-    })(window, document, 'script', 'dataLayer', 'GTM-53CBVFF7');
-
-    // 2. Initial Page View Event & UTM
+    // 1. Initial UTM & Page Context (Before GTM)
     window.dataLayer = window.dataLayer || [];
     function getStoredUTMParams() {
         try {
@@ -20,7 +10,8 @@ export function initAnalytics() {
     }
     const utmData = getStoredUTMParams();
     window.dataLayer.push({
-        'event': 'page_view',
+        // ONLY pushing page context variables, NO 'event' key, to prevent duplicate events
+        // GTM will automatically pick these up for its default Page View trigger
         'page_title': document.title,
         'page_location': window.location.href,
         'page_path': window.location.pathname,
@@ -30,6 +21,16 @@ export function initAnalytics() {
         'content': utmData.utm_content || '',
         'term': utmData.utm_term || ''
     });
+
+    // 2. Google Tag Manager Initialization
+    (function (w, d, s, l, i) {
+        w[l] = w[l] || []; w[l].push({
+            'gtm.start':
+                new Date().getTime(), event: 'gtm.js'
+        }); var f = d.getElementsByTagName(s)[0],
+            j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+                'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-53CBVFF7');
 
     // 3. Meta Pixel
     !function (f, b, e, v, n, t, s) {
