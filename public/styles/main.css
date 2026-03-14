@@ -568,8 +568,8 @@ body {
 
 @media (min-width: 1024px) {
   .hero-image-wrapper img {
-    max-height: 700px;
-    max-width: 680px;
+    max-height: 720px;
+    max-width: 820px;
     width: 100%;
   }
 }
@@ -614,12 +614,13 @@ body {
   }
 
   .hero-image-wrapper {
-    margin: 1.1rem 0 1.3rem;
+    margin: 0.8rem -1.25rem 1.1rem;
   }
 
   .hero-image-wrapper img {
-    max-height: 340px;
-    border-radius: 14px;
+    max-height: none;
+    border-radius: 0;
+    width: 100%;
   }
 
   .hero-badge {
@@ -742,12 +743,13 @@ body {
   }
 
   .hero-image-wrapper {
-    margin: 0.5rem 0 0.7rem;
+    margin: 0.5rem -1rem 0.7rem;
   }
 
   .hero-image-wrapper img {
-    max-height: 320px;
-    border-radius: 12px;
+    max-height: none;
+    border-radius: 0;
+    width: 100%;
   }
 
   .cta-button {
