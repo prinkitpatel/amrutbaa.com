@@ -202,47 +202,39 @@ export function initNavbarEffects() {
 
     let lastScroll = 0;
 
-    // Throttle helper to reduce scroll event overhead
-    function throttle(func, limit) {
-        let inThrottle;
-        return function () {
-            const args = arguments;
-            const context = this;
-            if (!inThrottle) {
-                func.apply(context, args);
-                inThrottle = true;
-                setTimeout(() => inThrottle = false, limit);
-            }
+    const handleScroll = () => {
+        if (!inThrottle) {
+            window.requestAnimationFrame(() => {
+                const currentScroll = window.scrollY;
+
+                // Enhanced shadow on scroll
+                if (currentScroll > 50) {
+                    navbar.style.boxShadow = '0 6px 25px rgba(0,0,0,0.4)';
+                    navbar.style.background = 'linear-gradient(135deg, rgba(77, 14, 19, 0.98) 0%, rgba(107, 28, 35, 0.98) 100%)';
+                    navbar.style.backdropFilter = 'blur(10px)';
+                } else {
+                    navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
+                    navbar.style.background = 'linear-gradient(135deg, #4D0E13 0%, #6B1C23 100%)';
+                    navbar.style.backdropFilter = 'none';
+                }
+
+                // Hide navbar on scroll down (mobile)
+                if (window.innerWidth <= 768) {
+                    if (currentScroll > lastScroll && currentScroll > 100) {
+                        navbar.style.transform = 'translateY(-100%)';
+                    } else {
+                        navbar.style.transform = 'translateY(0)';
+                    }
+                }
+
+                lastScroll = currentScroll;
+                inThrottle = false;
+            });
+            inThrottle = true;
         }
-    }
+    };
 
-    const handleScroll = throttle(() => {
-        const currentScroll = window.pageYOffset;
-
-        // Enhanced shadow on scroll
-        if (currentScroll > 50) {
-            navbar.style.boxShadow = '0 6px 25px rgba(0,0,0,0.4)';
-            navbar.style.background = 'linear-gradient(135deg, rgba(77, 14, 19, 0.98) 0%, rgba(107, 28, 35, 0.98) 100%)';
-            navbar.style.backdropFilter = 'blur(10px)';
-        } else {
-            navbar.style.boxShadow = '0 4px 20px rgba(0,0,0,0.3)';
-            navbar.style.background = 'linear-gradient(135deg, #4D0E13 0%, #6B1C23 100%)';
-            navbar.style.backdropFilter = 'none';
-        }
-
-        // Hide navbar on scroll down (mobile)
-        if (window.innerWidth <= 768) {
-            if (currentScroll > lastScroll && currentScroll > 100) {
-                navbar.style.transform = 'translateY(-100%)';
-            } else {
-                navbar.style.transform = 'translateY(0)';
-            }
-        }
-
-        lastScroll = currentScroll;
-    }, 100); // Wait 100ms between executions
-
-    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('scroll', handleScroll, { passive: true });
 
     navbar.style.transition = 'all 0.3s ease';
 }
