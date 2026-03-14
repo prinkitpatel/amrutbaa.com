@@ -521,7 +521,6 @@ body {
   align-items: center;
   animation: fadeInUp 0.8s ease 0.1s both;
   position: relative;
-  aspect-ratio: 1 / 1;
 }
 
 .hero-image-wrapper img {
