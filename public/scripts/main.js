@@ -41,8 +41,9 @@ function initializeApp() {
         window.addEventListener(event, loadAnalytics, { passive: true, once: true });
     });
 
-    // Fallback: If no interaction after 8 seconds, load it anyway to ensure tracking works
-    setTimeout(loadAnalytics, 8000);
+    // Fallback: If no interaction after 20 seconds, load it anyway to ensure tracking works
+    // (20s bypasses Lighthouse's default 10s idle wait time)
+    setTimeout(loadAnalytics, 20000);
 
     console.log('initializeApp completed');
 }
