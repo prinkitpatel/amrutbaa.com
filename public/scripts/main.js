@@ -21,16 +21,28 @@ function initializeApp() {
     try { initModalTriggers(); } catch (e) { console.error('initModalTriggers error:', e); }
     try { initTestimonialsCarousel(); } catch (e) { console.error('initTestimonialsCarousel error:', e); }
 
-    // Defer analytics until page is idle (post-LCP) to avoid blocking main thread
-    // Falls back to setTimeout(3s) on browsers without requestIdleCallback
-    const deferAnalytics = () => {
+    // Defer analytics until first user interaction to avoid blocking main thread and improve Lighthouse scores
+    let analyticsLoaded = false;
+    const loadAnalytics = () => {
+        if (analyticsLoaded) return;
+        analyticsLoaded = true;
+        
+        // Remove event listeners once triggered
+        ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(event => {
+            window.removeEventListener(event, loadAnalytics, { passive: true });
+        });
+        
+        // Load analytics
         try { initAnalytics(); } catch (e) { console.error('initAnalytics error:', e); }
     };
-    if ('requestIdleCallback' in window) {
-        requestIdleCallback(deferAnalytics, { timeout: 3000 });
-    } else {
-        setTimeout(deferAnalytics, 3000);
-    }
+
+    // Attach interaction listeners
+    ['scroll', 'mousemove', 'touchstart', 'keydown', 'click'].forEach(event => {
+        window.addEventListener(event, loadAnalytics, { passive: true, once: true });
+    });
+
+    // Fallback: If no interaction after 8 seconds, load it anyway to ensure tracking works
+    setTimeout(loadAnalytics, 8000);
 
     console.log('initializeApp completed');
 }
