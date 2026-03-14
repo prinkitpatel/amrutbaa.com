@@ -2283,10 +2283,10 @@ body {
   flex-direction: column;
   gap: 1rem;
   padding: 1rem;
-  background: rgba(255, 255, 255, 0.75);
+  background: rgba(46, 125, 50, 0.95);
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 18px;
-  backdrop-filter: blur(12px);
+  /* backdrop-filter removed for perf */
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
   transition:
     box-shadow 0.25s ease,
@@ -3863,10 +3863,10 @@ body {
   max-width: 800px;
   margin: 0 auto;
   padding: 3rem;
-  background: rgba(42, 24, 16, 0.4);
+  background: rgba(26, 15, 10, 0.95);
   border: 1px solid rgba(212, 175, 55, 0.2);
   border-radius: 16px;
-  backdrop-filter: blur(10px);
+  /* backdrop-filter removed for perf */
   box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 }
 
