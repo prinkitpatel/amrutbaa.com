@@ -8,3 +8,6 @@ directory = "public"
 # Environment variables (set these via Cloudflare dashboard or CLI)
 # RAZORPAY_KEY_ID = "your_key_id"
 # RAZORPAY_KEY_SECRET = "your_key_secret"
+# SHIPROCKET_EMAIL = "your_email"
+# SHIPROCKET_PASSWORD = "your_password"
+# SHIPROCKET_PICKUP_PINCODE = "380001"

@@ -143,7 +143,7 @@ function initOrderModal() {
                         <div class="form-row">
                             <div class="form-group">
                                 <label for="pincode">Pincode *</label>
-                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" maxlength="6" required inputmode="numeric" autocomplete="shipping postal-code">
+                                <input type="text" id="pincode" name="pincode" placeholder="6-digit" required inputmode="numeric" autocomplete="shipping postal-code">
                                 <p class="input-error" data-error-for="pincode" style="display:none;"></p>
                                 <p class="pincode-status" id="pincodeStatus"></p>
                             </div>
@@ -401,6 +401,17 @@ function initOrderModal() {
             }
 
             const result = await response.json();
+            if (!result.success && result.error) {
+                const errorMsg = result.details ? `${result.error}: ${result.details}` : result.error;
+                setPincodeStatus('error', errorMsg || 'Could not verify pincode.');
+                if (cod) {
+                    codPincodeServiceable = false;
+                } else {
+                    pincodeServiceable = false;
+                }
+                return false;
+            }
+
             if (cod) {
                 codPincodeServiceable = !!result.serviceable;
             } else {
@@ -429,7 +440,7 @@ function initOrderModal() {
             } else {
                 pincodeServiceable = null;
             }
-            setPincodeStatus('error', 'Could not verify pincode.');
+            setPincodeStatus('error', 'Service connection issue. Please try again.');
             return null;
         }
     }
@@ -818,7 +829,7 @@ function initOrderModal() {
             address2: document.getElementById('address2').value,
             city: document.getElementById('city').value,
             state: document.getElementById('state').value,
-            pincode: document.getElementById('pincode').value,
+            pincode: document.getElementById('pincode').value.replace(/\D/g, '').trim(),
             payment_method: document.querySelector('input[name="payment_method"]:checked')?.value || 'online'
         };
 

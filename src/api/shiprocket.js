@@ -25,7 +25,8 @@ async function getShiprocketToken(env) {
         });
 
         if (!response.ok) {
-            throw new Error('Failed to authenticate with Shiprocket');
+            const errorBody = await response.text();
+            throw new Error(`Shiprocket auth failed: ${errorBody || response.statusText}`);
         }
 
         const data = await response.json();
@@ -41,14 +42,17 @@ async function getShiprocketToken(env) {
 }
 
 async function checkShiprocketServiceability(env, { pincode, weight = 0.23, cod = false }) {
+    const pickupPincode = env.SHIPROCKET_PICKUP_PINCODE || '380001'; // Fallback to a common Ahmedabad pincode if not set
     if (!env.SHIPROCKET_PICKUP_PINCODE) {
-        return { success: false, error: 'Pickup pincode not configured' };
+        console.warn('⚠️ SHIPROCKET_PICKUP_PINCODE not set, using fallback.');
     }
 
     const token = await getShiprocketToken(env);
+    const normalizedPincode = String(pincode).replace(/\D/g, '').trim();
+
     const queryParams = new URLSearchParams({
-        pickup_postcode: env.SHIPROCKET_PICKUP_PINCODE,
-        delivery_postcode: String(pincode),
+        pickup_postcode: pickupPincode,
+        delivery_postcode: normalizedPincode,
         cod: cod ? 1 : 0,
         weight: Number(weight) || 0.23
     });
@@ -255,18 +259,20 @@ export async function handleCheckPincode(request, env) {
         if (originError) return originError;
 
         const { pincode, weight = 0.23, cod = false } = await request.json();
+        const normalizedPincode = String(pincode).replace(/\D/g, '').trim();
 
-        if (!pincode || String(pincode).length !== 6) {
+        if (!normalizedPincode || normalizedPincode.length !== 6) {
             return new Response(JSON.stringify({
                 success: false,
-                error: 'Invalid pincode'
+                error: 'Invalid pincode',
+                details: 'Pincode must be exactly 6 digits.'
             }), {
                 status: 400,
                 headers: { ...corsHeaders, 'Content-Type': 'application/json' }
             });
         }
 
-        const serviceability = await checkShiprocketServiceability(env, { pincode, weight, cod });
+        const serviceability = await checkShiprocketServiceability(env, { pincode: normalizedPincode, weight, cod });
         if (!serviceability.success) {
             // Fix for Feedback 3: Return a safe API response format rather than crashing
             return new Response(JSON.stringify({
