@@ -406,11 +406,16 @@ function initOrderModal() {
                 })
             });
 
-            if (!response.ok) {
-                throw new Error('Serviceability check failed');
+            let result;
+            try {
+                result = await response.json();
+            } catch (e) {
+                if (!response.ok) {
+                    throw new Error('Serviceability check failed');
+                }
+                throw e;
             }
 
-            const result = await response.json();
             if (!result.success && result.error) {
                 const errorMsg = result.details ? `${result.error}: ${result.details}` : result.error;
                 setPincodeStatus('error', errorMsg || 'Could not verify pincode.');
@@ -420,6 +425,10 @@ function initOrderModal() {
                     pincodeServiceable = false;
                 }
                 return false;
+            }
+
+            if (!response.ok) {
+                throw new Error('Serviceability check failed');
             }
 
             if (cod) {
