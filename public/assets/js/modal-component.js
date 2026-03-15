@@ -354,6 +354,16 @@ function initOrderModal() {
         }
     }
 
+    function clearFieldError(fieldId) {
+        const group = document.getElementById(fieldId)?.closest('.form-group');
+        const errorEl = document.querySelector(`[data-error-for="${fieldId}"]`);
+        if (group) group.classList.remove('error');
+        if (errorEl) {
+            errorEl.textContent = '';
+            errorEl.style.display = 'none';
+        }
+    }
+
     function setPincodeStatus(type, message) {
         if (!pincodeStatus) return;
         pincodeStatus.classList.remove('pending', 'success', 'error');
@@ -701,6 +711,7 @@ function initOrderModal() {
     phoneInput?.addEventListener('input', (e) => {
         const phoneValue = e.target.value.replace(/\D/g, '');
         e.target.value = phoneValue;
+        clearFieldError('phone');
 
         // Auto-advance when exactly 10 digits entered
         if (phoneValue.length === 10) {
@@ -785,13 +796,23 @@ function initOrderModal() {
             clearTimeout(pincodeCheckTimer);
         }
         const pincode = pincodeInput.value.replace(/\D/g, '').trim();
+        
+        // Reactive error clearing
         if (pincode.length === 6) {
+            clearFieldError('pincode');
             pincodeCheckTimer = setTimeout(() => {
                 checkPincodeServiceability({ cod: isCodSelected });
             }, 400);
         } else {
             setPincodeStatus(null, '');
         }
+    });
+
+    // Reactive clearing for other Step 2 fields
+    ['name', 'email', 'address1', 'city', 'state'].forEach(fieldId => {
+        document.getElementById(fieldId)?.addEventListener('input', () => {
+            clearFieldError(fieldId);
+        });
     });
 
     pincodeInput?.addEventListener('blur', () => {
