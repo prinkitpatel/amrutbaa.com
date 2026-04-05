@@ -17,7 +17,10 @@ async function getShiprocketToken(env) {
 
         const response = await fetch('https://apiv2.shiprocket.in/v1/external/auth/login', {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 
+                'Content-Type': 'application/json',
+                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+            },
             body: JSON.stringify({
                 email: env.SHIPROCKET_EMAIL,
                 password: env.SHIPROCKET_PASSWORD
@@ -61,7 +64,8 @@ async function checkShiprocketServiceability(env, { pincode, weight = 0.23, cod 
         method: 'GET',
         headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${token}`,
+            'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
         }
     });
 
@@ -210,7 +214,8 @@ export async function handleCreateCodOrder(request, env) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
             },
             body: JSON.stringify(shipmentData)
         });
@@ -416,7 +421,8 @@ export async function handleCreateShipment(request, env) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
             },
             body: JSON.stringify(shipmentData)
         });
@@ -485,7 +491,8 @@ export async function handleTrackShipment(request, env) {
         const trackingResponse = await fetch(trackingUrl, {
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
             }
         });
 
