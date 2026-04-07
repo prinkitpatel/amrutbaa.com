@@ -24,13 +24,13 @@ function initializeApp() {
     
     // Initialize Easter Egg
     try {
-        initEasterEgg('.veg-mark-dot', () => {
+        initEasterEgg('.veg-mark', () => {
             if (window.OrderModal) {
                 window.OrderModal.open({ easterEgg: 'JADOOI_7' });
             }
         });
     } catch (e) { console.error('initEasterEgg error:', e); }
-}
+
     // Defer analytics until first user interaction to avoid blocking main thread and improve Lighthouse scores
     let analyticsLoaded = false;
     const loadAnalytics = () => {
