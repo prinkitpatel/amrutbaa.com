@@ -19,7 +19,7 @@ async function getShiprocketToken(env) {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
             },
             body: JSON.stringify({
                 email: env.SHIPROCKET_EMAIL,
@@ -65,7 +65,7 @@ async function checkShiprocketServiceability(env, { pincode, weight = 0.23, cod 
         headers: {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${token}`,
-            'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
         }
     });
 
@@ -216,7 +216,7 @@ export async function handleCreateCodOrder(request, env) {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
-                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
             },
             body: JSON.stringify(shipmentData)
         });
@@ -424,7 +424,7 @@ export async function handleCreateShipment(request, env) {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
-                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
             },
             body: JSON.stringify(shipmentData)
         });
@@ -494,7 +494,7 @@ export async function handleTrackShipment(request, env) {
             headers: {
                 'Content-Type': 'application/json',
                 'Authorization': `Bearer ${token}`,
-                'User-Agent': 'Amrutbaa/1.0 (Cloudflare Worker)'
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
             }
         });
 
