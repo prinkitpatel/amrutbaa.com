@@ -7,7 +7,7 @@ export async function handleCreateOrder(request, env) {
         if (originError) return originError;
 
         const body = await request.json();
-        const { name, email, phone, quantity, address1, address2, city, state, pincode } = body;
+        const { name, email, phone, quantity, address1, address2, city, state, pincode, easterEggCode } = body;
 
         if (!name || !email || !phone || !quantity) {
             return new Response(JSON.stringify({ error: 'Missing required fields' }), {
@@ -16,7 +16,7 @@ export async function handleCreateOrder(request, env) {
             });
         }
 
-        const pricing = getPricing(quantity, 'Prepaid');
+        const pricing = getPricing(quantity, 'Prepaid', easterEggCode);
 
         const auth = btoa(`${env.RAZORPAY_KEY_ID}:${env.RAZORPAY_KEY_SECRET}`);
         const orderData = {

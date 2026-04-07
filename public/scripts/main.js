@@ -1,4 +1,5 @@
 import { initAnalytics } from './analytics.js';
+import { initEasterEgg } from './easter-egg.js';
 import {
     initFonts,
     initScrollAnimations,
@@ -20,7 +21,16 @@ function initializeApp() {
     try { initCountdownTimer(); } catch (e) { console.error('initCountdownTimer error:', e); }
     try { initModalTriggers(); } catch (e) { console.error('initModalTriggers error:', e); }
     try { initTestimonialsCarousel(); } catch (e) { console.error('initTestimonialsCarousel error:', e); }
-
+    
+    // Initialize Easter Egg
+    try {
+        initEasterEgg('.veg-mark-dot', () => {
+            if (window.OrderModal) {
+                window.OrderModal.open({ easterEgg: 'JADOOI_7' });
+            }
+        });
+    } catch (e) { console.error('initEasterEgg error:', e); }
+}
     // Defer analytics until first user interaction to avoid blocking main thread and improve Lighthouse scores
     let analyticsLoaded = false;
     const loadAnalytics = () => {

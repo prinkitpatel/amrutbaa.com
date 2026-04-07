@@ -106,7 +106,8 @@ export async function handleCreateCodOrder(request, env) {
             state,
             pincode,
             quantity,
-            client_order_ref
+            client_order_ref,
+            easterEggCode
         } = orderData;
 
         if (!customer_name || !customer_phone || !address1 || !city || !state || !pincode) {
@@ -119,7 +120,7 @@ export async function handleCreateCodOrder(request, env) {
             });
         }
 
-        const pricing = getPricing(quantity, 'COD');
+        const pricing = getPricing(quantity, 'COD', easterEggCode);
         const safeQuantity = pricing.qty;
         const safeUnitPrice = pricing.unitPrice;
         const safeDiscount = pricing.discount;
@@ -333,7 +334,8 @@ export async function handleCreateShipment(request, env) {
             city,
             state,
             pincode,
-            quantity
+            quantity,
+            easterEggCode
         } = orderData;
 
         if (!customer_name || !customer_phone || !address1 || !city || !state || !pincode) {
@@ -346,7 +348,7 @@ export async function handleCreateShipment(request, env) {
             });
         }
 
-        const pricing = getPricing(quantity, 'Prepaid');
+        const pricing = getPricing(quantity, 'Prepaid', easterEggCode);
         const idempotencyRef = payment_id || order_id;
         if (!idempotencyRef) {
             return new Response(JSON.stringify({

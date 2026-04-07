@@ -1,6 +1,12 @@
-export function getPricing(quantity, paymentMethod) {
+export function getPricing(quantity, paymentMethod, easterEggCode = null) {
     const safeQty = Math.min(10, Math.max(1, Number(quantity) || 1));
-    const unitPrice = 499;
+    
+    // Easter Egg Special Pricing Logic
+    let unitPrice = 499;
+    if (easterEggCode === 'JADOOI_7') {
+        unitPrice = 299;
+    }
+
     const baseTotal = safeQty * unitPrice;
     let discountPercent = 0;
     if (paymentMethod === 'Prepaid') {

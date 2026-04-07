@@ -1,0 +1,73 @@
+/* 
+ * Easter Egg Styles
+ * Completely isolated to prevent polluting main.css 
+ */
+
+.easter-egg-confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    pointer-events: none;
+    z-index: 999999;
+    animation: easter-egg-burst 1.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+}
+
+@keyframes easter-egg-burst {
+    0% {
+        opacity: 1;
+        transform: translate(0, 0) scale(1) rotate(0deg);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(var(--tx), var(--ty)) scale(0.5) rotate(var(--r));
+    }
+}
+
+.easter-egg-banner {
+    background: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #B8860B 100%);
+    color: #1a0f0a;
+    padding: 1rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
+    animation: golden-pulse 2s infinite;
+    position: relative;
+    overflow: hidden;
+}
+
+.easter-egg-banner::after {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+    transform: rotate(45deg) translateY(-100%);
+    animation: shine 3s infinite;
+}
+
+.easter-egg-banner-title {
+    font-weight: 800;
+    font-size: 1.2rem;
+    letter-spacing: 1px;
+    margin-bottom: 0.25rem;
+    text-transform: uppercase;
+}
+
+.easter-egg-banner-text {
+    font-size: 0.95rem;
+    font-weight: 600;
+}
+
+@keyframes golden-pulse {
+    0% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
+    50% { box-shadow: 0 4px 25px rgba(212, 175, 55, 0.8); }
+    100% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
+}
+
+@keyframes shine {
+    0% { transform: translateX(-150%) rotate(45deg); }
+    100% { transform: translateX(150%) rotate(45deg); }
+}
