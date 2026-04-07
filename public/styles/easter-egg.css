@@ -1,8 +1,9 @@
 /* 
  * Easter Egg Styles
- * Completely isolated to prevent polluting main.css 
+ * Completely isolated — delete this file to remove all easter egg visuals
  */
 
+/* === Confetti particles === */
 .easter-egg-confetti {
     position: fixed;
     width: 10px;
@@ -23,51 +24,259 @@
     }
 }
 
-.easter-egg-banner {
+/* === Easter Egg Modal === */
+.ee-modal {
+    position: fixed;
+    inset: 0;
+    z-index: 99999;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.ee-modal.ee-active {
+    display: flex;
+}
+
+.ee-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(4px);
+}
+
+.ee-content {
+    position: relative;
+    background: #fff;
+    border-radius: 16px;
+    width: 90%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 2rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4), 0 0 40px rgba(212, 175, 55, 0.3);
+    animation: ee-slide-in 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes ee-slide-in {
+    from {
+        opacity: 0;
+        transform: translateY(30px) scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+.ee-close {
+    position: absolute;
+    top: 12px;
+    right: 16px;
+    background: none;
+    border: none;
+    font-size: 1.8rem;
+    color: #999;
+    cursor: pointer;
+    line-height: 1;
+    z-index: 1;
+}
+
+.ee-close:hover {
+    color: #333;
+}
+
+/* === Golden Banner === */
+.ee-banner {
     background: linear-gradient(135deg, #FFD700 0%, #D4AF37 50%, #B8860B 100%);
     color: #1a0f0a;
-    padding: 1rem;
-    border-radius: 8px;
+    padding: 1.2rem;
+    border-radius: 10px;
     margin-bottom: 1.5rem;
     text-align: center;
     box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4);
-    animation: golden-pulse 2s infinite;
+    animation: ee-golden-pulse 2s infinite;
     position: relative;
     overflow: hidden;
 }
 
-.easter-egg-banner::after {
+.ee-banner::after {
     content: '';
     position: absolute;
     top: -50%;
     left: -50%;
     width: 200%;
     height: 200%;
-    background: linear-gradient(to right, rgba(255,255,255,0) 0%, rgba(255,255,255,0.7) 50%, rgba(255,255,255,0) 100%);
+    background: linear-gradient(
+        to right,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.6) 50%,
+        rgba(255, 255, 255, 0) 100%
+    );
     transform: rotate(45deg) translateY(-100%);
-    animation: shine 3s infinite;
+    animation: ee-shine 3s infinite;
 }
 
-.easter-egg-banner-title {
+.ee-banner-title {
     font-weight: 800;
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     letter-spacing: 1px;
     margin-bottom: 0.25rem;
     text-transform: uppercase;
 }
 
-.easter-egg-banner-text {
+.ee-banner-text {
     font-size: 0.95rem;
     font-weight: 600;
 }
 
-@keyframes golden-pulse {
+@keyframes ee-golden-pulse {
     0% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
     50% { box-shadow: 0 4px 25px rgba(212, 175, 55, 0.8); }
     100% { box-shadow: 0 4px 15px rgba(212, 175, 55, 0.4); }
 }
 
-@keyframes shine {
+@keyframes ee-shine {
     0% { transform: translateX(-150%) rotate(45deg); }
     100% { transform: translateX(150%) rotate(45deg); }
+}
+
+/* === Price === */
+.ee-price-row {
+    text-align: center;
+    margin-bottom: 0.25rem;
+}
+
+.ee-price-mrp {
+    text-decoration: line-through;
+    color: #999;
+    font-size: 0.95rem;
+    margin-right: 0.75rem;
+}
+
+.ee-price-now {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #D4AF37;
+}
+
+.ee-price-caption {
+    text-align: center;
+    font-size: 0.85rem;
+    color: #777;
+    margin-bottom: 1.5rem;
+}
+
+/* === Form === */
+.ee-field {
+    margin-bottom: 1rem;
+}
+
+.ee-field label {
+    display: block;
+    font-weight: 600;
+    color: #6B2C2C;
+    margin-bottom: 0.4rem;
+    font-size: 0.9rem;
+}
+
+.ee-field input,
+.ee-field textarea {
+    width: 100%;
+    padding: 0.7rem 0.9rem;
+    border: 2px solid rgba(107, 44, 44, 0.2);
+    border-radius: 8px;
+    font-size: 0.95rem;
+    color: #333;
+    transition: border-color 0.2s;
+    box-sizing: border-box;
+}
+
+.ee-field input:focus,
+.ee-field textarea:focus {
+    outline: none;
+    border-color: #D4AF37;
+    box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.15);
+}
+
+.ee-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+
+.ee-error {
+    color: #dc2626;
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+    display: none;
+}
+
+.ee-pincode-status {
+    font-size: 0.82rem;
+    margin-top: 0.3rem;
+}
+
+.ee-pincode-status.checking { color: #D4AF37; }
+.ee-pincode-status.success { color: #22c55e; }
+.ee-pincode-status.error { color: #dc2626; }
+
+/* === Total & Submit === */
+.ee-total {
+    text-align: center;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #6B2C2C;
+    margin: 1.25rem 0;
+    padding: 0.75rem;
+    background: rgba(212, 175, 55, 0.1);
+    border-radius: 8px;
+    border: 1px solid rgba(212, 175, 55, 0.3);
+}
+
+.ee-submit {
+    width: 100%;
+    padding: 1rem;
+    background: linear-gradient(135deg, #D4AF37 0%, #E0BD4D 100%);
+    color: #1a0f0a;
+    border: none;
+    border-radius: 10px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.5px;
+}
+
+.ee-submit:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+}
+
+.ee-submit:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+}
+
+/* === Success === */
+.ee-success {
+    text-align: center;
+    padding: 2rem 0;
+}
+
+.ee-success-icon {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+}
+
+.ee-success h3 {
+    font-size: 1.4rem;
+    color: #22c55e;
+    margin-bottom: 0.5rem;
+}
+
+.ee-success p {
+    color: #666;
+    font-size: 0.95rem;
 }

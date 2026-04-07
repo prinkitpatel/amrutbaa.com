@@ -22,14 +22,8 @@ function initializeApp() {
     try { initModalTriggers(); } catch (e) { console.error('initModalTriggers error:', e); }
     try { initTestimonialsCarousel(); } catch (e) { console.error('initTestimonialsCarousel error:', e); }
     
-    // Initialize Easter Egg
-    try {
-        initEasterEgg('.veg-mark', () => {
-            if (window.OrderModal) {
-                window.OrderModal.open({ easterEgg: 'JADOOI_7' });
-            }
-        });
-    } catch (e) { console.error('initEasterEgg error:', e); }
+    // Initialize Easter Egg (fully self-contained — see easter-egg.js + easter-egg-modal.js)
+    try { initEasterEgg('.veg-mark'); } catch (e) { console.error('initEasterEgg error:', e); }
 
     // Defer analytics until first user interaction to avoid blocking main thread and improve Lighthouse scores
     let analyticsLoaded = false;

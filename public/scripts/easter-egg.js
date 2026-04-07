@@ -1,4 +1,6 @@
-export function initEasterEgg(targetSelector, onTriggerCallback) {
+import { openEasterEggModal } from './easter-egg-modal.js';
+
+export function initEasterEgg(targetSelector) {
     const targetElement = document.querySelector(targetSelector);
     if (!targetElement) return;
 
@@ -20,9 +22,10 @@ export function initEasterEgg(targetSelector, onTriggerCallback) {
         if (clickCount === TARGET_CLICKS) {
             clickCount = 0; // reset to prevent spamming
             fireDopamineHit(e.clientX, e.clientY);
-            if (typeof onTriggerCallback === 'function') {
-                setTimeout(onTriggerCallback, 600); // Wait for confetti before opening
-            }
+            // Open the self-contained easter egg modal
+            setTimeout(() => {
+                openEasterEggModal();
+            }, 600);
         }
     });
 
@@ -30,7 +33,7 @@ export function initEasterEgg(targetSelector, onTriggerCallback) {
 }
 
 function fireDopamineHit(x, y) {
-    // Basic dependency-free CSS confetti explosion
+    // Dependency-free CSS confetti explosion
     const colors = ['#d4af37', '#ff0000', '#22c55e', '#ffffff'];
     
     for (let i = 0; i < 40; i++) {

@@ -229,7 +229,6 @@ function initOrderModal() {
     let isCodSelected = false;
     let lastFocusedElement = null;
     let isModalOpen = false;
-    let currentEasterEgg = null;
 
     const pricingConfig = {
         unitPrice: 499,
@@ -566,25 +565,7 @@ function initOrderModal() {
         return valid;
     }
 
-    function openModal(options = {}) {
-        currentEasterEgg = options.easterEgg || null;
-        pricingConfig.unitPrice = currentEasterEgg === 'JADOOI_7' ? 299 : 499;
-        
-        let headerEl = modal.querySelector('.modal-header');
-        let existingBanner = headerEl.querySelector('.easter-egg-banner');
-        if (currentEasterEgg === 'JADOOI_7') {
-            if (!existingBanner) {
-                const banner = document.createElement('div');
-                banner.className = 'easter-egg-banner';
-                banner.innerHTML = '<div class="easter-egg-banner-title">🎟️ YOU FOUND THE SECRET!</div><div class="easter-egg-banner-text">Jadooi Chutney is yours for just ₹299 today.</div>';
-                headerEl.insertBefore(banner, headerEl.firstChild);
-            }
-            if (mrpDisplay) mrpDisplay.textContent = 'MRP ₹499';
-        } else {
-            if (existingBanner) existingBanner.remove();
-            if (mrpDisplay) mrpDisplay.textContent = 'MRP ₹800';
-        }
-        if (unitPriceDisplay) unitPriceDisplay.textContent = `₹${pricingConfig.unitPrice}`;
+    function openModal() {
 
         // Lazy load Razorpay script when modal opens
         if (!window.Razorpay && !document.getElementById('razorpay-checkout-script')) {
@@ -880,7 +861,6 @@ function initOrderModal() {
             city: document.getElementById('city').value.trim(),
             state: document.getElementById('state').value.trim(),
             pincode: document.getElementById('pincode').value.replace(/\D/g, '').trim(),
-            easterEggCode: currentEasterEgg,
             payment_method: document.querySelector('input[name="payment_method"]:checked')?.value || 'online'
         };
 
@@ -939,8 +919,7 @@ function initOrderModal() {
                         unit_price: pricePerJar,
                         base_total: pricing.baseTotal,
                         discount: 0,
-                        client_order_ref: codClientOrderRef,
-                        easterEggCode: currentEasterEgg
+                        client_order_ref: codClientOrderRef
                     })
                 });
 
@@ -1090,8 +1069,7 @@ function initOrderModal() {
                     address2: formData.address2,
                     city: formData.city,
                     state: formData.state,
-                    pincode: formData.pincode,
-                    easterEggCode: currentEasterEgg
+                    pincode: formData.pincode
                 })
             });
 
