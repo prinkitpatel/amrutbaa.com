@@ -82,7 +82,7 @@
               border: 2px solid rgba(212, 175, 55, 0.3);
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -110,7 +110,7 @@
               border: 2px solid rgba(212, 175, 55, 0.3);
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -138,7 +138,7 @@
               border: 2px solid rgba(212, 175, 55, 0.3);
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -226,7 +226,7 @@
               border: 4px solid #fff;
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -254,7 +254,7 @@
               border: 4px solid #fff;
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -282,7 +282,7 @@
               border: 4px solid #fff;
               background: #000;
               aspect-ratio: 9/16;
-              cursor: pointer;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+              cursor: pointer;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
                 top: 0;
                 left: 0;
                 width: 100%;
@@ -335,7 +335,7 @@
             background: #000;
             aspect-ratio: 16/9;
             cursor: pointer;
-            margin: 0 auto;"onclick="toggleMute(this)"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
+            margin: 0 auto;"><video autoplay muted loop playsinline preload="metadata"style="position: absolute;
               top: 0;
               left: 0;
               width: 100%;
@@ -374,27 +374,31 @@
               font-size: 2.5rem;
               color: #2a1810;
               margin-bottom: 0.5rem;">Frequently Asked Questions</h2></div><div class="faq-container"><div class="faq-item"><button class="faq-question"><span>How spicy is it?</span> <span class="faq-icon">+</span></button><div class="faq-answer"><p>It has a perfectly balanced bold kick that awakens your tastebuds without overpowering the main dish. The heat comes naturally from premium hand-picked red chillies.</div></div><div class="faq-item"><button class="faq-question"><span>What is the shelf life?</span> <span class="faq-icon">+</span></button><div class="faq-answer"><p>Even with zero preservatives, our natural preparation method gives it a shelf life of up to 2 months when unopened.</div></div><div class="faq-item"><button class="faq-question"><span>Do I need to refrigerate it?</span> <span class="faq-icon">+</span></button><div class="faq-answer"><p>We recommend refrigerating after opening to maintain the vibrant color and fresh garlic punch, as we use absolutely no chemical preservatives.</div></div><div class="faq-item"><button class="faq-question"><span>Is it Vegan and Gluten-Free?</span> <span class="faq-icon">+</span></button><div class="faq-answer"><p>Yes, 100%! Our chutney is purely plant-based, made with just garlic, chillies, spices, rock salt, and cold-pressed oil. No dairy, no gluten, no artificial colors.</div></div></div></div></section><footer class="site-footer"><div class="container"><div class="footer-content"><p class="footer-note">Have a question? We're here to help.<div class="footer-links"><a href="mailto:namaste@amrutbaa.com"class="footer-link">namaste@amrutbaa.com</a> <span class="footer-divider">|</span> <a href="https://wa.me/917016705714?text=Hi%2C%20I%20have%20a%20question%20about%20my%20order"class="footer-link"target="_blank"rel="noopener">WhatsApp Us</a></div><p class="footer-copyright">&copy; 2026 Amrutbaa. All rights reserved.</div></div></footer><div class="sticky-cta-bar"><div class="timer-info"><div class="timer-label">⏰ Fresh Cooking Starts In</div><div class="timer-display"id="timerDisplay">--:--:--</div></div><div class="price-anchor"><div class="price-value">₹499</div><div class="price-label"><span class="price-full">MRP ₹800</span> <span class="price-compact">₹800 → ₹499</span></div></div><button class="cta-button-sticky"id="openModalBtnSticky"><span>Secure Jar</span> <span class="cta-arrow">→</span></button></div><script src="assets/js/modal-component.js?v=3"defer></script><script type="module"src="scripts/main.js"></script><script>// Video Mute Toggle Handler
-      // Video Mute Toggle Handler
-      window.toggleMute = function (container) {
+      // Video Mute Toggle Handler & UI Sync
+      document.querySelectorAll(".video-container").forEach((container) => {
         const video = container.querySelector("video");
-        video.muted = !video.muted;
-      };
-
-      // Sync Custom Mute UI to Actual Video State
-      document.querySelectorAll(".video-container video").forEach((video) => {
-        const container = video.closest(".video-container");
         const iconMuted = container.querySelector(".icon-muted");
         const iconUnmuted = container.querySelector(".icon-unmuted");
 
-        video.addEventListener("volumechange", () => {
-          if (video.muted) {
-            iconMuted.style.display = "block";
-            iconUnmuted.style.display = "none";
-          } else {
-            iconMuted.style.display = "none";
-            iconUnmuted.style.display = "block";
-          }
+        if (!video) return;
+
+        // Toggle mute on click
+        container.addEventListener("click", () => {
+          video.muted = !video.muted;
         });
+
+        // Sync UI with video mute state
+        const updateMuteUI = () => {
+          if (iconMuted && iconUnmuted) {
+            iconMuted.style.display = video.muted ? "block" : "none";
+            iconUnmuted.style.display = video.muted ? "none" : "block";
+          }
+        };
+
+        video.addEventListener("volumechange", updateMuteUI);
+        
+        // Initial UI state
+        updateMuteUI();
       });
 
       // Smart Autoplay based on Scroll Visibility
