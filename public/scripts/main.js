@@ -7,11 +7,8 @@ import {
     initSmoothScrolling,
     initCountdownTimer,
     initModalTriggers,
-    initTestimonialsCarousel,
-    initVideoManagement,
-    initStoryCarousel,
-    initHeroAnimation
-} from './ui.js';
+    initTestimonialsCarousel
+} from './ui.min.js';
 
 console.log('main.js loaded (ES Module)');
 
@@ -24,11 +21,8 @@ function initializeApp() {
     try { initCountdownTimer(); } catch (e) { console.error('initCountdownTimer error:', e); }
     try { initModalTriggers(); } catch (e) { console.error('initModalTriggers error:', e); }
     try { initTestimonialsCarousel(); } catch (e) { console.error('initTestimonialsCarousel error:', e); }
-    try { initVideoManagement(); } catch (e) { console.error('initVideoManagement error:', e); }
-    try { initStoryCarousel(); } catch (e) { console.error('initStoryCarousel error:', e); }
-    try { initHeroAnimation(); } catch (e) { console.error('initHeroAnimation error:', e); }
     
-    // Initialize Easter Egg
+    // Initialize Easter Egg (fully self-contained — see easter-egg.js + easter-egg-modal.js)
     try { initEasterEgg('.veg-mark'); } catch (e) { console.error('initEasterEgg error:', e); }
 
     // Defer analytics until first user interaction to avoid blocking main thread and improve Lighthouse scores
