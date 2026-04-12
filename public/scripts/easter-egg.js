@@ -32,7 +32,7 @@ export function initEasterEgg(targetSelector) {
     targetElement.style.cursor = 'pointer'; // Hint that it is clickable
 }
 
-function fireDopamineHit(x, y) {
+export function fireDopamineHit(x, y) {
     // Dependency-free CSS confetti explosion
     const colors = ['#d4af37', '#ff0000', '#22c55e', '#ffffff'];
     

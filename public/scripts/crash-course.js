@@ -1,4 +1,4 @@
-import { triggerConfetti } from './easter-egg.js';
+import { fireDopamineHit } from './easter-egg.js';
 
 document.addEventListener('DOMContentLoaded', () => {
     // State Tracking
@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     secureJarBtn.classList.remove('hidden');
                     
                     try {
-                        triggerConfetti(window.innerWidth / 2, window.innerHeight / 2, { count: 120, spread: 80, colors: ['#D4AF37', '#8B0000', '#22C55E'] });
+                        fireDopamineHit(window.innerWidth / 2, window.innerHeight / 2);
                     } catch (err) {}
                 }
             } else {
