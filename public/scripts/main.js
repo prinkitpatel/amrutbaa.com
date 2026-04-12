@@ -8,7 +8,7 @@ import {
     initCountdownTimer,
     initModalTriggers,
     initTestimonialsCarousel
-} from './ui.min.js';
+} from './ui.js';
 
 console.log('main.js loaded (ES Module)');
 

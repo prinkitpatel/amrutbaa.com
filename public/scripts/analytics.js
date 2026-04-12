@@ -69,7 +69,7 @@ export function initAnalytics() {
 
     // 5. CTA and Click Tracking
     document.addEventListener('click', function (e) {
-        const ctaEl = e.target.closest('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button, .cta-button, .cta-button-secondary, .cta-button-promise, .cta-button-sticky, .journey-cta');
+        const ctaEl = e.target.closest('[data-register-btn], .cta-btn, .hero-btn, .sticky-cta-button, .cta-button, .cta-button-secondary, .cta-button-promise, .cta-button-sticky, .journey-cta, .course-cta-btn');
         if (ctaEl) {
             const buttonText = ctaEl.textContent.trim();
             const buttonLocation = ctaEl.closest('.hero') ? 'hero' :

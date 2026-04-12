@@ -126,6 +126,12 @@ export function displayCountdown(milliseconds, isNextWeek) {
     if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
     if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
 
+    // Also update modalTimer if it exists
+    const modalTimer = document.getElementById('modalTimer');
+    if (modalTimer) {
+        modalTimer.textContent = `${days}d ${String(hours).padStart(2, '0')}:${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`;
+    }
+
     // Add urgency styling when less than 24 hours
     const countdownTimer = document.getElementById('countdown-timer');
     if (countdownTimer) {

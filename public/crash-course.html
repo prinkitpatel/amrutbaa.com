@@ -8,8 +8,22 @@
   
   <link rel="canonical" href="https://amrutbaa.com/crash-course">
   
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://amrutbaa.com/crash-course">
+  <meta property="og:title" content="Amrutbaa Mastery - The Jadooi Chutney Crash Course">
+  <meta property="og:description" content="Master the Top, Side, and Base methodology to cut your cooking time in half and enjoy 10X satisfaction with zero guilt.">
+  <meta property="og:image" content="https://amrutbaa.com/assets/images/hero-image-v2-opt.jpg">
+
+  <meta property="twitter:card" content="summary_large_image">
+  <meta property="twitter:url" content="https://amrutbaa.com/crash-course">
+  <meta property="twitter:title" content="Amrutbaa Mastery - The Jadooi Chutney Crash Course">
+  <meta property="twitter:description" content="Master the Top, Side, and Base methodology to cut your cooking time in half and enjoy 10X satisfaction with zero guilt.">
+  <meta property="twitter:image" content="https://amrutbaa.com/assets/images/hero-image-v2-opt.jpg">
+
   <!-- Preconnect & Preload -->
   <link rel="preconnect" href="https://assets.amrutbaa.com" crossorigin>
+  <link rel="preconnect" href="https://www.googletagmanager.com" crossorigin>
+  <link rel="preconnect" href="https://connect.facebook.net" crossorigin>
   <link rel="preload" href="assets/fonts/inter-regular.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="assets/fonts/playfair-bold.woff2" as="font" type="font/woff2" crossorigin>
 
@@ -47,6 +61,8 @@
   </style>
 </head>
 <body>
+
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53CBVFF7" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
 
   <!-- Minimal Header -->
   <header class="inner-header">
@@ -178,7 +194,7 @@
     <div class="exam-container">
       <h2>Your Kitchen Needs This Rhythm.</h2>
       <p>Amrutbaa adapts to your life—quietly becoming the most reached-for jar in your pantry.</p>
-      <a href="/#faq" class="course-cta-btn" onclick="if(window.location.href.includes('crash')){window.location.href='/';setTimeout(()=>document.getElementById('openModalBtn').click(),500);return false;}">Secure Your Jar Now</a>
+      <a href="/#faq" class="course-cta-btn" onclick="if(window.OrderModal){window.OrderModal.open();return false;} if(window.location.href.includes('crash')){window.location.href='/';setTimeout(()=>document.getElementById('openModalBtn').click(),500);return false;}">Secure Your Jar Now</a>
     </div>
   </section>
 
@@ -189,6 +205,9 @@
       </div>
     </div>
   </footer>
+
+  <script src="assets/js/modal-component.js?v=3" defer></script>
+  <script type="module" src="scripts/main.js"></script>
 
 </body>
 </html>
