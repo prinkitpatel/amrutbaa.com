@@ -64,6 +64,12 @@
 
   <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-53CBVFF7" height="0" width="0" style="display: none; visibility: hidden"></iframe></noscript>
 
+  <!-- Progress Tracker -->
+  <div class="progress-tracker" id="progressTracker">
+    <div class="progress-bar" id="masteryProgress"></div>
+    <div class="progress-label" id="masteryLabel">0% (Novice)</div>
+  </div>
+
   <!-- Minimal Header -->
   <header class="inner-header">
     <a href="/" class="back-home">← Back to Home</a>
@@ -73,9 +79,16 @@
   <section class="course-hero">
     <div class="course-hero-content">
       <span class="course-badge">Official Guide</span>
-      <h1>Master The Jadooi Chutney.</h1>
-      <p>Discover the 450-year-old <strong>Top, Side, Base</strong> methodology. Instantly transform your meals into a Shahi Dawat, cut your cooking time in half, and enjoy 10X satisfaction with zero guilt.</p>
+      <h1>You lose ~14 hours a week chopping and prepping.</h1>
+      <p>Discover the 450-year-old <strong>Top, Side, Base</strong> methodology. Transform your meals into a Shahi Dawat, cut cooking time in half, and enjoy 10X satisfaction with zero guilt.</p>
+      <a href="#frameworkSection" class="course-cta-btn" id="startCourseBtn" style="margin-top: 1rem;">Start The 60-Second Mastery Course</a>
     </div>
+  </section>
+
+  <!-- The Framework Primer -->
+  <section class="framework-section" id="frameworkSection">
+    <h2>The 450-Year-Old Algorithm</h2>
+    <p>How does one jar replace your chopping board, spice box, and tadka pan? Because we strictly use <strong>preservative-free ingredients slow-roasted in cold-pressed oil</strong>, it handles high heat like a Base, blooms instantly as a Top, and eats beautifully raw as a Side. One jar. 1,00,000+ uses.</p>
   </section>
 
   <!-- Course Modules -->
@@ -100,20 +113,19 @@
           <h2 class="module-title">The Side (Zero-Prep Setup)</h2>
         </div>
         <p class="module-desc">The easiest way to experience the magic. Serve it exactly as it comes, straight from the jar.</p>
-        <ul class="checklist">
-          <li><strong>Parathas & Theplas:</strong> Smear directly before rolling or use as a fiery dip.</li>
-          <li><strong>Healthy Snacking:</strong> Replace high-calorie mayo or cheese dips for your khakhras and nachos.</li>
-          <li><strong>Sandwiches & Toast:</strong> A micro-layer on sourdough adds a royal kick without the guilt.</li>
-        </ul>
-        <div class="stat-box">
-          <div class="stat-item">
-            <strong>100%</strong>
-            <span>Guilt-Free</span>
+        <div class="interactive-container">
+          <div class="interactive-title">Select your first shortcut:</div>
+          <div class="choice-grid">
+            <button class="side-choice-btn" data-choice="dip">
+              <span style="font-size: 1.5rem;">🥣</span>
+              Use as Fiery Dip
+            </button>
+            <button class="side-choice-btn" data-choice="smear">
+              <span style="font-size: 1.5rem;">🫓</span>
+              Smear on Parathas
+            </button>
           </div>
-          <div class="stat-item">
-            <strong>Instant</strong>
-            <span>Flavor Kick</span>
-          </div>
+          <p class="subliminal-pitch">Tastes incredible raw because it's packed with 100% natural, preservative-free ingredients.</p>
         </div>
       </div>
     </div>
@@ -122,7 +134,8 @@
     <div class="module-card" style="direction: ltr;">
       <!-- CSS will flip the order on desktop -->
       <div class="module-visual">
-        <div class="video-wrapper">
+        <div class="video-wrapper sizzle-target">
+          <div class="sizzle-overlay" id="sizzleOverlay"></div>
           <video autoplay muted loop playsinline preload="metadata">
             <source src="https://assets.amrutbaa.com/dal%20tadka%20reel_compressed.mp4" type="video/mp4">
           </video>
@@ -135,20 +148,14 @@
           <h2 class="module-title">The Top (The Instant Tadka)</h2>
         </div>
         <p class="module-desc">Forget roasting cumin and garlic every time you serve a bowl of dal. Add a spoonful right before eating.</p>
-        <ul class="checklist">
-          <li><strong>Dal & Khichdi:</strong> Swirl half a spoon into hot yellow dal. Watch the vibrant "Red Gold" color bloom.</li>
-          <li><strong>Chaat & Dahi Vada:</strong> Drizzle over yogurt for an instant sweet-spicy-garlicky explosion.</li>
-          <li><strong>Pulao & Jeera Rice:</strong> Mix into plain rice on your plate for a premium restaurant-style biryani feel.</li>
-        </ul>
-        <div class="stat-box">
-          <div class="stat-item">
-            <strong>10X</strong>
-            <span>Aroma Boost</span>
+        <div class="interactive-container sizzle-container">
+          <div class="interactive-title">Slide to skip Tadka prep:</div>
+          <input type="range" min="0" max="100" value="0" class="sizzle-slider" id="sizzleSlider">
+          <div style="display:flex; justify-content:space-between; font-size: 0.8rem; font-weight:bold; color: #d4af37;">
+            <span>Washing Pans</span>
+            <span>Zero Prep</span>
           </div>
-          <div class="stat-item">
-            <strong>0</strong>
-            <span>Tadka Pans to Wash</span>
-          </div>
+          <p class="subliminal-pitch">Watch the cold-pressed peanut oil naturally bloom the heirloom garlic the instant it hits hot food.</p>
         </div>
       </div>
     </div>
@@ -169,20 +176,18 @@
           <h2 class="module-title">The Base (Cheat-Code Masala)</h2>
         </div>
         <p class="module-desc">The ultimate secret weapon for quick weeknight dinners. Replace your chopped garlic, onions, and dry powder masalas entirely.</p>
-        <ul class="checklist">
-          <li><strong>Quick Sabji:</strong> Heat oil, sizzle one spoon of Amrutbaa, toss in your veggies, and cook. Done in minutes.</li>
-          <li><strong>Rich Curries:</strong> Use it as the foundation paste for paneer or chicken gravies.</li>
-          <li><strong>Pasta & Noodles:</strong> Sauté as the aromatic base instead of Aglio e Olio prep.</li>
-        </ul>
-        <div class="stat-box">
-          <div class="stat-item">
-            <strong>50%</strong>
-            <span>Less Time</span>
+        <div class="interactive-container">
+          <div class="interactive-title">Tap to eliminate from weeknight prep:</div>
+          <div class="purge-grid">
+            <div class="pantry-item" title="Eliminate Garlic Chopping">🧄<span class="item-label">Garlic</span></div>
+            <div class="pantry-item" title="Eliminate Onion Chopping">🧅<span class="item-label">Onion</span></div>
+            <div class="pantry-item" title="Eliminate Dry Spices">🌶️<span class="item-label">Spices</span></div>
+            <div class="amrutbaa-reveal" id="amrutbaaReveal">
+              <img src="assets/images/Amrutbaa-Jar.png" alt="Amrutbaa Jar">
+              <div style="font-weight:bold; margin-top:0.5rem; color:var(--course-accent);">1 Jar Replaces All 3</div>
+            </div>
           </div>
-          <div class="stat-item">
-            <strong>3-in-1</strong>
-            <span>Ingredient</span>
-          </div>
+          <p class="subliminal-pitch">Our authentic 450-yr-old Kathiyawadi roasting process ensures it handles high heat without burning, making it the perfect gravy foundation.</p>
         </div>
       </div>
     </div>
@@ -190,11 +195,22 @@
   </section>
 
   <!-- Final CTA Section -->
-  <section class="final-exam">
+  <section class="final-exam locked" id="calendarSection">
     <div class="exam-container">
-      <h2>Your Kitchen Needs This Rhythm.</h2>
-      <p>Amrutbaa adapts to your life—quietly becoming the most reached-for jar in your pantry.</p>
-      <a href="/#faq" class="course-cta-btn" onclick="if(window.OrderModal){window.OrderModal.open();return false;} if(window.location.href.includes('crash')){window.location.href='/';setTimeout(()=>document.getElementById('openModalBtn').click(),500);return false;}">Secure Your Jar Now</a>
+      <h2>Map your first week.</h2>
+      <p>A tool is useless if it stays in the fridge. Tap 3 days you plan to use your new Top, Side, and Base skills to unlock your jar.</p>
+      
+      <div class="week-calendar">
+        <div class="calendar-day" data-day="Mon">Mon</div>
+        <div class="calendar-day" data-day="Tue">Tue</div>
+        <div class="calendar-day" data-day="Wed">Wed</div>
+        <div class="calendar-day" data-day="Thu">Thu</div>
+        <div class="calendar-day" data-day="Fri">Fri</div>
+        <div class="calendar-day" data-day="Sat">Sat</div>
+        <div class="calendar-day" data-day="Sun">Sun</div>
+      </div>
+
+      <a href="/#faq" class="course-cta-btn hidden" id="secureJarBtn" onclick="if(window.OrderModal){window.OrderModal.open();return false;} if(window.location.href.includes('crash')){window.location.href='/';setTimeout(()=>document.getElementById('openModalBtn').click(),500);return false;}">Secure Batch #17 Jar</a>
     </div>
   </section>
 
@@ -208,6 +224,7 @@
 
   <script src="assets/js/modal-component.js?v=3" defer></script>
   <script type="module" src="scripts/main.js"></script>
+  <script type="module" src="scripts/crash-course.js"></script>
 
 </body>
 </html>
