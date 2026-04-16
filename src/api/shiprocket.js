@@ -261,8 +261,8 @@ export async function handleCreateCodOrder(request, env) {
 
 export async function handleCheckPincode(request, env) {
     try {
-        const originError = assertTrustedOrigin(request, env);
-        if (originError) return originError;
+        // No origin check — this is a public, read-only lookup.
+        // Transactional endpoints (create-order, verify-payment, etc.) still enforce origin checks.
 
         const { pincode, weight = 0.23, cod = false } = await request.json();
         const normalizedPincode = String(pincode).replace(/\D/g, '').trim();

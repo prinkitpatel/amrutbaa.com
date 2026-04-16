@@ -22,7 +22,12 @@ export function isTrustedOrigin(req, env) {
     'https://www.amrutbaa.com',
     'https://amrutbaa-com.prinkit-patel.workers.dev',
     'http://localhost:8787',
-    'http://127.0.0.1:8787'
+    'http://127.0.0.1:8787',
+    'null',
+    'https://l.instagram.com',
+    'https://l.facebook.com',
+    'android-app://com.instagram.android',
+    'android-app://com.facebook.katana'
   ];
   const configuredOrigins = (env.ALLOWED_ORIGINS || '')
     .split(',')
@@ -34,7 +39,16 @@ export function isTrustedOrigin(req, env) {
   ]);
 
   const requestOrigin = extractRequestOrigin(req);
-  if (!requestOrigin) return false;
+  
+  // In-app browsers (like Instagram) often strip Origin and Referer headers for privacy.
+  // If they are missing, check if the request comes from a known social media user agent.
+  if (!requestOrigin) {
+    const ua = (req.headers.get('user-agent') || '').toLowerCase();
+    if (ua.includes('instagram') || ua.includes('fbav') || ua.includes('fban') || ua.includes('facebook')) {
+      return true;
+    }
+    return false;
+  }
 
   if (allowedOrigins.has(requestOrigin)) return true;
 
