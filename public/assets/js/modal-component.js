@@ -1074,7 +1074,9 @@ function initOrderModal() {
             });
 
             if (!orderResponse.ok) {
-                throw new Error('Failed to create order');
+                const errBody = await orderResponse.json().catch(() => ({}));
+                console.error('Create order failed:', orderResponse.status, errBody);
+                throw new Error(errBody?.error || `Order creation failed (${orderResponse.status})`);
             }
 
             const order = await orderResponse.json();
@@ -1265,7 +1267,8 @@ function initOrderModal() {
             if (paymentMethod === 'cod') {
                 alert(error?.message || 'Could not place COD order. Please try again or choose Pay Now.');
             } else {
-                alert('Failed to initialize payment. Please try again.');
+                console.error('Payment initialization error:', error);
+                alert(error?.message || 'Failed to initialize payment. Please try again.');
             }
             submitBtn.textContent = originalText;
             submitBtn.disabled = false;
