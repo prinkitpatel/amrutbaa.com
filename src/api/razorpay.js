@@ -3,8 +3,7 @@ import { getPricing } from '../utils/pricing.js';
 
 export async function handleCreateOrder(request, env) {
     try {
-        const originError = assertTrustedOrigin(request, env);
-        if (originError) return originError;
+
 
         const body = await request.json();
         const { name, email, phone, quantity, address1, address2, city, state, pincode, easterEggCode } = body;
@@ -73,8 +72,7 @@ export async function handleCreateOrder(request, env) {
 
 export async function handleVerifyPayment(request, env) {
     try {
-        const originError = assertTrustedOrigin(request, env);
-        if (originError) return originError;
+
 
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json();
 
