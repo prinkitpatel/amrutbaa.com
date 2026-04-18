@@ -24,7 +24,9 @@ export function initEasterEgg(targetSelector) {
             fireDopamineHit(e.clientX, e.clientY);
             // Open the self-contained easter egg modal
             setTimeout(() => {
-                openEasterEggModal();
+                if (window.OrderModal) {
+                    window.OrderModal.open({ easterEggCode: 'JADOOI_7' });
+                }
             }, 600);
         }
     });

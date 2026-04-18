@@ -249,6 +249,7 @@ function initOrderModal() {
     let isCodSelected = false;
     let lastFocusedElement = null;
     let isModalOpen = false;
+    let currentEasterEggCode = null;
 
     const pricingConfig = {
         unitPrice: 499,
@@ -266,13 +267,19 @@ function initOrderModal() {
 
     function calculatePricing(qty) {
         const safeQty = Number.isFinite(qty) ? qty : 1;
-        const baseTotal = safeQty * pricingConfig.unitPrice;
+        
+        let unitPrice = pricingConfig.unitPrice;
+        if (currentEasterEggCode === 'JADOOI_7') {
+            unitPrice = 299;
+        }
+
+        const baseTotal = safeQty * unitPrice;
 
         // No discounts for COD
         if (isCodSelected) {
             return {
                 qty: safeQty,
-                unitPrice: pricingConfig.unitPrice,
+                unitPrice: unitPrice,
                 baseTotal,
                 discount: 0,
                 total: baseTotal,
@@ -282,11 +289,12 @@ function initOrderModal() {
 
         // Apply discounts for online payments
         const offer = getOfferForQty(safeQty);
-        const discount = offer ? Math.round((baseTotal * offer.discountPercent) / 100) : 0;
+        const discountPercent = offer ? offer.discountPercent : 0;
+        const discount = Math.round((baseTotal * discountPercent) / 100);
         const total = baseTotal - discount;
         return {
             qty: safeQty,
-            unitPrice: pricingConfig.unitPrice,
+            unitPrice: unitPrice,
             baseTotal,
             discount,
             total,
@@ -304,6 +312,9 @@ function initOrderModal() {
         const qty = getSelectedQuantity();
 
         if (!qty) {
+            let defaultPrice = pricingConfig.unitPrice;
+            if (currentEasterEggCode === 'JADOOI_7') defaultPrice = 299;
+
             if (modalTotal) {
                 modalTotal.textContent = 'Select jars to see total';
             }
@@ -311,7 +322,7 @@ function initOrderModal() {
                 orderQuantityText.textContent = "Select jars to reserve this week's batch";
             }
             if (unitPriceDisplay) {
-                unitPriceDisplay.textContent = `₹${pricingConfig.unitPrice}`;
+                unitPriceDisplay.textContent = `₹${defaultPrice}`;
             }
             if (mrpDisplay) {
                 mrpDisplay.textContent = 'MRP ₹800';
@@ -585,7 +596,28 @@ function initOrderModal() {
         return valid;
     }
 
-    function openModal() {
+    function openModal(options = {}) {
+        currentEasterEggCode = options.easterEggCode || null;
+        
+        const modalHeaderTitle = modal?.querySelector('.modal-header h2');
+        const modalHeaderTagline = modal?.querySelector('.modal-header p.modal-tagline');
+        const paymentMethodCodLabel = paymentMethodCod?.closest('label');
+        const quantityFormGroup = quantityInput?.closest('.form-group');
+
+        if (currentEasterEggCode === 'JADOOI_7') {
+            if (modalHeaderTitle) modalHeaderTitle.textContent = '🎟️ YOU FOUND THE SECRET!';
+            if (modalHeaderTagline) modalHeaderTagline.textContent = 'Jadooi Chutney is yours for just ₹299 today.';
+            if (paymentMethodCodLabel) paymentMethodCodLabel.style.display = 'none';
+            if (paymentMethodOnline) paymentMethodOnline.checked = true;
+            if (quantityFormGroup) quantityFormGroup.style.display = 'none';
+            isCodSelected = false;
+        } else {
+            if (modalHeaderTitle) modalHeaderTitle.textContent = 'Secure My Jar in This Week’s Batch';
+            if (modalHeaderTagline) modalHeaderTagline.textContent = 'Fresh prep begins Monday • Dispatch Tuesday • Delivered Wed–Fri';
+            if (paymentMethodCodLabel) paymentMethodCodLabel.style.display = 'flex';
+            if (quantityFormGroup) quantityFormGroup.style.display = 'block';
+        }
+
         fetchCsrfToken(); // Pre-fetch security token for smoother checkout
 
         // Lazy load Razorpay script when modal opens
@@ -600,7 +632,7 @@ function initOrderModal() {
         modal.classList.add('active');
         document.body.style.overflow = 'hidden';
         if (quantityInput) {
-            quantityInput.value = '';
+            quantityInput.value = currentEasterEggCode === 'JADOOI_7' ? '1' : '';
         }
         setStep(1);
         isModalOpen = true;
@@ -944,7 +976,8 @@ function initOrderModal() {
                         unit_price: pricePerJar,
                         base_total: pricing.baseTotal,
                         discount: 0,
-                        client_order_ref: codClientOrderRef
+                        client_order_ref: codClientOrderRef,
+                        easterEggCode: currentEasterEggCode
                     })
                 });
 
@@ -1098,7 +1131,8 @@ function initOrderModal() {
                     address2: formData.address2,
                     city: formData.city,
                     state: formData.state,
-                    pincode: formData.pincode
+                    pincode: formData.pincode,
+                    easterEggCode: currentEasterEggCode
                 })
             });
 
@@ -1556,82 +1590,6 @@ function initOrderModal() {
         }
     }
 
-    async function createShiprocketShipmentWithRetry(payload) {
-        const maxAttempts = 3;
-        for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
-            try {
-                const token = await fetchCsrfToken();
-                const response = await fetch('/api/create-shipment', {
-                    method: 'POST',
-                    headers: { 
-                        'Content-Type': 'application/json',
-                        'X-CSRF-Token': token
-                    },
-                    body: JSON.stringify(payload)
-                });
-
-                if (response.ok) {
-                    const data = await response.json();
-                    return data.success ? data : null;
-                }
-
-                const errorText = await response.text();
-                if (attempt === maxAttempts) {
-                    console.warn('⚠️ Direct Shiprocket creation failed:', errorText);
-                }
-            } catch (error) {
-                if (attempt === maxAttempts) {
-                    console.warn('⚠️ Direct Shiprocket creation error:', error);
-                }
-            }
-
-            await new Promise((resolve) => setTimeout(resolve, attempt * 700));
-        }
-
-        return null;
-    }
-
-    async function createShiprocketShipment(payload, alertContext) {
-        try {
-            const result = await createShiprocketShipmentWithRetry(payload);
-            if (result) {
-                return result;
-            }
-            await notifyOpsShipmentFailure({
-                reason: 'shiprocket_creation_failed_after_retries',
-                ...alertContext
-            });
-            return null;
-        } catch (error) {
-            await notifyOpsShipmentFailure({
-                reason: 'shiprocket_creation_unhandled_error',
-                error: error?.message || 'unknown_error',
-                ...alertContext
-            });
-            return null;
-        }
-    }
-
-    async function notifyOpsShipmentFailure(payload) {
-        try {
-            const token = await fetchCsrfToken();
-            await fetch('/api/ops-alert', {
-                method: 'POST',
-                headers: { 
-                    'Content-Type': 'application/json',
-                    'X-CSRF-Token': token
-                },
-                body: JSON.stringify({
-                    alert_type: 'shipment_creation_failure',
-                    source: 'frontend_checkout',
-                    created_at: new Date().toISOString(),
-                    ...payload
-                })
-            });
-        } catch (error) {
-            console.warn('⚠️ Failed to notify ops alert endpoint:', error);
-        }
-    }
 
     async function submitOrderDetails(orderData) {
         try {
