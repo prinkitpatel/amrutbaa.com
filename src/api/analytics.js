@@ -1,9 +1,11 @@
-import { assertTrustedOrigin, corsHeaders } from '../utils/cors.js';
+import { assertCsrf, corsHeaders } from '../utils/cors.js';
 import { hashPII } from '../utils/crypto.js';
 import { getEventSourceUrl, getClientIP, getUserAgent } from '../utils/request.js';
 
 export async function handleTrackAddPaymentInfo(request, env) {
     try {
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
             return new Response(JSON.stringify({
                 success: false,
@@ -123,6 +125,8 @@ export async function handleTrackAddPaymentInfo(request, env) {
 
 export async function handleTrackPurchase(request, env) {
     try {
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
             return new Response(JSON.stringify({
                 success: false,
@@ -245,6 +249,8 @@ export async function handleTrackPurchase(request, env) {
 
 export async function handleTrackView(request, env) {
     try {
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
             return new Response(JSON.stringify({
                 success: false,
@@ -336,6 +342,8 @@ export async function handleTrackView(request, env) {
 
 export async function handleTrackAddToCart(request, env) {
     try {
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
             return new Response(JSON.stringify({
                 success: false,
@@ -428,6 +436,8 @@ export async function handleTrackAddToCart(request, env) {
 
 export async function handleTrackInitiateCheckout(request, env) {
     try {
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         if (!env.META_DATASET_ID || !env.META_ACCESS_TOKEN) {
             return new Response(JSON.stringify({
                 success: false,

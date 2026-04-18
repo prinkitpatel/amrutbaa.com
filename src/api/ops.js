@@ -1,9 +1,9 @@
-import { assertTrustedOrigin, corsHeaders } from '../utils/cors.js';
+import { assertCsrf, corsHeaders } from '../utils/cors.js';
 
 export async function handleOpsAlert(request, env) {
     try {
-        const originError = assertTrustedOrigin(request, env);
-        if (originError) return originError;
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
 
         const alertData = await request.json();
         const opsWebhookUrl = env.OPS_ALERT_WEBHOOK_URL || env.N8N_WEBHOOK_URL;

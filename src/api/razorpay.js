@@ -1,10 +1,10 @@
-import { assertTrustedOrigin, corsHeaders } from '../utils/cors.js';
+import { assertCsrf, corsHeaders } from '../utils/cors.js';
 import { getPricing } from '../utils/pricing.js';
 
 export async function handleCreateOrder(request, env) {
     try {
-
-
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         const body = await request.json();
         const { name, email, phone, quantity, address1, address2, city, state, pincode, easterEggCode } = body;
 
@@ -72,8 +72,8 @@ export async function handleCreateOrder(request, env) {
 
 export async function handleVerifyPayment(request, env) {
     try {
-
-
+        const csrfError = await assertCsrf(request, env);
+        if (csrfError) return csrfError;
         const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = await request.json();
 
         const message = `${razorpay_order_id}|${razorpay_payment_id}`;
@@ -170,10 +170,11 @@ export async function handleRazorpayWebhook(request, env) {
             const amount = paymentEntity.amount / 100;
             const quantityVal = parseInt(notes.quantity || "1", 10);
 
-            // 1. Create Shiprocket Shipment
-            const shipmentBody = {
-                order_id: order_id,
-                payment_id: payment_id,
+            // 1. Create Shiprocket Shipment (call internal function directly, no CSRF needed)
+            const { createShipmentInternal } = await import('./shiprocket.js');
+            const shipmentResult = await createShipmentInternal({
+                order_id,
+                payment_id,
                 customer_name: notes.customer_name,
                 customer_email: notes.customer_email,
                 customer_phone: notes.customer_phone,
@@ -183,27 +184,17 @@ export async function handleRazorpayWebhook(request, env) {
                 state: notes.state,
                 pincode: notes.pincode,
                 quantity: quantityVal
-            };
-
-            const { handleCreateShipment } = await import('./shiprocket.js');
-            const mockReq = new Request('https://amrutbaa.com/api/create-shipment', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json', 'origin': 'https://amrutbaa.com' },
-                body: JSON.stringify(shipmentBody)
-            });
-
-            const shipmentRes = await handleCreateShipment(mockReq, env);
+            }, env);
             let shipmentId = null;
             let trackingNumber = null;
             let courierName = null;
 
-            if (shipmentRes.ok) {
-                const sData = await shipmentRes.json();
-                if (sData.success) {
-                    shipmentId = sData.shipment_id;
-                    trackingNumber = sData.awb_code;
-                    courierName = sData.courier_name;
-                }
+            if (shipmentResult.success) {
+                shipmentId = shipmentResult.shipment_id;
+                trackingNumber = shipmentResult.awb_code;
+                courierName = shipmentResult.courier_name;
+            } else {
+                console.warn('Webhook shipment creation issue:', shipmentResult.error || shipmentResult.message);
             }
 
             // 2. Trigger n8n Webhook

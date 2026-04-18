@@ -10,6 +10,26 @@
 function initOrderModal() {
     // 🔒 CRITICAL: Track processed orders to prevent duplicates (persists across page reloads)
     const processedOrders = new Set(JSON.parse(sessionStorage.getItem('processedOrders') || '[]'));
+    let csrfToken = null;
+    let csrfTokenFetchedAt = 0;
+    const CSRF_TOKEN_MAX_AGE_MS = 90 * 60 * 1000; // 90 minutes (server TTL is 2h)
+
+    async function fetchCsrfToken() {
+        const now = Date.now();
+        if (csrfToken && (now - csrfTokenFetchedAt) < CSRF_TOKEN_MAX_AGE_MS) {
+            return csrfToken;
+        }
+        try {
+            const response = await fetch('/api/csrf-token', { method: 'POST' });
+            const data = await response.json();
+            csrfToken = data.token;
+            csrfTokenFetchedAt = Date.now();
+            return csrfToken;
+        } catch (e) {
+            console.error('Failed to fetch security token', e);
+            return null;
+        }
+    }
 
     // Helper to save processed orders
     const saveProcessedOrders = () => {
@@ -392,7 +412,7 @@ function initOrderModal() {
         }
 
         const qty = getSelectedQuantity() || 1;
-        const weight = Number((0.15 * qty).toFixed(2));
+        const weight = Number((0.23 * qty).toFixed(2));
 
         setPincodeStatus('pending', 'Checking availability...');
         try {
@@ -566,6 +586,7 @@ function initOrderModal() {
     }
 
     function openModal() {
+        fetchCsrfToken(); // Pre-fetch security token for smoother checkout
 
         // Lazy load Razorpay script when modal opens
         if (!window.Razorpay && !document.getElementById('razorpay-checkout-script')) {
@@ -902,9 +923,13 @@ function initOrderModal() {
 
                 // Create COD order via Worker
                 const codClientOrderRef = `COD-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+                const token = await fetchCsrfToken();
                 const codOrderResponse = await fetch('/api/create-order-cod', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': token
+                    },
                     body: JSON.stringify({
                         customer_name: formData.name,
                         customer_email: formData.email,
@@ -972,11 +997,6 @@ function initOrderModal() {
 
                 trackMetaPurchase(formData, totalAmount, codOrderId, sharedEventId).catch(() => { });
 
-                // Show success message immediately
-                successMessage.classList.add('show');
-                registrationForm.style.display = 'none !important';
-                registrationForm.hidden = true;
-
                 // 🔒 Prevent duplicate tracking for same order
                 if (processedOrders.has(codOrderId)) {
                     console.warn('⚠️ Order already processed:', codOrderId);
@@ -984,6 +1004,11 @@ function initOrderModal() {
                 }
                 processedOrders.add(codOrderId);
                 saveProcessedOrders();
+
+                // Show success message
+                successMessage.classList.add('show');
+                registrationForm.style.setProperty('display', 'none', 'important');
+                registrationForm.hidden = true;
 
                 // Submit order to n8n in background
                 submitOrderDetails({
@@ -1056,9 +1081,13 @@ function initOrderModal() {
             });
 
             // Create order via Cloudflare Worker
+            const token = await fetchCsrfToken();
             const orderResponse = await fetch('/api/create-order', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     amount: totalAmount,
                     name: formData.name,
@@ -1112,9 +1141,13 @@ function initOrderModal() {
                     // Payment successful
                     // Verify payment signature via backend
                     try {
+                        const token = await fetchCsrfToken();
                         const verifyResponse = await fetch('/api/verify-payment', {
                             method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
+                            headers: { 
+                                'Content-Type': 'application/json',
+                                'X-CSRF-Token': token
+                            },
                             body: JSON.stringify({
                                 razorpay_order_id: response.razorpay_order_id,
                                 razorpay_payment_id: response.razorpay_payment_id,
@@ -1157,7 +1190,7 @@ function initOrderModal() {
 
                             // Show success message IMMEDIATELY
                             successMessage.classList.add('show');
-                            registrationForm.style.display = 'none !important';
+                            registrationForm.style.setProperty('display', 'none', 'important');
                             registrationForm.hidden = true;
 
                             // 🔒 Prevent duplicate tracking for same order
@@ -1307,9 +1340,13 @@ function initOrderModal() {
                 }, { eventID: eventId });
             }
 
+            const token = await fetchCsrfToken();
             const response = await fetch('/api/track-view', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     phone: phone || '',
                     fbc: getCookie('_fbc'),
@@ -1345,9 +1382,13 @@ function initOrderModal() {
                 }, { eventID: eventId });
             }
 
+            const token = await fetchCsrfToken();
             const response = await fetch('/api/track-addtocart', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     quantity: quantity || 1,
                     value: value || 0,
@@ -1388,9 +1429,13 @@ function initOrderModal() {
                 }, { eventID: eventId });
             }
 
+            const token = await fetchCsrfToken();
             const response = await fetch('/api/track-initiate-checkout', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     quantity: quantity || 1,
                     value: value || 0,
@@ -1431,9 +1476,13 @@ function initOrderModal() {
                 }, { eventID: eventId });
             }
 
+            const token = await fetchCsrfToken();
             const response = await fetch('/api/track-addpaymentinfo', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -1470,9 +1519,13 @@ function initOrderModal() {
 
             // ✅ ONLY using Conversions API (server-side) to avoid duplicate tracking
             // Meta will handle deduplication via event_id
+            const token = await fetchCsrfToken();
             const response = await fetch('/api/track-purchase', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     name: formData.name,
                     email: formData.email,
@@ -1507,9 +1560,13 @@ function initOrderModal() {
         const maxAttempts = 3;
         for (let attempt = 1; attempt <= maxAttempts; attempt += 1) {
             try {
+                const token = await fetchCsrfToken();
                 const response = await fetch('/api/create-shipment', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
+                    headers: { 
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': token
+                    },
                     body: JSON.stringify(payload)
                 });
 
@@ -1557,9 +1614,13 @@ function initOrderModal() {
 
     async function notifyOpsShipmentFailure(payload) {
         try {
+            const token = await fetchCsrfToken();
             await fetch('/api/ops-alert', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
+                headers: { 
+                    'Content-Type': 'application/json',
+                    'X-CSRF-Token': token
+                },
                 body: JSON.stringify({
                     alert_type: 'shipment_creation_failure',
                     source: 'frontend_checkout',

@@ -15,6 +15,7 @@ import {
     handleTrackInitiateCheckout
 } from './api/analytics.js';
 import { handleOpsAlert, handleHealthCheck } from './api/ops.js';
+import { generateCsrfToken } from './utils/csrf.js';
 
 export default {
     async fetch(request, env) {
@@ -22,6 +23,14 @@ export default {
 
         if (request.method === 'OPTIONS') {
             return new Response(null, { headers: corsHeaders });
+        }
+
+        // CSRF Token Route
+        if (url.pathname === '/api/csrf-token' && request.method === 'POST') {
+            const token = await generateCsrfToken(env);
+            return new Response(JSON.stringify({ token }), {
+                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+            });
         }
 
         // Razorpay Routes
