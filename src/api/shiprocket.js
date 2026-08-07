@@ -142,106 +142,113 @@ export async function handleCreateCodOrder(request, env) {
             });
         }
 
-        const codServiceability = await checkShiprocketServiceability(env, {
-            pincode,
-            weight: safeWeight,
-            cod: true
-        });
+        const finalOrderId = client_order_ref || `COD-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
+        let shipmentId = null;
+        let awbCode = null;
+        let courierName = null;
 
-        if (!codServiceability.success) {
-            return new Response(JSON.stringify({
-                success: false,
-                error: codServiceability.error,
-                details: codServiceability.details
-            }), {
-                status: 500,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        // Try Shiprocket creation asynchronously/gracefully — do not block COD order if Shiprocket fails
+        try {
+            const token = await getShiprocketToken(env);
+            const shipmentData = {
+                order_id: finalOrderId,
+                order_date: new Date().toISOString().split('T')[0],
+                pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
+                channel_id: "",
+                comment: "Weekly batch order - Amrutbaa Traditional Chutney (COD)",
+                billing_customer_name: customer_name,
+                billing_last_name: "",
+                billing_address: address1,
+                billing_address_2: address2 || "",
+                billing_city: city,
+                billing_pincode: pincode,
+                billing_state: state,
+                billing_country: "India",
+                billing_email: customer_email,
+                billing_phone: customer_phone,
+                shipping_is_billing: true,
+                order_items: [
+                    {
+                        name: "Amrut Baa Chilly Garlic Chutney",
+                        sku: "AMB-CGC-100G",
+                        units: safeQuantity,
+                        selling_price: safeUnitPrice,
+                        discount: safeDiscount,
+                        tax: 0,
+                        hsn: 210390
+                    }
+                ],
+                payment_method: "COD",
+                shipping_charges: 0,
+                giftwrap_charges: 0,
+                transaction_charges: 0,
+                total_discount: safeDiscount,
+                sub_total: safeAmount,
+                length: 10,
+                breadth: 10,
+                height: 8,
+                weight: safeWeight
+            };
+
+            const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}`,
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+                },
+                body: JSON.stringify(shipmentData)
             });
+
+            if (shiprocketResponse.ok) {
+                const shipmentResult = await shiprocketResponse.json();
+                shipmentId = shipmentResult.shipment_id;
+                awbCode = shipmentResult.awb_code;
+                courierName = shipmentResult.courier_name;
+            } else {
+                console.warn('Shiprocket COD API issue:', await shiprocketResponse.text());
+            }
+        } catch (srErr) {
+            console.warn('Shiprocket auth/API error ignored for COD order:', srErr.message);
         }
 
-        if (!codServiceability.serviceable) {
-            return new Response(JSON.stringify({
-                success: false,
-                error: 'COD is not serviceable for this pincode'
-            }), {
-                status: 400,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+        // Trigger n8n webhook for COD order fulfillment
+        const n8nWebhook = env.N8N_WEBHOOK_URL || 'https://n8n.prinkit.cloud/webhook/checkout_events';
+        try {
+            await fetch(n8nWebhook, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    event: 'order.cod_created',
+                    source: 'worker',
+                    order_id: finalOrderId,
+                    customer_name,
+                    customer_email,
+                    customer_phone,
+                    address1,
+                    address2: address2 || '',
+                    city,
+                    state,
+                    pincode,
+                    quantity: safeQuantity,
+                    amount: safeAmount,
+                    payment_method: 'COD',
+                    shipment_id: shipmentId,
+                    awb_code: awbCode,
+                    courier_name: courierName,
+                    timestamp: new Date().toISOString()
+                })
             });
+        } catch (n8nErr) {
+            console.warn('n8n COD webhook notification failed:', n8nErr.message);
         }
-
-        const token = await getShiprocketToken(env);
-
-        const shipmentData = {
-            order_id: `COD-${Date.now()}-${Math.random().toString(36).slice(2, 11).toUpperCase()}`,
-            order_date: new Date().toISOString().split('T')[0],
-            pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
-            channel_id: "",
-            comment: "Weekly batch order - Amrutbaa Traditional Chutney (COD)",
-            billing_customer_name: customer_name,
-            billing_last_name: "",
-            billing_address: address1,
-            billing_address_2: address2 || "",
-            billing_city: city,
-            billing_pincode: pincode,
-            billing_state: state,
-            billing_country: "India",
-            billing_email: customer_email,
-            billing_phone: customer_phone,
-            shipping_is_billing: true,
-            order_items: [
-                {
-                    name: "Amrut Baa Chilly Garlic Chutney",
-                    sku: "AMB-CGC-100G",
-                    units: safeQuantity,
-                    selling_price: safeUnitPrice,
-                    discount: safeDiscount,
-                    tax: 0,
-                    hsn: 210390
-                }
-            ],
-            payment_method: "COD",
-            shipping_charges: 0,
-            giftwrap_charges: 0,
-            transaction_charges: 0,
-            total_discount: safeDiscount,
-            sub_total: safeAmount,
-            length: 10,
-            breadth: 10,
-            height: 8,
-            weight: Number((0.23 * safeQuantity).toFixed(2))
-        };
-
-        const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${token}`,
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
-            },
-            body: JSON.stringify(shipmentData)
-        });
-
-        if (!shiprocketResponse.ok) {
-            const errorText = await shiprocketResponse.text();
-            console.error('Shiprocket COD API error:', errorText);
-            return new Response(JSON.stringify({
-                success: false,
-                error: 'Failed to create COD shipment',
-                details: errorText
-            }), {
-                status: shiprocketResponse.status,
-                headers: { ...corsHeaders, 'Content-Type': 'application/json' }
-            });
-        }
-
-        const shipmentResult = await shiprocketResponse.json();
 
         return new Response(JSON.stringify({
             success: true,
-            shipment_id: shipmentResult.shipment_id,
-            order_id: shipmentResult.order_id,
-            awb_code: shipmentResult.awb_code,
-            courier_name: shipmentResult.courier_name,
+            order_id: finalOrderId,
+            shipment_id: shipmentId,
+            awb_code: awbCode,
+            courier_name: courierName,
             message: 'COD order created successfully'
         }), {
             status: 200,
@@ -317,111 +324,114 @@ export async function handleCheckPincode(request, env) {
     }
 }
 
-// Internal shipment creation logic — callable by both the HTTP handler and the webhook.
-// Does NOT perform CSRF validation (the caller is responsible for auth).
 export async function createShipmentInternal(orderData, env) {
-    const {
-        order_id,
-        payment_id,
-        customer_name,
-        customer_email,
-        customer_phone,
-        address1,
-        address2,
-        city,
-        state,
-        pincode,
-        quantity,
-        easterEggCode
-    } = orderData;
+    try {
+        const {
+            order_id,
+            payment_id,
+            customer_name,
+            customer_email,
+            customer_phone,
+            address1,
+            address2,
+            city,
+            state,
+            pincode,
+            quantity,
+            easterEggCode
+        } = orderData;
 
-    if (!customer_name || !customer_phone || !address1 || !city || !state || !pincode) {
-        return { success: false, error: 'Missing required shipping details' };
+        if (!customer_name || !customer_phone || !address1 || !city || !state || !pincode) {
+            return { success: false, error: 'Missing required shipping details' };
+        }
+
+        const pricing = getPricing(quantity, 'Prepaid', easterEggCode);
+        const idempotencyRef = payment_id || order_id;
+        if (!idempotencyRef) {
+            return { success: false, error: 'Missing order_id or payment_id for idempotency' };
+        }
+        const prepaidLockAcquired = await acquireIdempotencyLock(`prepaid:${idempotencyRef}`, 24 * 60 * 60);
+        if (!prepaidLockAcquired) {
+            return { success: true, duplicate: true, order_id: order_id || null, message: 'Duplicate prepaid request ignored' };
+        }
+
+        const token = await getShiprocketToken(env);
+
+        const safeQuantity = pricing.qty;
+        const safeUnitPrice = pricing.unitPrice;
+        const safeDiscount = pricing.discount;
+        const safeAmount = pricing.total;
+
+        const shipmentData = {
+            order_id: order_id || `AMB${Date.now()}`,
+            order_date: new Date().toISOString().split('T')[0],
+            pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
+            channel_id: "",
+            comment: "Weekly batch order - Amrutbaa Traditional Chutney",
+            billing_customer_name: customer_name,
+            billing_last_name: "",
+            billing_address: address1,
+            billing_address_2: address2 || "",
+            billing_city: city,
+            billing_pincode: pincode,
+            billing_state: state,
+            billing_country: "India",
+            billing_email: customer_email,
+            billing_phone: customer_phone,
+            shipping_is_billing: true,
+            order_items: [
+                {
+                    name: "Amrut Baa Chilly Garlic Chutney",
+                    sku: "AMB-CGC-100G",
+                    units: safeQuantity,
+                    selling_price: safeUnitPrice,
+                    discount: safeDiscount,
+                    tax: 0,
+                    hsn: 210390
+                }
+            ],
+            payment_method: "Prepaid",
+            shipping_charges: 0,
+            giftwrap_charges: 0,
+            transaction_charges: 0,
+            total_discount: safeDiscount,
+            sub_total: safeAmount,
+            length: 10,
+            breadth: 10,
+            height: 8,
+            weight: Number((0.23 * safeQuantity).toFixed(2))
+        };
+
+        const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${token}`,
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
+            },
+            body: JSON.stringify(shipmentData)
+        });
+
+        if (!shiprocketResponse.ok) {
+            const errorText = await shiprocketResponse.text();
+            console.error('Shiprocket API error:', errorText);
+            return { success: false, error: 'Failed to create shipment', details: errorText };
+        }
+
+        const shipmentResult = await shiprocketResponse.json();
+
+        return {
+            success: true,
+            shipment_id: shipmentResult.shipment_id,
+            order_id: shipmentResult.order_id,
+            awb_code: shipmentResult.awb_code,
+            courier_name: shipmentResult.courier_name,
+            message: 'Shipment created successfully'
+        };
+    } catch (error) {
+        console.error('createShipmentInternal error:', error.message);
+        return { success: false, error: error.message };
     }
-
-    const pricing = getPricing(quantity, 'Prepaid', easterEggCode);
-    const idempotencyRef = payment_id || order_id;
-    if (!idempotencyRef) {
-        return { success: false, error: 'Missing order_id or payment_id for idempotency' };
-    }
-    const prepaidLockAcquired = await acquireIdempotencyLock(`prepaid:${idempotencyRef}`, 24 * 60 * 60);
-    if (!prepaidLockAcquired) {
-        return { success: true, duplicate: true, order_id: order_id || null, message: 'Duplicate prepaid request ignored' };
-    }
-
-    const token = await getShiprocketToken(env);
-
-    const safeQuantity = pricing.qty;
-    const safeUnitPrice = pricing.unitPrice;
-    const safeDiscount = pricing.discount;
-    const safeAmount = pricing.total;
-
-    const shipmentData = {
-        order_id: order_id || `AMB${Date.now()}`,
-        order_date: new Date().toISOString().split('T')[0],
-        pickup_location: env.SHIPROCKET_PICKUP_LOCATION || "Primary",
-        channel_id: "",
-        comment: "Weekly batch order - Amrutbaa Traditional Chutney",
-        billing_customer_name: customer_name,
-        billing_last_name: "",
-        billing_address: address1,
-        billing_address_2: address2 || "",
-        billing_city: city,
-        billing_pincode: pincode,
-        billing_state: state,
-        billing_country: "India",
-        billing_email: customer_email,
-        billing_phone: customer_phone,
-        shipping_is_billing: true,
-        order_items: [
-            {
-                name: "Amrut Baa Chilly Garlic Chutney",
-                sku: "AMB-CGC-100G",
-                units: safeQuantity,
-                selling_price: safeUnitPrice,
-                discount: safeDiscount,
-                tax: 0,
-                hsn: 210390
-            }
-        ],
-        payment_method: "Prepaid",
-        shipping_charges: 0,
-        giftwrap_charges: 0,
-        transaction_charges: 0,
-        total_discount: safeDiscount,
-        sub_total: safeAmount,
-        length: 10,
-        breadth: 10,
-        height: 8,
-        weight: Number((0.23 * safeQuantity).toFixed(2))
-    };
-
-    const shiprocketResponse = await fetch('https://apiv2.shiprocket.in/v1/external/orders/create/adhoc', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`,
-            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36'
-        },
-        body: JSON.stringify(shipmentData)
-    });
-
-    if (!shiprocketResponse.ok) {
-        const errorText = await shiprocketResponse.text();
-        console.error('Shiprocket API error:', errorText);
-        return { success: false, error: 'Failed to create shipment', details: errorText };
-    }
-
-    const shipmentResult = await shiprocketResponse.json();
-
-    return {
-        success: true,
-        shipment_id: shipmentResult.shipment_id,
-        order_id: shipmentResult.order_id,
-        awb_code: shipmentResult.awb_code,
-        courier_name: shipmentResult.courier_name,
-        message: 'Shipment created successfully'
-    };
 }
 
 // HTTP handler — validates CSRF then delegates to the internal function.
