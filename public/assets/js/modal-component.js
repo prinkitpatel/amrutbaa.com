@@ -816,15 +816,6 @@ function initOrderModal() {
 
             // For COD, skip Razorpay and create order directly
             if (formData.payment_method === 'cod') {
-                const codServiceable = await checkPincodeServiceability({ cod: true });
-                if (codServiceable !== true) {
-                    setError('pincode', 'COD is not serviceable on this pincode. Please choose Pay Now.');
-                    submitBtn.textContent = originalText;
-                    submitBtn.disabled = false;
-                    submitBtn.classList.remove('is-loading');
-                    submitBtn.setAttribute('aria-busy', 'false');
-                    return;
-                }
 
                 // Create COD order via Worker
                 const codClientOrderRef = `COD-${Date.now()}-${Math.random().toString(36).slice(2, 8).toUpperCase()}`;
