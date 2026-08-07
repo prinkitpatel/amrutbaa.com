@@ -114,11 +114,8 @@ export function openEasterEggModal() {
     const form = document.getElementById('eeForm');
     const submitBtn = document.getElementById('eeSubmitBtn');
     const pincodeInput = document.getElementById('eePincode');
-    const pincodeStatus = document.getElementById('eePincodeStatus');
     const successDiv = document.getElementById('eeSuccess');
 
-    let pincodeServiceable = null;
-    let pincodeTimer = null;
 
     // --- Close ---
     function closeModal() {
@@ -147,48 +144,13 @@ export function openEasterEggModal() {
         });
     }
 
-    // --- Pincode check ---
+    // --- Pincode input ---
     pincodeInput.addEventListener('input', () => {
         const pin = pincodeInput.value.replace(/\D/g, '');
         pincodeInput.value = pin;
         clearError('eePincode');
-        pincodeServiceable = null;
-        pincodeStatus.textContent = '';
-        pincodeStatus.className = 'ee-pincode-status';
-
-        if (pin.length === 6) {
-            clearTimeout(pincodeTimer);
-            pincodeTimer = setTimeout(() => checkPincode(pin), 400);
-        }
     });
 
-    async function checkPincode(pin) {
-        pincodeStatus.textContent = 'Checking…';
-        pincodeStatus.className = 'ee-pincode-status checking';
-        try {
-            const res = await fetch('/api/check-pincode', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ pincode: pin })
-            });
-            const data = await res.json();
-            if (data.serviceable) {
-                pincodeServiceable = true;
-                pincodeStatus.textContent = '✓ Delivery available';
-                pincodeStatus.className = 'ee-pincode-status success';
-                clearError('eePincode');
-            } else {
-                pincodeServiceable = false;
-                pincodeStatus.textContent = '✗ Not serviceable';
-                pincodeStatus.className = 'ee-pincode-status error';
-                showError('eePincode', 'This pincode is not serviceable yet.');
-            }
-        } catch {
-            pincodeServiceable = null;
-            pincodeStatus.textContent = '⚠ Check failed — try again';
-            pincodeStatus.className = 'ee-pincode-status error';
-        }
-    }
 
     // --- Form submit ---
     form.addEventListener('submit', async (e) => {
@@ -210,19 +172,10 @@ export function openEasterEggModal() {
         if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) { showError('eeEmail', 'Enter a valid email'); valid = false; }
         if (!address) { showError('eeAddress', 'Address is required'); valid = false; }
         if (pincode.length !== 6) { showError('eePincode', 'Enter a valid 6-digit pincode'); valid = false; }
-        if (pincodeServiceable === false) { showError('eePincode', 'This pincode is not serviceable'); valid = false; }
         if (!city) { showError('eeCity', 'City is required'); valid = false; }
         if (!state) { showError('eeState', 'State is required'); valid = false; }
         if (!valid) return;
 
-        // If pincode not yet checked, run check now
-        if (pincodeServiceable === null && pincode.length === 6) {
-            await checkPincode(pincode);
-            if (pincodeServiceable !== true) {
-                showError('eePincode', 'Please wait for pincode check to complete');
-                return;
-            }
-        }
 
         const originalText = submitBtn.textContent;
         submitBtn.textContent = 'Initializing Payment…';

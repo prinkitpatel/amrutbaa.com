@@ -165,7 +165,6 @@ function initOrderModal() {
                                 <label for="pincode">Pincode *</label>
                                 <input type="text" id="pincode" name="pincode" placeholder="6-digit" required inputmode="numeric" autocomplete="shipping postal-code">
                                 <p class="input-error" data-error-for="pincode" style="display:none;"></p>
-                                <p class="pincode-status" id="pincodeStatus"></p>
                             </div>
                             <div class="form-group">
                                 <label for="city">City *</label>
@@ -238,14 +237,11 @@ function initOrderModal() {
     const unitPriceDisplay = document.getElementById('unitPriceDisplay');
     const orderQuantityText = document.getElementById('orderQuantityText');
     const pincodeInput = document.getElementById('pincode');
-    const pincodeStatus = document.getElementById('pincodeStatus');
     const paymentMethodOnline = document.getElementById('paymentMethodOnline');
     const paymentMethodCod = document.getElementById('paymentMethodCod');
     const submitBtn = document.getElementById('submitBtn');
     let currentStep = 1;
-    let pincodeServiceable = null;
-    let codPincodeServiceable = null;
-    let pincodeCheckTimer = null;
+
     let isCodSelected = false;
     let lastFocusedElement = null;
     let isModalOpen = false;
@@ -395,105 +391,7 @@ function initOrderModal() {
         }
     }
 
-    function setPincodeStatus(type, message) {
-        if (!pincodeStatus) return;
-        pincodeStatus.classList.remove('pending', 'success', 'error');
-        if (type) {
-            pincodeStatus.classList.add(type);
-            pincodeStatus.textContent = message;
-            pincodeStatus.style.display = 'block';
-        } else {
-            pincodeStatus.textContent = '';
-            pincodeStatus.style.display = 'none';
-        }
-    }
 
-    async function checkPincodeServiceability(options = {}) {
-        const raw = pincodeInput?.value || '';
-        const pincode = raw.replace(/\D/g, '').trim();
-        const cod = options.cod === true;
-        if (pincode.length !== 6) {
-            if (cod) {
-                codPincodeServiceable = null;
-            } else {
-                pincodeServiceable = null;
-            }
-            setPincodeStatus(null, '');
-            return null;
-        }
-
-        const qty = getSelectedQuantity() || 1;
-        const weight = Number((0.23 * qty).toFixed(2));
-
-        setPincodeStatus('pending', 'Checking availability...');
-        try {
-            const response = await fetch('/api/check-pincode', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    pincode,
-                    weight,
-                    cod
-                })
-            });
-
-            let result;
-            try {
-                result = await response.json();
-            } catch (e) {
-                if (!response.ok) {
-                    throw new Error('Serviceability check failed');
-                }
-                throw e;
-            }
-
-            if (!result.success && result.error) {
-                const errorMsg = result.details ? `${result.error}: ${result.details}` : result.error;
-                setPincodeStatus('error', errorMsg || 'Could not verify pincode.');
-                if (cod) {
-                    codPincodeServiceable = false;
-                } else {
-                    pincodeServiceable = false;
-                }
-                return false;
-            }
-
-            if (!response.ok) {
-                throw new Error('Serviceability check failed');
-            }
-
-            if (cod) {
-                codPincodeServiceable = !!result.serviceable;
-            } else {
-                pincodeServiceable = !!result.serviceable;
-            }
-
-            // Auto-fill city and state if available
-            if (result.city && result.state) {
-                document.getElementById('city').value = result.city;
-                document.getElementById('state').value = result.state;
-            }
-
-            const activeServiceability = cod ? codPincodeServiceable : pincodeServiceable;
-            if (activeServiceability) {
-                const courierCount = result.courier_count || 0;
-                setPincodeStatus('success', cod
-                    ? `COD available${courierCount ? ` (${courierCount} couriers)` : ''}.`
-                    : `Delivery available${courierCount ? ` (${courierCount} couriers)` : ''}.`);
-            } else {
-                setPincodeStatus('error', cod ? 'COD not available for this pincode.' : 'Delivery not available yet.');
-            }
-            return activeServiceability;
-        } catch (error) {
-            if (cod) {
-                codPincodeServiceable = null;
-            } else {
-                pincodeServiceable = null;
-            }
-            setPincodeStatus('error', 'Service connection issue. Please try again.');
-            return null;
-        }
-    }
 
     function setStep(step) {
         currentStep = step;
@@ -589,10 +487,7 @@ function initOrderModal() {
             valid = false;
         }
 
-        if (pincode.length === 6 && pincodeServiceable === false) {
-            setError('pincode', 'This pincode is not serviceable yet.');
-            valid = false;
-        }
+
         return valid;
     }
 
@@ -764,7 +659,7 @@ function initOrderModal() {
             btn.style.color = '#4A4A4A';
 
             updatePricingUI();
-            pincodeServiceable = null;
+
             updateStep1CTA();
         });
     });
@@ -853,21 +748,9 @@ function initOrderModal() {
         updateStep1CTA();
     });
     pincodeInput?.addEventListener('input', () => {
-        pincodeServiceable = null;
-        codPincodeServiceable = null;
-        if (pincodeCheckTimer) {
-            clearTimeout(pincodeCheckTimer);
-        }
         const pincode = pincodeInput.value.replace(/\D/g, '').trim();
-        
-        // Reactive error clearing
         if (pincode.length === 6) {
             clearFieldError('pincode');
-            pincodeCheckTimer = setTimeout(() => {
-                checkPincodeServiceability({ cod: isCodSelected });
-            }, 400);
-        } else {
-            setPincodeStatus(null, '');
         }
     });
 
@@ -878,25 +761,15 @@ function initOrderModal() {
         });
     });
 
-    pincodeInput?.addEventListener('blur', () => {
-        checkPincodeServiceability({ cod: isCodSelected });
-    });
-
     paymentMethodOnline?.addEventListener('change', () => {
         isCodSelected = false;
         updatePricingUI();
-        if ((pincodeInput?.value || '').replace(/\D/g, '').trim().length === 6) {
-            checkPincodeServiceability({ cod: false });
-        }
         if (submitBtn) submitBtn.textContent = 'Reserve & Pay Securely';
     });
 
     paymentMethodCod?.addEventListener('change', () => {
         isCodSelected = true;
         updatePricingUI();
-        if ((pincodeInput?.value || '').replace(/\D/g, '').trim().length === 6) {
-            checkPincodeServiceability({ cod: true });
-        }
         if (submitBtn) submitBtn.textContent = 'Reserve & Pay on Delivery';
     });
 
